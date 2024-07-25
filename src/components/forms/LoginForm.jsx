@@ -1,6 +1,6 @@
 import { Button, Form, Input } from "antd";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 function LoginForm() {
   const [email, setEmail] = useState("");
@@ -76,6 +76,9 @@ function LoginForm() {
             Login
           </Button>
         </Form.Item>
+        <Button>
+          <Link to="/register">Register</Link>
+        </Button>
       </Form>
     </div>
   );
