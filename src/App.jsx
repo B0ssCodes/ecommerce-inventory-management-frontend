@@ -4,6 +4,8 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import ValidateRoute from "./components/utility/ValidateRoute";
+import AllProducts from "./pages/AllProducts";
+import CreateProduct from "./pages/CreateProduct";
 
 function App() {
   return (
@@ -14,6 +16,22 @@ function App() {
           element={
             <ValidateRoute>
               <Dashboard />
+            </ValidateRoute>
+          }
+        />
+        <Route
+          path="/products"
+          element={
+            <ValidateRoute>
+              <AllProducts />
+            </ValidateRoute>
+          }
+        />
+        <Route
+          path="/create-product"
+          element={
+            <ValidateRoute>
+              <CreateProduct />
             </ValidateRoute>
           }
         />
