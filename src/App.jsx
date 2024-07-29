@@ -8,7 +8,7 @@ import AllProducts from "./pages/AllProducts/AllProducts";
 import CreateProduct from "./pages/CreateProduct";
 import EditProduct from "./pages/EditProduct/EditProduct";
 import AllUsers from "./pages/AllUsers/AllUsers";
-
+import CreateUser from "./pages/CreateUser/CreateUser";
 function App() {
   return (
     <Router>
@@ -50,6 +50,15 @@ function App() {
           element={
             <ValidateRoute>
               <AllUsers />
+            </ValidateRoute>
+          }
+        />
+
+        <Route
+          path="/create-user"
+          element={
+            <ValidateRoute>
+              <CreateUser />
             </ValidateRoute>
           }
         />
