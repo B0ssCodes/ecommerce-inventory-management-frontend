@@ -27,6 +27,9 @@ function Dashboard() {
       <Button>
         <Link to="/products">All Products</Link>
       </Button>
+      <Button>
+        <Link to="/users">All Users</Link>
+      </Button>
     </div>
   );
 }

@@ -7,6 +7,7 @@ import ValidateRoute from "./components/utility/ValidateRoute";
 import AllProducts from "./pages/AllProducts/AllProducts";
 import CreateProduct from "./pages/CreateProduct";
 import EditProduct from "./pages/EditProduct/EditProduct";
+import AllUsers from "./pages/AllUsers/AllUsers";
 
 function App() {
   return (
@@ -41,6 +42,14 @@ function App() {
           element={
             <ValidateRoute>
               <EditProduct />
+            </ValidateRoute>
+          }
+        />
+        <Route
+          path="/users"
+          element={
+            <ValidateRoute>
+              <AllUsers />
             </ValidateRoute>
           }
         />
