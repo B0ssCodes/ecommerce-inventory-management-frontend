@@ -4,8 +4,9 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import ValidateRoute from "./components/utility/ValidateRoute";
-import AllProducts from "./pages/AllProducts";
+import AllProducts from "./pages/AllProducts/AllProducts";
 import CreateProduct from "./pages/CreateProduct";
+import EditProduct from "./pages/EditProduct/EditProduct";
 
 function App() {
   return (
@@ -32,6 +33,14 @@ function App() {
           element={
             <ValidateRoute>
               <CreateProduct />
+            </ValidateRoute>
+          }
+        />
+        <Route
+          path="/edit-product"
+          element={
+            <ValidateRoute>
+              <EditProduct />
             </ValidateRoute>
           }
         />
