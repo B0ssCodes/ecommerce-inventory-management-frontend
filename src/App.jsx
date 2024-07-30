@@ -12,6 +12,9 @@ import CreateUser from "./pages/Users/CreateUser/CreateUser";
 import AllVendors from "./pages/Vendors/AllVendors/AllVendors";
 import CreateVendor from "./pages/Vendors/CreateVendor/CreateVendor";
 import EditVendor from "./pages/Vendors/EditVendor/EditVendor";
+import AllCategories from "./pages/Categories/AllCategories/AllCategories";
+import CreateCategory from "./pages/Categories/CreateCategory/CreateCategory";
+import EditCategory from "./pages/Categories/EditCategory/EditCategory";
 function App() {
   return (
     <Router>
@@ -82,10 +85,34 @@ function App() {
           }
         />
         <Route
-          path="edit-vendor"
+          path="/edit-vendor"
           element={
             <ValidateRoute>
               <EditVendor />
+            </ValidateRoute>
+          }
+        />
+        <Route
+          path="/categories"
+          element={
+            <ValidateRoute>
+              <AllCategories />
+            </ValidateRoute>
+          }
+        />
+        <Route
+          path="/create-category"
+          element={
+            <ValidateRoute>
+              <CreateCategory />
+            </ValidateRoute>
+          }
+        />
+        <Route
+          path="/edit-category"
+          element={
+            <ValidateRoute>
+              <EditCategory />
             </ValidateRoute>
           }
         />

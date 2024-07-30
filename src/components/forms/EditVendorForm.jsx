@@ -102,7 +102,7 @@ const EditVendorForm = ({}) => {
       </Form.Item>
       <Form.Item>
         <Button type="primary" htmlType="submit">
-          Update Vendor
+          Edit Vendor
         </Button>
       </Form.Item>
     </Form>
