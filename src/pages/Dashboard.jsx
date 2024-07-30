@@ -30,6 +30,9 @@ function Dashboard() {
       <Button>
         <Link to="/users">All Users</Link>
       </Button>
+      <Button>
+        <Link to="/vendors">All Vendors</Link>
+      </Button>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import { Typography } from "antd";
-import EditProductForm from "../../components/forms/EditProductForm";
+import EditProductForm from "../../../components/forms/EditProductForm";
 
 const { Title } = Typography;
 function EditProduct() {

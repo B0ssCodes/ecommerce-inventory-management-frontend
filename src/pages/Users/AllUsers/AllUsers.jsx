@@ -3,8 +3,7 @@ import { Typography, Table, Button, Space, Input } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { EditOutlined, SearchOutlined } from "@ant-design/icons";
 import "./AllUsers.css"; // Import the CSS file
-import DeleteProduct from "../../components/modals/DeleteProduct";
-import DeleteUser from "../../components/modals/DeleteUser";
+import DeleteUser from "../../../components/modals/DeleteUser";
 
 const { Title } = Typography;
 
@@ -42,7 +41,7 @@ function AllUsers() {
 
   useEffect(() => {
     const payload = {
-      pagenumber: pageNumber,
+      pageNumber: pageNumber,
       pagesize: pageSize,
       search: searchText,
     };
@@ -52,7 +51,7 @@ function AllUsers() {
 
   const handleSearchClick = () => {
     const payload = {
-      pagenumber: pageNumber,
+      pageNumber: pageNumber,
       pagesize: pageSize,
       search: searchText,
     };
@@ -127,7 +126,7 @@ function AllUsers() {
         pagination={{
           current: pageNumber,
           pageSize: pageSize,
-          total: users.userCount, // Assuming users is an array
+          total: users.length > 0 || 0,
         }}
         onChange={handleTableChange}
       />

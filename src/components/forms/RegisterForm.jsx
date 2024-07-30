@@ -7,7 +7,7 @@ const { Option } = Select;
 
 const dateFormatList = ["YYYY-MM-DD", "MM/DD/YYYY", "DD/MM/YYYY"];
 
-function RegisterForm({ returnRoute }) {
+function RegisterForm({ returnRoute, buttonText, showLogin }) {
   const [userRoles, setUserRoles] = useState([]);
   const [birthDate, setBirthDate] = useState(null);
   const navigate = useNavigate();
@@ -128,12 +128,14 @@ function RegisterForm({ returnRoute }) {
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit" style={{ width: "100%" }}>
-            Register
+            {buttonText}
           </Button>
         </Form.Item>
-        <Button htmlType="submit">
-          <Link to="/login">Login</Link>
-        </Button>
+        {showLogin && (
+          <Button>
+            <Link to="/login">Login</Link>
+          </Button>
+        )}
       </Form>
     </div>
   );

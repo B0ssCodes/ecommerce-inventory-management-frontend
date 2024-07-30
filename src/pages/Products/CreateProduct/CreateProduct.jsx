@@ -1,14 +1,14 @@
 import React from "react";
 import { Typography } from "antd";
-import RegisterForm from "../../components/forms/RegisterForm";
+import CreateProductForm from "../../../components/forms/CreateProductForm";
 
 const { Title } = Typography;
 
 function CreateProduct() {
   return (
     <div>
-      <Title style={{ textAlign: "center" }}>Create a New User</Title>
-      <RegisterForm returnRoute={"/users"} />
+      <Title style={{ textAlign: "center" }}>Create a New Product</Title>
+      <CreateProductForm />
     </div>
   );
 }

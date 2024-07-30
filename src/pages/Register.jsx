@@ -8,7 +8,7 @@ const Register = () => {
       <Title level={1} style={{ textAlign: "center" }}>
         Register
       </Title>
-      <RegisterForm returnRoute={null} />
+      <RegisterForm returnRoute={null} buttonText="Register" showLogin={true} />
     </div>
   );
 };

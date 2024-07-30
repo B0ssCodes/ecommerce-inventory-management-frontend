@@ -3,7 +3,7 @@ import { Typography, Table, Button, Space, Input } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { EditOutlined, SearchOutlined } from "@ant-design/icons";
 import "./AllProducts.css"; // Import the CSS file
-import DeleteProduct from "../../components/modals/DeleteProduct";
+import DeleteProduct from "../../../components/modals/DeleteProduct";
 
 const { Title } = Typography;
 
@@ -41,7 +41,7 @@ function AllProducts() {
 
   useEffect(() => {
     const payload = {
-      pagenumber: pageNumber,
+      pageNumber: pageNumber,
       pagesize: pageSize,
       search: searchText,
     };
@@ -51,7 +51,7 @@ function AllProducts() {
 
   const handleSearchClick = () => {
     const payload = {
-      pagenumber: pageNumber,
+      pageNumber: pageNumber,
       pagesize: pageSize,
       search: searchText,
     };
@@ -145,7 +145,7 @@ function AllProducts() {
         pagination={{
           current: pageNumber,
           pageSize: pageSize,
-          total: products.length, // Assuming products is an array
+          total: products.length,
         }}
         onChange={handleTableChange}
       />
