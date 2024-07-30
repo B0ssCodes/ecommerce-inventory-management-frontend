@@ -2,20 +2,20 @@ import React, { useEffect, useState } from "react";
 import { Typography, Table, Button, Space, Input } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { EditOutlined, SearchOutlined } from "@ant-design/icons";
-import "./AllProducts.css"; // Import the CSS file
-import DeleteProduct from "../../components/modals/DeleteProduct";
+import "./AllUsers.css"; // Import the CSS file
+import DeleteUser from "../../../components/modals/DeleteUser";
 
 const { Title } = Typography;
 
-function AllProducts() {
+function AllUsers() {
   const [searchText, setSearchText] = useState("");
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [products, setProducts] = useState([]);
+  const [users, setUsers] = useState([]);
   const navigate = useNavigate();
 
-  const fetchProducts = async (payload) => {
-    const url = "https://localhost:7200/api/product/get";
+  const fetchUsers = async (payload) => {
+    const url = "https://localhost:7200/api/user/get";
 
     try {
       const response = await fetch(url, {
@@ -28,85 +28,66 @@ function AllProducts() {
 
       const data = await response.json();
       if (response.ok) {
-        setProducts(data.result);
+        setUsers(data.result);
       } else {
-        console.error("Failed to fetch products:", data);
-        alert(data.message || "Failed to fetch products");
+        console.error("Failed to fetch users:", data);
+        alert(data.message || "Failed to fetch users");
       }
     } catch (error) {
       console.error("An error occurred:", error);
-      alert("An error occurred while fetching products");
+      alert("An error occurred while fetching users");
     }
   };
 
   useEffect(() => {
     const payload = {
-      pagenumber: pageNumber,
+      pageNumber: pageNumber,
       pagesize: pageSize,
       search: searchText,
     };
 
-    fetchProducts(payload);
+    fetchUsers(payload);
   }, [pageNumber, pageSize, searchText]);
 
   const handleSearchClick = () => {
     const payload = {
-      pagenumber: pageNumber,
+      pageNumber: pageNumber,
       pagesize: pageSize,
       search: searchText,
     };
 
-    fetchProducts(payload);
+    fetchUsers(payload);
   };
 
-  const handleEdit = (productID) => {
-    navigate("/edit-product", { state: { productID } });
+  const handleEdit = (userID) => {
+    navigate("/edit-user", { state: { userID } });
   };
 
   const columns = [
     {
-      title: "Name",
-      dataIndex: "name",
-      key: "name",
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
     },
     {
-      title: "SKU",
-      dataIndex: "sku",
-      key: "sku",
+      title: "First",
+      dataIndex: "firstName",
+      key: "firstName",
     },
     {
-      title: "Price",
-      dataIndex: "price",
-      key: "price",
+      title: "Last",
+      dataIndex: "lastName",
+      key: "lastName",
     },
     {
-      title: "Cost",
-      dataIndex: "cost",
-      key: "cost",
-    },
-    {
-      title: "Category",
-      dataIndex: ["category", "name"],
-      key: "category",
-    },
-    {
-      title: "Image Count",
-      dataIndex: "imageCount",
-      key: "imageCount",
+      title: "Role",
+      dataIndex: "role",
+      key: "role",
     },
     {
       title: "Actions",
       key: "actions",
-      render: (text, record) => (
-        <Space size="middle">
-          <Button
-            type="primary"
-            icon={<EditOutlined />}
-            onClick={() => handleEdit(record.productID)}
-          ></Button>
-          <DeleteProduct productID={products.productID} />
-        </Space>
-      ),
+      render: (text, record) => <DeleteUser userID={record.userID} />,
     },
   ];
 
@@ -123,7 +104,7 @@ function AllProducts() {
           type="text"
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
-          placeholder="Search products..."
+          placeholder="Search users..."
           style={{ marginRight: "8px", maxWidth: "40%" }}
         />
         <Button
@@ -135,27 +116,27 @@ function AllProducts() {
         </Button>
       </div>
 
-      <Title style={{ textAlign: "center" }}>All Products</Title>
+      <Title style={{ textAlign: "center" }}>All users</Title>
       <Table
         columns={columns}
-        dataSource={products}
-        rowKey="productID"
+        dataSource={users}
+        rowKey="userID"
         bordered
         className="custom-table"
         pagination={{
           current: pageNumber,
           pageSize: pageSize,
-          total: products.length, // Assuming products is an array
+          total: users.length > 0 || 0,
         }}
         onChange={handleTableChange}
       />
       <Button type="primary" style={{ marginTop: 16 }}>
-        <Link to="/create-product" style={{ color: "white" }}>
-          Create Product
+        <Link to="/create-user" style={{ color: "white" }}>
+          Create User
         </Link>
       </Button>
     </>
   );
 }
 
-export default AllProducts;
+export default AllUsers;

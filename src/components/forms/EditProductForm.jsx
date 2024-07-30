@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Form, Input, Button, Upload, Select, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 
 const { Option } = Select;
 const backendUrl = "https://localhost:7200";
-const EditProduct = () => {
+const EditProductForm = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   const { productID } = location.state || {};
   const [form] = Form.useForm();
@@ -94,6 +95,7 @@ const EditProduct = () => {
 
       if (response.ok) {
         message.success("Product updated successfully");
+        navigate("/products");
       } else {
         message.error("Failed to update product");
       }
@@ -176,4 +178,4 @@ const EditProduct = () => {
   );
 };
 
-export default EditProduct;
+export default EditProductForm;

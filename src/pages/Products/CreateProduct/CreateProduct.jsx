@@ -1,6 +1,6 @@
 import React from "react";
 import { Typography } from "antd";
-import CreateProductForm from "../components/forms/CreateProductForm";
+import CreateProductForm from "../../../components/forms/CreateProductForm";
 
 const { Title } = Typography;
 

@@ -8,11 +8,13 @@ import {
   Upload,
   message,
 } from "antd";
+import { useNavigate } from "react-router-dom";
 import { UploadOutlined } from "@ant-design/icons";
 
 const { Option } = Select;
 
 function CreateProductForm() {
+  const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
   const [fileList, setFileList] = useState([]);
 
@@ -60,6 +62,7 @@ function CreateProductForm() {
       const data = await response.json();
       if (response.ok) {
         message.success("Product created successfully");
+        navigate("/products");
       } else {
         const error = data.message || "An unknown error occurred";
         console.error("Failed to create product:", data);

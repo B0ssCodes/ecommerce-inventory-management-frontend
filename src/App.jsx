@@ -4,11 +4,14 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import ValidateRoute from "./components/utility/ValidateRoute";
-import AllProducts from "./pages/AllProducts/AllProducts";
-import CreateProduct from "./pages/CreateProduct";
-import EditProduct from "./pages/EditProduct/EditProduct";
-import AllUsers from "./pages/AllUsers/AllUsers";
-
+import AllProducts from "./pages/Products/AllProducts/AllProducts";
+import CreateProduct from "./pages/Products/CreateProduct/CreateProduct";
+import EditProduct from "./pages/Products/EditProduct/EditProduct";
+import AllUsers from "./pages/Users/AllUsers/AllUsers";
+import CreateUser from "./pages/Users/CreateUser/CreateUser";
+import AllVendors from "./pages/Vendors/AllVendors/AllVendors";
+import CreateVendor from "./pages/Vendors/CreateVendor/CreateVendor";
+import EditVendor from "./pages/Vendors/EditVendor/EditVendor";
 function App() {
   return (
     <Router>
@@ -50,6 +53,39 @@ function App() {
           element={
             <ValidateRoute>
               <AllUsers />
+            </ValidateRoute>
+          }
+        />
+
+        <Route
+          path="/create-user"
+          element={
+            <ValidateRoute>
+              <CreateUser />
+            </ValidateRoute>
+          }
+        />
+        <Route
+          path="/vendors"
+          element={
+            <ValidateRoute>
+              <AllVendors />
+            </ValidateRoute>
+          }
+        />
+        <Route
+          path="/create-vendor"
+          element={
+            <ValidateRoute>
+              <CreateVendor />
+            </ValidateRoute>
+          }
+        />
+        <Route
+          path="edit-vendor"
+          element={
+            <ValidateRoute>
+              <EditVendor />
             </ValidateRoute>
           }
         />
