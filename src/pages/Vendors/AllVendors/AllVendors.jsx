@@ -68,21 +68,25 @@ function AllVendors() {
       title: "Name",
       dataIndex: "name",
       key: "name",
+      sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
       title: "Email",
       dataIndex: "email",
       key: "email",
+      sorter: (a, b) => a.email.localeCompare(b.email),
     },
     {
       title: "Phone",
       dataIndex: "phone",
       key: "phone",
+      sorter: (a, b) => a.phone.localeCompare(b.phone),
     },
     {
       title: "Commercial",
       dataIndex: "commercialPhone",
       key: "commercialPhone",
+      sorter: (a, b) => a.commercialPhone.localeCompare(b.commercialPhone),
     },
     {
       title: "Actions",

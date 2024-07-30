@@ -68,21 +68,25 @@ function AllUsers() {
       title: "Email",
       dataIndex: "email",
       key: "email",
+      sorter: (a, b) => a.email.localeCompare(b.email),
     },
     {
       title: "First",
       dataIndex: "firstName",
       key: "firstName",
+      sorter: (a, b) => a.firstName.localeCompare(b.firstName),
     },
     {
       title: "Last",
       dataIndex: "lastName",
       key: "lastName",
+      sorter: (a, b) => a.lastName.localeCompare(b.lastName),
     },
     {
       title: "Role",
       dataIndex: "role",
       key: "role",
+      sorter: (a, b) => a.role.localeCompare(b.role),
     },
     {
       title: "Actions",

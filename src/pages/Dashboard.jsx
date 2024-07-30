@@ -2,8 +2,9 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { decodeToken } from "../components/utility/decodeToken";
-import { Button } from "antd";
+import { Button, Typography } from "antd";
 
+const { Title } = Typography;
 function Dashboard() {
   const [firstName, setFirstName] = useState("");
 
@@ -23,7 +24,7 @@ function Dashboard() {
 
   return (
     <div>
-      <h1>Welcome, {firstName}</h1>
+      <Title>Welcome, {firstName}</Title>
       <Button>
         <Link to="/products">All Products</Link>
       </Button>

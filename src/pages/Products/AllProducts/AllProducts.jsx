@@ -68,31 +68,37 @@ function AllProducts() {
       title: "Name",
       dataIndex: "name",
       key: "name",
+      sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
       title: "SKU",
       dataIndex: "sku",
       key: "sku",
+      sorter: (a, b) => a.sku.localeCompare(b.sku),
     },
     {
       title: "Price",
       dataIndex: "price",
       key: "price",
+      sorter: (a, b) => a.price - b.price,
     },
     {
       title: "Cost",
       dataIndex: "cost",
       key: "cost",
+      sorter: (a, b) => a.cost - b.cost,
     },
     {
       title: "Category",
       dataIndex: ["category", "name"],
       key: "category",
+      sorter: (a, b) => a.category.name.localeCompare(b.category.name),
     },
     {
       title: "Image Count",
       dataIndex: "imageCount",
       key: "imageCount",
+      sorter: (a, b) => a.imageCount - b.imageCount,
     },
     {
       title: "Actions",
@@ -104,7 +110,7 @@ function AllProducts() {
             icon={<EditOutlined />}
             onClick={() => handleEdit(record.productID)}
           ></Button>
-          <DeleteProduct productID={products.productID} />
+          <DeleteProduct productID={record.productID} />
         </Space>
       ),
     },

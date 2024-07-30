@@ -9,7 +9,9 @@ const applyThemeToBody = (isDarkMode) => {
 };
 
 const Main = () => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(
+    localStorage.getItem("darkMode") === "true"
+  );
 
   useEffect(() => {
     applyThemeToBody(isDarkMode);
@@ -17,6 +19,7 @@ const Main = () => {
 
   const toggleTheme = () => {
     setIsDarkMode((prevMode) => !prevMode);
+    localStorage.setItem("darkMode", isDarkMode ? "false" : "true");
   };
 
   return (
