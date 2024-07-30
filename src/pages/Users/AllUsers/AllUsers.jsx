@@ -120,7 +120,7 @@ function AllUsers() {
         </Button>
       </div>
 
-      <Title style={{ textAlign: "center" }}>All users</Title>
+      <Title style={{ textAlign: "center" }}>Users</Title>
       <Table
         columns={columns}
         dataSource={users}

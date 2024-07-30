@@ -117,7 +117,7 @@ function AllCategories() {
         </Button>
       </div>
 
-      <Title style={{ textAlign: "center" }}>All Categories</Title>
+      <Title style={{ textAlign: "center" }}>Categories</Title>
       <Table
         columns={columns}
         dataSource={categories}

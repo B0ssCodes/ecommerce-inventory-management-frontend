@@ -21,9 +21,20 @@ function CreateProductForm() {
   useEffect(() => {
     const fetchCategories = async () => {
       const url = "https://localhost:7200/api/category/get";
+      const payload = {
+        pageNumber: 1,
+        pageSize: 200,
+        search: "",
+      };
 
       try {
-        const response = await fetch(url);
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        });
         const data = await response.json();
         if (response.ok) {
           setCategories(data.result);

@@ -2,7 +2,7 @@ import { Button, Form, Input } from "antd";
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
-function LoginForm() {
+function LoginForm({ setIsLoggedIn }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -38,6 +38,7 @@ function LoginForm() {
 
       localStorage.setItem("token", token);
       localStorage.setItem("tokenExpiry", expiryDate.toISOString());
+      setIsLoggedIn(true);
       navigate("/");
     } catch (error) {
       console.error("Error:", error);

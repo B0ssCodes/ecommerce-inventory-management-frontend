@@ -141,7 +141,7 @@ function AllProducts() {
         </Button>
       </div>
 
-      <Title style={{ textAlign: "center" }}>All Products</Title>
+      <Title style={{ textAlign: "center" }}>Products</Title>
       <Table
         columns={columns}
         dataSource={products}

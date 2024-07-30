@@ -129,7 +129,7 @@ function AllVendors() {
         </Button>
       </div>
 
-      <Title style={{ textAlign: "center" }}>All Vendors</Title>
+      <Title style={{ textAlign: "center" }}>Vendors</Title>
       <Table
         columns={columns}
         dataSource={vendors}

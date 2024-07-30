@@ -4,7 +4,7 @@ import LoginForm from "../components/forms/LoginForm";
 import { Typography, Alert, Button } from "antd";
 const { Title } = Typography;
 
-function Login() {
+function Login({ setIsLoggedIn }) {
   const location = useLocation();
   const [showSuccessMessage, setShowSuccessMessage] = useState(
     !!location.state?.successMessage
@@ -33,7 +33,7 @@ function Login() {
         Login
       </Title>
 
-      <LoginForm />
+      <LoginForm setIsLoggedIn={setIsLoggedIn} />
     </div>
   );
 }
