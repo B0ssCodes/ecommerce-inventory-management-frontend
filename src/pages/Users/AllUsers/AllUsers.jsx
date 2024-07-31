@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Typography, Table, Button, Space, Input } from "antd";
+import { Typography, Table, Button, Input, Pagination, Select } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { EditOutlined, SearchOutlined } from "@ant-design/icons";
 import "./AllUsers.css"; // Import the CSS file
 import DeleteUser from "../../../components/modals/DeleteUser";
 
 const { Title } = Typography;
+const { Option } = Select;
 
 function AllUsers() {
   const [searchText, setSearchText] = useState("");
@@ -95,50 +96,88 @@ function AllUsers() {
     },
   ];
 
-  const handleTableChange = (pagination) => {
-    setPageNumber(pagination.current);
-    setPageSize(pagination.pageSize);
+  const handleTableChange = (page, pageSize) => {
+    setPageNumber(page);
+    setPageSize(pageSize);
   };
-
   return (
     <>
-      <div style={{ display: "flex", justifyContent: "flex-end" }}>
-        {" "}
-        <Input
-          type="text"
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
-          placeholder="Search users..."
-          style={{ marginRight: "8px", maxWidth: "40%" }}
-        />
-        <Button
-          type="primary"
-          icon={<SearchOutlined />}
-          onClick={handleSearchClick}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Title level={2} style={{ margin: 0, lineHeight: "32px" }}>
+          Users
+        </Title>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+          }}
         >
-          Search
-        </Button>
+          <Input
+            type="text"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            placeholder="Search users..."
+            style={{ marginRight: "8px", maxWidth: "40%" }}
+          />
+          <Button
+            type="primary"
+            icon={<SearchOutlined />}
+            onClick={handleSearchClick}
+            style={{ marginRight: "8px" }}
+          >
+            Search
+          </Button>
+          <Select
+            defaultValue={10}
+            style={{ width: 120 }}
+            onChange={(value) => handleTableChange(1, value)}
+          >
+            <Option value={5}>5</Option>
+            <Option value={10}>10</Option>
+            <Option value={25}>25</Option>
+          </Select>
+        </div>
       </div>
 
-      <Title style={{ textAlign: "center" }}>Users</Title>
-      <Table
-        columns={columns}
-        dataSource={users}
-        rowKey="userID"
-        bordered
-        className="custom-table"
-        pagination={{
-          current: pageNumber,
-          pageSize: pageSize,
-          total: users.length > 0 || 0,
+      <div style={{ maxHeight: "70vh", overflowY: "auto" }}>
+        <Table
+          columns={columns}
+          dataSource={users}
+          rowKey="userID"
+          bordered
+          className="custom-table"
+          pagination={false}
+          onChange={handleTableChange}
+        />
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginTop: 16,
         }}
-        onChange={handleTableChange}
-      />
-      <Button type="primary" style={{ marginTop: 16 }}>
-        <Link to="/create-user" style={{ color: "white" }}>
-          Create User
-        </Link>
-      </Button>
+      >
+        <Button type="primary">
+          <Link to="/create-user" style={{ color: "white" }}>
+            Create User
+          </Link>
+        </Button>
+        <Pagination
+          current={pageNumber}
+          pageSize={pageSize}
+          total={users.length}
+          onChange={handleTableChange}
+        />
+      </div>
     </>
   );
 }
