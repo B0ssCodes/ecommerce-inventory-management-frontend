@@ -13,6 +13,7 @@ function AllUsers() {
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [users, setUsers] = useState([]);
+  const [itemCount, setItemCount] = useState(1);
   const navigate = useNavigate();
 
   const fetchUsers = async (payload) => {
@@ -30,6 +31,7 @@ function AllUsers() {
       const data = await response.json();
       if (response.ok) {
         setUsers(data.result);
+        setItemCount(data.itemCount);
       } else {
         console.error("Failed to fetch users:", data);
         alert(data.message || "Failed to fetch users");
@@ -69,25 +71,21 @@ function AllUsers() {
       title: "Email",
       dataIndex: "email",
       key: "email",
-      sorter: (a, b) => a.email.localeCompare(b.email),
     },
     {
       title: "First",
       dataIndex: "firstName",
       key: "firstName",
-      sorter: (a, b) => a.firstName.localeCompare(b.firstName),
     },
     {
       title: "Last",
       dataIndex: "lastName",
       key: "lastName",
-      sorter: (a, b) => a.lastName.localeCompare(b.lastName),
     },
     {
       title: "Role",
       dataIndex: "role",
       key: "role",
-      sorter: (a, b) => a.role.localeCompare(b.role),
     },
     {
       title: "Actions",
@@ -174,7 +172,7 @@ function AllUsers() {
         <Pagination
           current={pageNumber}
           pageSize={pageSize}
-          total={users.length}
+          total={itemCount}
           onChange={handleTableChange}
         />
       </div>

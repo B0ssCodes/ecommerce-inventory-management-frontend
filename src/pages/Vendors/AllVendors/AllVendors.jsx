@@ -21,6 +21,7 @@ function AllVendors() {
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [vendors, setVendors] = useState([]);
+  const [itemCount, setItemCount] = useState(1);
   const navigate = useNavigate();
 
   const fetchVendors = async (payload) => {
@@ -38,6 +39,7 @@ function AllVendors() {
       const data = await response.json();
       if (response.ok) {
         setVendors(data.result);
+        setItemCount(data.itemCount);
       } else {
         console.error("Failed to fetch vendors:", data);
         alert(data.message || "Failed to fetch vendors");
@@ -77,25 +79,21 @@ function AllVendors() {
       title: "Name",
       dataIndex: "name",
       key: "name",
-      sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
       title: "Email",
       dataIndex: "email",
       key: "email",
-      sorter: (a, b) => a.email.localeCompare(b.email),
     },
     {
       title: "Phone",
       dataIndex: "phone",
       key: "phone",
-      sorter: (a, b) => a.phone.localeCompare(b.phone),
     },
     {
       title: "Commercial",
       dataIndex: "commercialPhone",
       key: "commercialPhone",
-      sorter: (a, b) => a.commercialPhone.localeCompare(b.commercialPhone),
     },
     {
       title: "Actions",
@@ -191,7 +189,7 @@ function AllVendors() {
         <Pagination
           current={pageNumber}
           pageSize={pageSize}
-          total={vendors.length}
+          total={itemCount}
           onChange={handleTableChange}
         />
       </div>

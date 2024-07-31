@@ -20,6 +20,7 @@ function AllProducts() {
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [products, setProducts] = useState([]);
+  const [itemCount, setItemCount] = useState(1);
   const navigate = useNavigate();
 
   const fetchProducts = async (payload) => {
@@ -37,6 +38,7 @@ function AllProducts() {
       const data = await response.json();
       if (response.ok) {
         setProducts(data.result);
+        setItemCount(data.itemCount);
       } else {
         console.error("Failed to fetch products:", data);
         alert(data.message || "Failed to fetch products");
@@ -76,37 +78,31 @@ function AllProducts() {
       title: "Name",
       dataIndex: "name",
       key: "name",
-      sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
       title: "SKU",
       dataIndex: "sku",
       key: "sku",
-      sorter: (a, b) => a.sku.localeCompare(b.sku),
     },
     {
       title: "Price",
       dataIndex: "price",
       key: "price",
-      sorter: (a, b) => a.price - b.price,
     },
     {
       title: "Cost",
       dataIndex: "cost",
       key: "cost",
-      sorter: (a, b) => a.cost - b.cost,
     },
     {
       title: "Category",
       dataIndex: ["category", "name"],
       key: "category",
-      sorter: (a, b) => a.category.name.localeCompare(b.category.name),
     },
     {
       title: "Image Count",
       dataIndex: "imageCount",
       key: "imageCount",
-      sorter: (a, b) => a.imageCount - b.imageCount,
     },
     {
       title: "Actions",
@@ -203,7 +199,7 @@ function AllProducts() {
         <Pagination
           current={pageNumber}
           pageSize={pageSize}
-          total={products.length}
+          total={itemCount}
           onChange={handleTableChange}
         />
       </div>

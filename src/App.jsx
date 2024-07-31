@@ -17,6 +17,7 @@ import AllCategories from "./pages/Categories/AllCategories/AllCategories";
 import CreateCategory from "./pages/Categories/CreateCategory/CreateCategory";
 import EditCategory from "./pages/Categories/EditCategory/EditCategory";
 import Sidebar from "./components/layout/Sidebar";
+import AllTransactions from "./pages/Transactions/AllTransactions/AllTransactions";
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -132,6 +133,14 @@ function App() {
             element={
               <ValidateRoute>
                 <EditCategory />
+              </ValidateRoute>
+            }
+          />
+          <Route
+            path="/transactions"
+            element={
+              <ValidateRoute>
+                <AllTransactions />
               </ValidateRoute>
             }
           />
