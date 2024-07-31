@@ -21,9 +21,20 @@ function CreateProductForm() {
   useEffect(() => {
     const fetchCategories = async () => {
       const url = "https://localhost:7200/api/category/get";
+      const payload = {
+        pageNumber: 1,
+        pageSize: 200,
+        search: "",
+      };
 
       try {
-        const response = await fetch(url);
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        });
         const data = await response.json();
         if (response.ok) {
           setCategories(data.result);
@@ -126,7 +137,14 @@ function CreateProductForm() {
           name="CategoryID"
           rules={[{ required: true, message: "Please select a Category!" }]}
         >
-          <Select placeholder="Select a category">
+          <Select
+            showSearch
+            placeholder="Select a category"
+            optionFilterProp="children"
+            filterOption={(input, option) =>
+              option.children.toLowerCase().includes(input.toLowerCase())
+            }
+          >
             {categories.map((category) => (
               <Option key={category.categoryID} value={category.categoryID}>
                 {category.name}

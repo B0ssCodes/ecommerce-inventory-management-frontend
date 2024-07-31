@@ -1,17 +1,26 @@
 import React, { useEffect, useState } from "react";
-import { Typography, Table, Button, Space, Input } from "antd";
+import {
+  Typography,
+  Table,
+  Button,
+  Space,
+  Input,
+  Pagination,
+  Select,
+} from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { EditOutlined, SearchOutlined } from "@ant-design/icons";
 import "./AllProducts.css"; // Import the CSS file
 import DeleteProduct from "../../../components/modals/DeleteProduct";
 
 const { Title } = Typography;
-
+const { Option } = Select;
 function AllProducts() {
   const [searchText, setSearchText] = useState("");
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [products, setProducts] = useState([]);
+  const [itemCount, setItemCount] = useState(1);
   const navigate = useNavigate();
 
   const fetchProducts = async (payload) => {
@@ -29,6 +38,7 @@ function AllProducts() {
       const data = await response.json();
       if (response.ok) {
         setProducts(data.result);
+        setItemCount(data.itemCount);
       } else {
         console.error("Failed to fetch products:", data);
         alert(data.message || "Failed to fetch products");
@@ -68,37 +78,31 @@ function AllProducts() {
       title: "Name",
       dataIndex: "name",
       key: "name",
-      sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
       title: "SKU",
       dataIndex: "sku",
       key: "sku",
-      sorter: (a, b) => a.sku.localeCompare(b.sku),
     },
     {
       title: "Price",
       dataIndex: "price",
       key: "price",
-      sorter: (a, b) => a.price - b.price,
     },
     {
       title: "Cost",
       dataIndex: "cost",
       key: "cost",
-      sorter: (a, b) => a.cost - b.cost,
     },
     {
       title: "Category",
       dataIndex: ["category", "name"],
       key: "category",
-      sorter: (a, b) => a.category.name.localeCompare(b.category.name),
     },
     {
       title: "Image Count",
       dataIndex: "imageCount",
       key: "imageCount",
-      sorter: (a, b) => a.imageCount - b.imageCount,
     },
     {
       title: "Actions",
@@ -116,50 +120,89 @@ function AllProducts() {
     },
   ];
 
-  const handleTableChange = (pagination) => {
-    setPageNumber(pagination.current);
-    setPageSize(pagination.pageSize);
+  const handleTableChange = (page, pageSize) => {
+    setPageNumber(page);
+    setPageSize(pageSize);
   };
 
   return (
     <>
-      <div style={{ display: "flex", justifyContent: "flex-end" }}>
-        {" "}
-        <Input
-          type="text"
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
-          placeholder="Search products..."
-          style={{ marginRight: "8px", maxWidth: "40%" }}
-        />
-        <Button
-          type="primary"
-          icon={<SearchOutlined />}
-          onClick={handleSearchClick}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Title level={2} style={{ margin: 0, lineHeight: "32px" }}>
+          Products
+        </Title>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+          }}
         >
-          Search
-        </Button>
+          <Input
+            type="text"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            placeholder="Search products..."
+            style={{ marginRight: "8px", maxWidth: "40%" }}
+          />
+          <Button
+            type="primary"
+            icon={<SearchOutlined />}
+            onClick={handleSearchClick}
+            style={{ marginRight: "8px" }}
+          >
+            Search
+          </Button>
+          <Select
+            defaultValue={10}
+            style={{ width: 120 }}
+            onChange={(value) => handleTableChange(1, value)}
+          >
+            <Option value={5}>5</Option>
+            <Option value={10}>10</Option>
+            <Option value={25}>25</Option>
+          </Select>
+        </div>
       </div>
 
-      <Title style={{ textAlign: "center" }}>All Products</Title>
-      <Table
-        columns={columns}
-        dataSource={products}
-        rowKey="productID"
-        bordered
-        className="custom-table"
-        pagination={{
-          current: pageNumber,
-          pageSize: pageSize,
-          total: products.length,
+      <div style={{ maxHeight: "70vh", overflowY: "auto" }}>
+        <Table
+          columns={columns}
+          dataSource={products}
+          rowKey="productID"
+          bordered
+          className="custom-table"
+          pagination={false}
+          onChange={handleTableChange}
+        />
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginTop: 16,
         }}
-        onChange={handleTableChange}
-      />
-      <Button type="primary" style={{ marginTop: 16 }}>
-        <Link to="/create-product" style={{ color: "white" }}>
-          Create Product
-        </Link>
-      </Button>
+      >
+        <Button type="primary">
+          <Link to="/create-product" style={{ color: "white" }}>
+            Create Product
+          </Link>
+        </Button>
+        <Pagination
+          current={pageNumber}
+          pageSize={pageSize}
+          total={itemCount}
+          onChange={handleTableChange}
+        />
+      </div>
     </>
   );
 }

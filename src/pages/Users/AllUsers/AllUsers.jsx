@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { Typography, Table, Button, Space, Input } from "antd";
+import { Typography, Table, Button, Input, Pagination, Select } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { EditOutlined, SearchOutlined } from "@ant-design/icons";
 import "./AllUsers.css"; // Import the CSS file
 import DeleteUser from "../../../components/modals/DeleteUser";
 
 const { Title } = Typography;
+const { Option } = Select;
 
 function AllUsers() {
   const [searchText, setSearchText] = useState("");
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [users, setUsers] = useState([]);
+  const [itemCount, setItemCount] = useState(1);
   const navigate = useNavigate();
 
   const fetchUsers = async (payload) => {
@@ -29,6 +31,7 @@ function AllUsers() {
       const data = await response.json();
       if (response.ok) {
         setUsers(data.result);
+        setItemCount(data.itemCount);
       } else {
         console.error("Failed to fetch users:", data);
         alert(data.message || "Failed to fetch users");
@@ -68,25 +71,21 @@ function AllUsers() {
       title: "Email",
       dataIndex: "email",
       key: "email",
-      sorter: (a, b) => a.email.localeCompare(b.email),
     },
     {
       title: "First",
       dataIndex: "firstName",
       key: "firstName",
-      sorter: (a, b) => a.firstName.localeCompare(b.firstName),
     },
     {
       title: "Last",
       dataIndex: "lastName",
       key: "lastName",
-      sorter: (a, b) => a.lastName.localeCompare(b.lastName),
     },
     {
       title: "Role",
       dataIndex: "role",
       key: "role",
-      sorter: (a, b) => a.role.localeCompare(b.role),
     },
     {
       title: "Actions",
@@ -95,50 +94,88 @@ function AllUsers() {
     },
   ];
 
-  const handleTableChange = (pagination) => {
-    setPageNumber(pagination.current);
-    setPageSize(pagination.pageSize);
+  const handleTableChange = (page, pageSize) => {
+    setPageNumber(page);
+    setPageSize(pageSize);
   };
-
   return (
     <>
-      <div style={{ display: "flex", justifyContent: "flex-end" }}>
-        {" "}
-        <Input
-          type="text"
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
-          placeholder="Search users..."
-          style={{ marginRight: "8px", maxWidth: "40%" }}
-        />
-        <Button
-          type="primary"
-          icon={<SearchOutlined />}
-          onClick={handleSearchClick}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Title level={2} style={{ margin: 0, lineHeight: "32px" }}>
+          Users
+        </Title>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+          }}
         >
-          Search
-        </Button>
+          <Input
+            type="text"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            placeholder="Search users..."
+            style={{ marginRight: "8px", maxWidth: "40%" }}
+          />
+          <Button
+            type="primary"
+            icon={<SearchOutlined />}
+            onClick={handleSearchClick}
+            style={{ marginRight: "8px" }}
+          >
+            Search
+          </Button>
+          <Select
+            defaultValue={10}
+            style={{ width: 120 }}
+            onChange={(value) => handleTableChange(1, value)}
+          >
+            <Option value={5}>5</Option>
+            <Option value={10}>10</Option>
+            <Option value={25}>25</Option>
+          </Select>
+        </div>
       </div>
 
-      <Title style={{ textAlign: "center" }}>All users</Title>
-      <Table
-        columns={columns}
-        dataSource={users}
-        rowKey="userID"
-        bordered
-        className="custom-table"
-        pagination={{
-          current: pageNumber,
-          pageSize: pageSize,
-          total: users.length > 0 || 0,
+      <div style={{ maxHeight: "70vh", overflowY: "auto" }}>
+        <Table
+          columns={columns}
+          dataSource={users}
+          rowKey="userID"
+          bordered
+          className="custom-table"
+          pagination={false}
+          onChange={handleTableChange}
+        />
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginTop: 16,
         }}
-        onChange={handleTableChange}
-      />
-      <Button type="primary" style={{ marginTop: 16 }}>
-        <Link to="/create-user" style={{ color: "white" }}>
-          Create User
-        </Link>
-      </Button>
+      >
+        <Button type="primary">
+          <Link to="/create-user" style={{ color: "white" }}>
+            Create User
+          </Link>
+        </Button>
+        <Pagination
+          current={pageNumber}
+          pageSize={pageSize}
+          total={itemCount}
+          onChange={handleTableChange}
+        />
+      </div>
     </>
   );
 }

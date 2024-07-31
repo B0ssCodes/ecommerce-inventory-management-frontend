@@ -1,31 +1,30 @@
 import React, { useEffect, useState } from "react";
 import {
-  Pagination,
   Typography,
   Table,
   Button,
   Space,
   Input,
+  Pagination,
   Select,
 } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { EditOutlined, SearchOutlined } from "@ant-design/icons";
-import "./AllCategories.css"; // Import the CSS file
-import DeleteCategory from "../../../components/modals/DeleteCategory";
+import "./AllTransactions.css"; // Import the CSS file
+import DeleteProduct from "../../../components/modals/DeleteProduct";
 
 const { Title } = Typography;
 const { Option } = Select;
-
-function AllCategories() {
+function AllTransactions() {
   const [searchText, setSearchText] = useState("");
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [transactions, setTransactions] = useState([]);
   const [itemCount, setItemCount] = useState(1);
-  const [categories, setCategories] = useState([]);
   const navigate = useNavigate();
 
-  const fetchCategories = async (payload) => {
-    const url = "https://localhost:7200/api/category/get";
+  const fetchTransactions = async (payload) => {
+    const url = "https://localhost:7200/api/transaction/get";
 
     try {
       const response = await fetch(url, {
@@ -38,15 +37,15 @@ function AllCategories() {
 
       const data = await response.json();
       if (response.ok) {
-        setCategories(data.result);
+        setTransactions(data.result);
         setItemCount(data.itemCount);
       } else {
-        console.error("Failed to fetch Categories:", data);
-        alert(data.message || "Failed to fetch Categories");
+        console.error("Failed to fetch transactions:", data);
+        alert(data.message || "Failed to fetch transactions");
       }
     } catch (error) {
       console.error("An error occurred:", error);
-      alert("An error occurred while fetching Categories");
+      alert("An error occurred while fetching transactions");
     }
   };
 
@@ -57,7 +56,7 @@ function AllCategories() {
       search: searchText,
     };
 
-    fetchCategories(payload);
+    fetchTransactions(payload);
   }, [pageNumber, pageSize, searchText]);
 
   const handleSearchClick = () => {
@@ -67,37 +66,38 @@ function AllCategories() {
       search: searchText,
     };
 
-    fetchCategories(payload);
+    fetchTransactions(payload);
   };
 
-  const handleEdit = (categoryID) => {
-    navigate("/edit-category", { state: { categoryID } });
+  const handleEdit = (productID) => {
+    navigate("/edit-product", { state: { productID } });
   };
 
   const columns = [
     {
-      title: "Name",
-      dataIndex: "name",
-      key: "name",
+      title: "Amount",
+      dataIndex: "amount",
+      key: "amount",
     },
     {
-      title: "Description",
-      dataIndex: "description",
-      key: "description",
+      title: "Type",
+      dataIndex: "type",
+      key: "type",
     },
     {
-      title: "Actions",
-      key: "actions",
-      render: (text, record) => (
-        <Space size="middle">
-          <Button
-            type="primary"
-            icon={<EditOutlined />}
-            onClick={() => handleEdit(record.categoryID)}
-          ></Button>
-          <DeleteCategory categoryID={record.categoryID} />
-        </Space>
-      ),
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+    },
+    {
+      title: "Vendor",
+      dataIndex: ["vendor", "name"],
+      key: "vendor",
+    },
+    {
+      title: "Date",
+      dataIndex: "date",
+      key: "date",
     },
   ];
 
@@ -115,8 +115,8 @@ function AllCategories() {
           alignItems: "center",
         }}
       >
-        <Title level={2} style={{ marginBottom: "0.4em", lineHeight: "32px" }}>
-          Categories
+        <Title level={2} style={{ margin: 0, lineHeight: "32px" }}>
+          Transactions
         </Title>
         <div
           style={{
@@ -129,8 +129,8 @@ function AllCategories() {
             type="text"
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
-            placeholder="Search Categories..."
-            style={{ marginRight: "8px", maxWidth: "50%" }}
+            placeholder="Search Transactions..."
+            style={{ marginRight: "8px", maxWidth: "40%" }}
           />
           <Button
             type="primary"
@@ -155,11 +155,11 @@ function AllCategories() {
       <div style={{ maxHeight: "70vh", overflowY: "auto" }}>
         <Table
           columns={columns}
-          dataSource={categories}
-          rowKey="categoryID"
+          dataSource={transactions}
+          rowKey="productID"
           bordered
           className="custom-table"
-          pagination={false} // Disable built-in pagination
+          pagination={false}
           onChange={handleTableChange}
         />
       </div>
@@ -173,8 +173,8 @@ function AllCategories() {
         }}
       >
         <Button type="primary">
-          <Link to="/create-category" style={{ color: "white" }}>
-            Create Category
+          <Link to="/create-transaction" style={{ color: "white" }}>
+            Create Transaction
           </Link>
         </Button>
         <Pagination
@@ -188,4 +188,4 @@ function AllCategories() {
   );
 }
 
-export default AllCategories;
+export default AllTransactions;
