@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, Modal } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 
 function DeleteCategory({ categoryID }) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const handleDelete = async () => {
     console.log("Deleting category with ID:", categoryID);
     try {
@@ -29,24 +31,16 @@ function DeleteCategory({ categoryID }) {
   };
 
   const showDeleteConfirm = () => {
-    Modal.confirm({
-      title: "Are you sure you want to delete this category?",
-      icon: <DeleteOutlined />,
-      content: (
-        <div>
-          <p style={{ color: "red", fontSize: "18px", fontWeight: "bold" }}>
-            Deleting this category will remove ALL products related to it
-          </p>
-          <p>This action cannot be undone.</p>
-        </div>
-      ),
-      okText: "Yes",
-      okType: "danger",
-      cancelText: "No",
-      onOk() {
-        handleDelete();
-      },
-    });
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    handleDelete();
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
   };
 
   return (
@@ -57,6 +51,22 @@ function DeleteCategory({ categoryID }) {
         icon={<DeleteOutlined />}
         onClick={showDeleteConfirm}
       ></Button>
+      <Modal
+        title="Are you sure you want to delete this category?"
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        okText="Yes"
+        okType="danger"
+        cancelText="No"
+      >
+        <div>
+          <p style={{ color: "red", fontSize: "18px", fontWeight: "bold" }}>
+            Deleting this category will remove ALL products related to it
+          </p>
+          <p>This action cannot be undone.</p>
+        </div>
+      </Modal>
     </div>
   );
 }

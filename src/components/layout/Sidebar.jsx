@@ -6,6 +6,10 @@ import {
   ShopOutlined,
   AppstoreOutlined,
   TagsOutlined,
+  TransactionOutlined,
+  ShoppingCartOutlined,
+  TeamOutlined,
+  SolutionOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import Logout from "../modals/Logout";
@@ -17,24 +21,50 @@ const items = [
     label: <Link to="/">Home</Link>,
   },
   {
-    key: "2",
+    key: "sub1",
     icon: <AppstoreOutlined />,
-    label: <Link to="/products">Products</Link>,
+    label: "Inventory",
+    children: [
+      {
+        key: "2",
+        icon: <TransactionOutlined />,
+        label: <Link to="/transactions">Transactions</Link>,
+      },
+    ],
   },
   {
-    key: "3",
-    icon: <TagsOutlined />,
-    label: <Link to="/categories">Categories</Link>,
-  },
-  {
-    key: "4",
-    icon: <UserOutlined />,
-    label: <Link to="/users">Users</Link>,
-  },
-  {
-    key: "5",
+    key: "sub2",
     icon: <ShopOutlined />,
-    label: <Link to="/vendors">Vendors</Link>,
+    label: "Products",
+    children: [
+      {
+        key: "3",
+        icon: <ShoppingCartOutlined />,
+        label: <Link to="/products">Products</Link>,
+      },
+      {
+        key: "4",
+        icon: <TagsOutlined />,
+        label: <Link to="/categories">Categories</Link>,
+      },
+    ],
+  },
+  {
+    key: "sub3",
+    icon: <UserOutlined />,
+    label: "Management",
+    children: [
+      {
+        key: "5",
+        icon: <TeamOutlined />,
+        label: <Link to="/users">Users</Link>,
+      },
+      {
+        key: "6",
+        icon: <SolutionOutlined />,
+        label: <Link to="/vendors">Vendors</Link>,
+      },
+    ],
   },
 ];
 

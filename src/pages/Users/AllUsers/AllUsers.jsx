@@ -107,7 +107,7 @@ function AllUsers() {
           alignItems: "center",
         }}
       >
-        <Title level={2} style={{ margin: 0, lineHeight: "32px" }}>
+        <Title level={2} style={{ marginBottom: "0.3em", lineHeight: "32px" }}>
           Users
         </Title>
         <div

@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, Modal } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 
 function DeleteUser({ userID }) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const handleDelete = async () => {
     console.log("Deleting user with ID:", userID);
     try {
@@ -29,17 +31,16 @@ function DeleteUser({ userID }) {
   };
 
   const showDeleteConfirm = () => {
-    Modal.confirm({
-      title: "Are you sure you want to delete this user?",
-      icon: <DeleteOutlined />,
-      content: "This action cannot be undone.",
-      okText: "Yes",
-      okType: "danger",
-      cancelText: "No",
-      onOk() {
-        handleDelete();
-      },
-    });
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    handleDelete();
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
   };
 
   return (
@@ -50,6 +51,19 @@ function DeleteUser({ userID }) {
         icon={<DeleteOutlined />}
         onClick={showDeleteConfirm}
       ></Button>
+      <Modal
+        title="Are you sure you want to delete this user?"
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        okText="Yes"
+        okType="danger"
+        cancelText="No"
+      >
+        <div>
+          <p>This action cannot be undone.</p>
+        </div>
+      </Modal>
     </div>
   );
 }
