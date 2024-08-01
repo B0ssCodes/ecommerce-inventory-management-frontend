@@ -74,6 +74,11 @@ function AllCategories() {
     navigate("/edit-category", { state: { categoryID } });
   };
 
+  const handleSearch = (e) => {
+    setPageNumber(1);
+    setSearchText(e.target.value);
+  };
+
   const columns = [
     {
       title: "Name",
@@ -115,7 +120,7 @@ function AllCategories() {
           alignItems: "center",
         }}
       >
-        <Title level={2} style={{ marginBottom: "0.4em", lineHeight: "32px" }}>
+        <Title level={2} style={{ marginBottom: "0.3em", lineHeight: "32px" }}>
           Categories
         </Title>
         <div
@@ -127,8 +132,7 @@ function AllCategories() {
         >
           <Input
             type="text"
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
+            onChange={handleSearch}
             placeholder="Search Categories..."
             style={{ marginRight: "8px", maxWidth: "50%" }}
           />

@@ -18,6 +18,9 @@ import CreateCategory from "./pages/Categories/CreateCategory/CreateCategory";
 import EditCategory from "./pages/Categories/EditCategory/EditCategory";
 import Sidebar from "./components/layout/Sidebar";
 import AllTransactions from "./pages/Transactions/AllTransactions/AllTransactions";
+import CreateTransaction from "./pages/Transactions/CreateTransaction/CreateTransaction";
+import SelectVendor from "./pages/Vendors/SelectVendor/SelectVendor";
+import SubmitTransaction from "./pages/Transactions/SubmitTransaction/SubmitTransaction";
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -141,6 +144,30 @@ function App() {
             element={
               <ValidateRoute>
                 <AllTransactions />
+              </ValidateRoute>
+            }
+          />
+          <Route
+            path="/create-transaction"
+            element={
+              <ValidateRoute>
+                <CreateTransaction />
+              </ValidateRoute>
+            }
+          />
+          <Route
+            path="/select-vendor"
+            element={
+              <ValidateRoute>
+                <SelectVendor />
+              </ValidateRoute>
+            }
+          />
+          <Route
+            path="/submit-transaction"
+            element={
+              <ValidateRoute>
+                <SubmitTransaction />
               </ValidateRoute>
             }
           />

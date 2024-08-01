@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   Typography,
   Table,
@@ -7,11 +7,14 @@ import {
   Input,
   Pagination,
   Select,
+  Spin,
 } from "antd";
 import { Link, useNavigate } from "react-router-dom";
-import { EditOutlined, SearchOutlined } from "@ant-design/icons";
-import "./AllTransactions.css"; // Import the CSS file
-import DeleteProduct from "../../../components/modals/DeleteProduct";
+import { SearchOutlined } from "@ant-design/icons";
+import { debounce } from "lodash";
+import moment from "moment";
+import "./AllTransactions.css";
+import CreateTransactionButton from "../../../components/modals/CreateTransactionButton";
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -21,7 +24,12 @@ function AllTransactions() {
   const [pageSize, setPageSize] = useState(10);
   const [transactions, setTransactions] = useState([]);
   const [itemCount, setItemCount] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+
+  const capitalizeFirstLetter = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
 
   const fetchTransactions = async (payload) => {
     const url = "https://localhost:7200/api/transaction/get";
@@ -69,10 +77,6 @@ function AllTransactions() {
     fetchTransactions(payload);
   };
 
-  const handleEdit = (productID) => {
-    navigate("/edit-product", { state: { productID } });
-  };
-
   const columns = [
     {
       title: "Amount",
@@ -83,11 +87,13 @@ function AllTransactions() {
       title: "Type",
       dataIndex: "type",
       key: "type",
+      render: (text) => capitalizeFirstLetter(text),
     },
     {
       title: "Status",
       dataIndex: "status",
       key: "status",
+      render: (text) => capitalizeFirstLetter(text),
     },
     {
       title: "Vendor",
@@ -98,12 +104,43 @@ function AllTransactions() {
       title: "Date",
       dataIndex: "date",
       key: "date",
+      render: (date) => moment(date).format("DD/MM/YYYY HH:mm:ss"),
+    },
+    {
+      title: "Actions",
+      key: "actions",
+      render: (text, record) =>
+        record.status === "created" ? (
+          <Button
+            type="primary"
+            onClick={() =>
+              navigate("/submit-transaction", {
+                state: { transactionID: record.transactionID },
+              })
+            }
+          >
+            Submit
+          </Button>
+        ) : null,
     },
   ];
 
   const handleTableChange = (page, pageSize) => {
     setPageNumber(page);
     setPageSize(pageSize);
+  };
+
+  const debouncedSearch = useCallback(
+    debounce((value) => {
+      setSearchText(value);
+      setIsLoading(false);
+    }, 1500),
+    []
+  );
+
+  const handleSearchChange = (e) => {
+    setIsLoading(true);
+    debouncedSearch(e.target.value);
   };
 
   return (
@@ -115,7 +152,7 @@ function AllTransactions() {
           alignItems: "center",
         }}
       >
-        <Title level={2} style={{ margin: 0, lineHeight: "32px" }}>
+        <Title level={2} style={{ marginBottom: "0.4em", lineHeight: "32px" }}>
           Transactions
         </Title>
         <div
@@ -125,21 +162,16 @@ function AllTransactions() {
             alignItems: "center",
           }}
         >
-          <Input
-            type="text"
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-            placeholder="Search Transactions..."
-            style={{ marginRight: "8px", maxWidth: "40%" }}
-          />
-          <Button
-            type="primary"
-            icon={<SearchOutlined />}
-            onClick={handleSearchClick}
-            style={{ marginRight: "8px" }}
-          >
-            Search
-          </Button>
+          <div>
+            <Input
+              type="text"
+              onChange={handleSearchChange}
+              placeholder="Search Transactions..."
+              style={{ marginRight: "8px", maxWidth: "70%" }}
+            />
+            {isLoading ? <Spin size="small" /> : null}
+          </div>
+
           <Select
             defaultValue={10}
             style={{ width: 120 }}
@@ -156,7 +188,7 @@ function AllTransactions() {
         <Table
           columns={columns}
           dataSource={transactions}
-          rowKey="productID"
+          rowKey="transactionID"
           bordered
           className="custom-table"
           pagination={false}
@@ -172,11 +204,7 @@ function AllTransactions() {
           marginTop: 16,
         }}
       >
-        <Button type="primary">
-          <Link to="/create-transaction" style={{ color: "white" }}>
-            Create Transaction
-          </Link>
-        </Button>
+        <CreateTransactionButton />
         <Pagination
           current={pageNumber}
           pageSize={pageSize}

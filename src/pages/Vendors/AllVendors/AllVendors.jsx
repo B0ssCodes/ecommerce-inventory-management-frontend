@@ -115,6 +115,11 @@ function AllVendors() {
     setPageNumber(page);
     setPageSize(pageSize);
   };
+
+  const handleSearch = (e) => {
+    setPageNumber(1);
+    setSearchText(e.target.value);
+  };
   return (
     <>
       <div
@@ -124,7 +129,7 @@ function AllVendors() {
           alignItems: "center",
         }}
       >
-        <Title level={2} style={{ margin: 0, lineHeight: "32px" }}>
+        <Title level={2} style={{ marginBottom: "0.3em", lineHeight: "32px" }}>
           Vendors
         </Title>
         <div
@@ -137,7 +142,7 @@ function AllVendors() {
           <Input
             type="text"
             value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
+            onChange={handleSearch}
             placeholder="Search vendors..."
             style={{ marginRight: "8px", maxWidth: "40%" }}
           />
