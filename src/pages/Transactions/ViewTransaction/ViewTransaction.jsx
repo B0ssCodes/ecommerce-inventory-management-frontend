@@ -17,8 +17,13 @@ function ViewTransaction() {
   useEffect(() => {
     const fetchTransactionDetails = async () => {
       const url = `https://localhost:7200/api/transaction/get/${transactionID}`;
+      const token = localStorage.getItem("token");
       try {
-        const response = await fetch(url);
+        const response = await fetch(url, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         const data = await response.json();
         if (response.ok) {
           setTransactionDetails(data.result);

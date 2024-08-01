@@ -19,10 +19,12 @@ function SelectProducts({
   useEffect(() => {
     const fetchData = async (payload) => {
       const url = "https://localhost:7200/api/product/get";
+      const token = localStorage.getItem("token");
       const response = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(payload),
       });

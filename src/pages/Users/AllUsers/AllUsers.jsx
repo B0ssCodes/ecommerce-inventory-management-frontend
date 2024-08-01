@@ -18,12 +18,13 @@ function AllUsers() {
 
   const fetchUsers = async (payload) => {
     const url = "https://localhost:7200/api/user/get";
-
+    const token = localStorage.getItem("token");
     try {
       const response = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(payload),
       });
@@ -60,10 +61,6 @@ function AllUsers() {
     };
 
     fetchUsers(payload);
-  };
-
-  const handleEdit = (userID) => {
-    navigate("/edit-user", { state: { userID } });
   };
 
   const columns = [

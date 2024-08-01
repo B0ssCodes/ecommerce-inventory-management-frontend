@@ -41,6 +41,7 @@ function SubmitTransaction() {
       return;
     }
     const url = "https://localhost:7200/api/transaction/submit";
+    const token = localStorage.getItem("token");
     const payload = {
       transactionID: transactionID,
       amount: itemsToSubmit.reduce((acc, item) => acc + item.price, 0),
@@ -51,6 +52,7 @@ function SubmitTransaction() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(payload),
     });

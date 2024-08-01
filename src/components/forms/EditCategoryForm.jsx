@@ -10,9 +10,13 @@ const EditCategoryForm = () => {
   useEffect(() => {
     const fetchCategoryDetails = async () => {
       try {
-        const response = await fetch(
-          `https://localhost:7200/api/category/get/${categoryID}`
-        );
+        const url = `https://localhost:7200/api/category/get/${categoryID}`;
+        const token = localStorage.getItem("token");
+        const response = await fetch(url, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         const data = await response.json();
 
         form.setFieldsValue(data.result);
@@ -32,16 +36,16 @@ const EditCategoryForm = () => {
       description: values.description,
     };
     try {
-      const response = await fetch(
-        `https://localhost:7200/api/category/update/${categoryID}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(payload),
-        }
-      );
+      const url = `https://localhost:7200/api/category/update/${categoryID}`;
+      const token = localStorage.getItem("token");
+      const response = await fetch(url, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      });
 
       if (response.ok) {
         message.success("category updated successfully");

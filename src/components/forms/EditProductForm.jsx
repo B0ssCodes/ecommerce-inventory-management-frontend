@@ -16,8 +16,14 @@ const EditProductForm = () => {
   useEffect(() => {
     const fetchProductDetails = async () => {
       try {
+        const token = localStorage.getItem("token");
         const response = await fetch(
-          `${backendUrl}/api/product/get/${productID}`
+          `${backendUrl}/api/product/get/${productID}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         const data = await response.json();
 

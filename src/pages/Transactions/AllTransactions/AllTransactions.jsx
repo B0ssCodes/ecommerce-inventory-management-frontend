@@ -33,12 +33,13 @@ function AllTransactions() {
 
   const fetchTransactions = async (payload) => {
     const url = "https://localhost:7200/api/transaction/get";
-
+    const token = localStorage.getItem("token");
     try {
       const response = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(payload),
       });

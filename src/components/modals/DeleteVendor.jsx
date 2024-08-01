@@ -8,12 +8,14 @@ function DeleteVendor({ vendorID }) {
   const handleDelete = async () => {
     console.log("Deleting vendor with ID:", vendorID);
     try {
+      const token = localStorage.getItem("token");
       const response = await fetch(
         `https://localhost:7200/api/vendor/delete/${vendorID}`,
         {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
         }
       );

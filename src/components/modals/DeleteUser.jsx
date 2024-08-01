@@ -8,12 +8,14 @@ function DeleteUser({ userID }) {
   const handleDelete = async () => {
     console.log("Deleting user with ID:", userID);
     try {
+      const token = localStorage.getItem("token");
       const response = await fetch(
         `https://localhost:7200/api/user/delete/${userID}`,
         {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
         }
       );

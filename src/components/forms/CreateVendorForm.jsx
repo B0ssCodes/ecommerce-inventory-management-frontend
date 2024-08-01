@@ -7,7 +7,7 @@ function CreateVendorForm() {
   const navigate = useNavigate();
   const handleFormSubmit = async (values) => {
     const url = "https://localhost:7200/api/vendor/create";
-
+    const token = localStorage.getItem("token");
     const payload = {
       name: values.name,
       email: values.email,
@@ -22,6 +22,7 @@ function CreateVendorForm() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(payload),
       });

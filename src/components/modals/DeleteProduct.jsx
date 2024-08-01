@@ -8,12 +8,14 @@ function DeleteProduct({ productID }) {
   const handleDelete = async () => {
     console.log("Deleting product with ID:", productID);
     try {
+      const token = localStorage.getItem("token");
       const response = await fetch(
         `https://localhost:7200/api/product/delete/${productID}`,
         {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
         }
       );

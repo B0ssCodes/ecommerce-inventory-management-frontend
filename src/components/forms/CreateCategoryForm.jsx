@@ -7,7 +7,7 @@ function CreateCategoryForm() {
   const navigate = useNavigate();
   const handleFormSubmit = async (values) => {
     const url = "https://localhost:7200/api/category/create";
-
+    const token = localStorage.getItem("token");
     const payload = {
       name: values.name,
       description: values.description,
@@ -17,6 +17,7 @@ function CreateCategoryForm() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(payload),
       });
