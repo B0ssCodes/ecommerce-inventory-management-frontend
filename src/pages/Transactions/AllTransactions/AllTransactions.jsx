@@ -9,8 +9,8 @@ import {
   Select,
   Spin,
 } from "antd";
-import { Link, useNavigate } from "react-router-dom";
-import { SearchOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
+import { EyeOutlined } from "@ant-design/icons";
 import { debounce } from "lodash";
 import moment from "moment";
 import "./AllTransactions.css";
@@ -67,16 +67,6 @@ function AllTransactions() {
     fetchTransactions(payload);
   }, [pageNumber, pageSize, searchText]);
 
-  const handleSearchClick = () => {
-    const payload = {
-      pageNumber: pageNumber,
-      pagesize: pageSize,
-      search: searchText,
-    };
-
-    fetchTransactions(payload);
-  };
-
   const columns = [
     {
       title: "Amount",
@@ -121,7 +111,18 @@ function AllTransactions() {
           >
             Submit
           </Button>
-        ) : null,
+        ) : (
+          <Button
+            type="primary"
+            onClick={() =>
+              navigate("/view-transaction", {
+                state: { transactionID: record.transactionID },
+              })
+            }
+          >
+            <EyeOutlined />
+          </Button>
+        ),
     },
   ];
 
