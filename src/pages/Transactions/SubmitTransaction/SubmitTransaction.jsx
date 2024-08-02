@@ -56,12 +56,14 @@ function SubmitTransaction() {
       },
       body: JSON.stringify(payload),
     });
+
     const data = await response.json();
+    const error = data.message;
     if (response.ok) {
       message.success("Transaction submitted successfully");
       navigate("/transactions");
     } else {
-      alert("Failed to submit transaction:", data.message);
+      alert("Failed to submit transaction:", error);
     }
   };
 

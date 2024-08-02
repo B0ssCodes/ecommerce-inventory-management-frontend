@@ -25,6 +25,7 @@ import ViewTransaction from "./pages/Transactions/ViewTransaction/ViewTransactio
 import AllUserRoles from "./pages/UserRoles/AllUserRoles/AllUserRoles";
 import CreateUserRole from "./pages/UserRoles/CreateUserRole/CreateUserRole";
 import EditUserRole from "./pages/UserRoles/EditUserRole/EditUserRole";
+import AllInventories from "./pages/Inventory/AllInventories/AllInventories";
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -44,6 +45,12 @@ function App() {
   }, []);
   return (
     <Router>
+      <Routes>
+        <Route
+          path="/login"
+          element={<Login setIsLoggedIn={setIsLoggedIn} />}
+        />
+      </Routes>
       <Sidebar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}>
         <Routes>
           <Route
@@ -208,10 +215,21 @@ function App() {
             }
           />
           <Route
-            path="/login"
-            element={<Login setIsLoggedIn={setIsLoggedIn} />}
+            path="/inventories"
+            element={
+              <ValidateRoute>
+                <AllInventories />
+              </ValidateRoute>
+            }
           />
-          <Route path="/register" element={<Register />} />
+          <Route
+            path="/add-user"
+            element={
+              <ValidateRoute>
+                <Register />
+              </ValidateRoute>
+            }
+          />
         </Routes>
       </Sidebar>
     </Router>

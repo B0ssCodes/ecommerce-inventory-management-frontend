@@ -11,6 +11,7 @@ import {
   ShoppingCartOutlined,
   TeamOutlined,
   SolutionOutlined,
+  ProductOutlined,
 } from "@ant-design/icons";
 import { Link, useLocation } from "react-router-dom";
 import Logout from "../modals/Logout";
@@ -26,6 +27,11 @@ const items = [
     icon: <AppstoreOutlined />,
     label: "Inventory",
     children: [
+      {
+        key: "/inventories",
+        icon: <ProductOutlined />,
+        label: <Link to="/inventories">Inventory</Link>,
+      },
       {
         key: "/transactions",
         icon: <TransactionOutlined />,

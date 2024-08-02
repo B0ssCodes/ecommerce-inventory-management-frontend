@@ -41,13 +41,27 @@ const EditProductForm = () => {
     };
 
     const fetchCategories = async () => {
+      const url = "https://localhost:7200/api/category/get";
+      const token = localStorage.getItem("token");
+      const payload = {
+        pageNumber: 1,
+        pageSize: 200,
+        search: "",
+      };
+
       try {
-        const response = await fetch(`${backendUrl}/api/category/get`);
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(payload),
+        });
         const data = await response.json();
         if (response.ok) {
           setCategories(data.result);
         } else {
-          alert(data.message || "Failed to fetch categories");
           console.error("Failed to fetch categories:", data);
         }
       } catch (error) {

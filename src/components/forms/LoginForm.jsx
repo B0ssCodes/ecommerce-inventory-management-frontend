@@ -77,9 +77,6 @@ function LoginForm({ setIsLoggedIn }) {
             Login
           </Button>
         </Form.Item>
-        <Button>
-          <Link to="/register">Register</Link>
-        </Button>
       </Form>
     </div>
   );
