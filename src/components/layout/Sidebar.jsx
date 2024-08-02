@@ -1,8 +1,9 @@
-import React from "react";
-import { Menu, Card, Button } from "antd";
+import React, { useState, useEffect } from "react";
+import { Menu, Card } from "antd";
 import {
   HomeOutlined,
   UserOutlined,
+  UsergroupAddOutlined,
   ShopOutlined,
   AppstoreOutlined,
   TagsOutlined,
@@ -11,12 +12,12 @@ import {
   TeamOutlined,
   SolutionOutlined,
 } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Logout from "../modals/Logout";
 
 const items = [
   {
-    key: "1",
+    key: "/",
     icon: <HomeOutlined />,
     label: <Link to="/">Home</Link>,
   },
@@ -26,7 +27,7 @@ const items = [
     label: "Inventory",
     children: [
       {
-        key: "2",
+        key: "/transactions",
         icon: <TransactionOutlined />,
         label: <Link to="/transactions">Transactions</Link>,
       },
@@ -38,12 +39,12 @@ const items = [
     label: "Products",
     children: [
       {
-        key: "3",
+        key: "/products",
         icon: <ShoppingCartOutlined />,
         label: <Link to="/products">Products</Link>,
       },
       {
-        key: "4",
+        key: "/categories",
         icon: <TagsOutlined />,
         label: <Link to="/categories">Categories</Link>,
       },
@@ -55,12 +56,17 @@ const items = [
     label: "Management",
     children: [
       {
-        key: "5",
+        key: "/users",
         icon: <TeamOutlined />,
         label: <Link to="/users">Users</Link>,
       },
       {
-        key: "6",
+        key: "/user-roles",
+        icon: <UsergroupAddOutlined />,
+        label: <Link to="/user-roles">User Roles</Link>,
+      },
+      {
+        key: "/vendors",
         icon: <SolutionOutlined />,
         label: <Link to="/vendors">Vendors</Link>,
       },
@@ -69,6 +75,20 @@ const items = [
 ];
 
 const Sidebar = ({ children, isLoggedIn, setIsLoggedIn }) => {
+  const location = useLocation();
+  const [openKeys, setOpenKeys] = useState([]);
+
+  // Set open keys based on the current location to open the category (copilot)
+  useEffect(() => {
+    const path = location.pathname;
+    const parentKey = items.find((item) =>
+      item.children?.some((child) => child.key === path)
+    )?.key;
+    if (parentKey) {
+      setOpenKeys([parentKey]);
+    }
+  }, [location.pathname]);
+
   return (
     <div style={{ display: "flex", height: "90vh", marginTop: "1em" }}>
       <div
@@ -83,7 +103,9 @@ const Sidebar = ({ children, isLoggedIn, setIsLoggedIn }) => {
           <>
             <Menu
               mode="inline"
-              defaultSelectedKeys={["1"]}
+              selectedKeys={[location.pathname]}
+              openKeys={openKeys}
+              onOpenChange={(keys) => setOpenKeys(keys)}
               style={{ flex: 1 }}
               items={items}
             />

@@ -22,6 +22,9 @@ import CreateTransaction from "./pages/Transactions/CreateTransaction/CreateTran
 import SelectVendor from "./pages/Vendors/SelectVendor/SelectVendor";
 import SubmitTransaction from "./pages/Transactions/SubmitTransaction/SubmitTransaction";
 import ViewTransaction from "./pages/Transactions/ViewTransaction/ViewTransaction";
+import AllUserRoles from "./pages/UserRoles/AllUserRoles/AllUserRoles";
+import CreateUserRole from "./pages/UserRoles/CreateUserRole/CreateUserRole";
+import EditUserRole from "./pages/UserRoles/EditUserRole/EditUserRole";
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -89,6 +92,30 @@ function App() {
             element={
               <ValidateRoute>
                 <CreateUser />
+              </ValidateRoute>
+            }
+          />
+          <Route
+            path="/user-roles"
+            element={
+              <ValidateRoute>
+                <AllUserRoles />
+              </ValidateRoute>
+            }
+          />
+          <Route
+            path="/create-user-role"
+            element={
+              <ValidateRoute>
+                <CreateUserRole />
+              </ValidateRoute>
+            }
+          />
+          <Route
+            path="/edit-user-role"
+            element={
+              <ValidateRoute>
+                <EditUserRole />
               </ValidateRoute>
             }
           />
