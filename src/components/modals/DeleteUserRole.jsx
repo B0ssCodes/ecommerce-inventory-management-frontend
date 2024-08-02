@@ -2,15 +2,15 @@ import React, { useState } from "react";
 import { Button, Modal } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 
-function DeleteUser({ userID }) {
+function DeleteUserRole({ userRoleID }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleDelete = async () => {
-    console.log("Deleting user with ID:", userID);
+    console.log("Deleting UserRole with ID:", userRoleID);
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
-        `https://localhost:7200/api/user/delete/${userID}`,
+        `https://localhost:7200/api/userRole/delete/${userRoleID}`,
         {
           method: "DELETE",
           headers: {
@@ -23,12 +23,12 @@ function DeleteUser({ userID }) {
       if (response.ok) {
         window.location.reload();
       } else {
-        console.error("Failed to delete user");
-        alert(response.message || "Failed to delete user");
+        console.error("Failed to delete user role");
+        alert(response.message || "Failed to delete user role");
       }
     } catch (error) {
       console.error("An error occurred:", error);
-      alert("An error occurred while deleting the user");
+      alert("An error occurred while deleting the user role");
     }
   };
 
@@ -54,7 +54,7 @@ function DeleteUser({ userID }) {
         onClick={showDeleteConfirm}
       ></Button>
       <Modal
-        title="Are you sure you want to delete this user?"
+        title="Are you sure you want to delete this user role?"
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
@@ -63,6 +63,9 @@ function DeleteUser({ userID }) {
         cancelText="No"
       >
         <div>
+          <p style={{ color: "red", fontSize: "18px", fontWeight: "bold" }}>
+            Deleting this user role will remove all users related to it
+          </p>
           <p>This action cannot be undone.</p>
         </div>
       </Modal>
@@ -70,4 +73,4 @@ function DeleteUser({ userID }) {
   );
 }
 
-export default DeleteUser;
+export default DeleteUserRole;

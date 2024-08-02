@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 
 const applyThemeToBody = (isDarkMode) => {
-  document.body.style.backgroundColor = isDarkMode ? "#1e1e1e" : "#ffffff"; // Dark or light background color
-  document.body.style.color = isDarkMode ? "#ffffff" : "#000000"; // Light or dark text color
+  document.body.style.backgroundColor = isDarkMode ? "#1e1e1e" : "#ffffff";
+  document.body.style.color = isDarkMode ? "#ffffff" : "#000000";
 };
 
 const useDarkMode = () => {

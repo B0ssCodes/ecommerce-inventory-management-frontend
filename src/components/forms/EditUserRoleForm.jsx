@@ -2,15 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Form, Input, Button, message } from "antd";
 
-const EditCategoryForm = () => {
+const EditUserRoleForm = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { categoryID } = location.state || {};
+  const { userRoleID } = location.state || {};
   const [form] = Form.useForm();
   useEffect(() => {
-    const fetchCategoryDetails = async () => {
+    const fetchUserRoleDetails = async () => {
       try {
-        const url = `https://localhost:7200/api/category/get/${categoryID}`;
+        const url = `https://localhost:7200/api/userRole/get/${userRoleID}`;
         const token = localStorage.getItem("token");
         const response = await fetch(url, {
           headers: {
@@ -21,22 +21,21 @@ const EditCategoryForm = () => {
 
         form.setFieldsValue(data.result);
       } catch (error) {
-        console.error("Failed to fetch category details:", error);
+        console.error("Failed to fetch user role details:", error);
       }
     };
 
-    if (categoryID) {
-      fetchCategoryDetails();
+    if (userRoleID) {
+      fetchUserRoleDetails();
     }
-  }, [categoryID, form]);
+  }, [userRoleID, form]);
 
   const handleSubmit = async (values) => {
     const payload = {
-      name: values.name,
-      description: values.description,
+      roleName: values.role,
     };
     try {
-      const url = `https://localhost:7200/api/category/update/${categoryID}`;
+      const url = `https://localhost:7200/api/userRole/update/${userRoleID}`;
       const token = localStorage.getItem("token");
       const response = await fetch(url, {
         method: "PUT",
@@ -48,40 +47,33 @@ const EditCategoryForm = () => {
       });
 
       if (response.ok) {
-        message.success("category updated successfully");
-        navigate("/categories");
+        message.success("User role updated successfully");
+        navigate("/user-roles");
       } else {
-        message.error("Failed to update category");
+        message.error("Failed to update user role");
       }
     } catch (error) {
       console.error("An error occurred:", error);
-      message.error("An error occurred while updating the category");
+      message.error("An error occurred while updating the user role");
     }
   };
 
   return (
     <Form form={form} onFinish={handleSubmit} layout="vertical">
       <Form.Item
-        name="name"
-        label="Name"
-        rules={[{ required: true, message: "Please enter the Category Name" }]}
-      >
-        <Input />
-      </Form.Item>
-      <Form.Item
-        name="description"
-        label="Description"
-        rules={[{ required: true, message: "Please enter the Description" }]}
+        name="role"
+        label="Role Name"
+        rules={[{ required: true, message: "Please enter the Role Name" }]}
       >
         <Input />
       </Form.Item>
       <Form.Item>
         <Button type="primary" htmlType="submit">
-          Edit category
+          Edit Role
         </Button>
       </Form.Item>
     </Form>
   );
 };
 
-export default EditCategoryForm;
+export default EditUserRoleForm;

@@ -8,12 +8,14 @@ function DeleteCategory({ categoryID }) {
   const handleDelete = async () => {
     console.log("Deleting category with ID:", categoryID);
     try {
+      const token = localStorage.getItem("token");
       const response = await fetch(
         `https://localhost:7200/api/category/delete/${categoryID}`,
         {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
         }
       );

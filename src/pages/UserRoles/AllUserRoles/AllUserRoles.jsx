@@ -1,23 +1,31 @@
 import React, { useEffect, useState } from "react";
-import { Typography, Table, Button, Input, Pagination, Select } from "antd";
+import {
+  Pagination,
+  Typography,
+  Table,
+  Button,
+  Space,
+  Input,
+  Select,
+} from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { EditOutlined, SearchOutlined } from "@ant-design/icons";
-import "./AllUsers.css"; // Import the CSS file
-import DeleteUser from "../../../components/modals/DeleteUser";
+import "./AllUserRoles.css"; // Import the CSS file
+import DeleteUserRole from "../../../components/modals/DeleteUserRole";
 
 const { Title } = Typography;
 const { Option } = Select;
 
-function AllUsers() {
+function AllUserRoles() {
   const [searchText, setSearchText] = useState("");
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [users, setUsers] = useState([]);
   const [itemCount, setItemCount] = useState(1);
+  const [userRoles, setUserRoles] = useState([]);
   const navigate = useNavigate();
 
-  const fetchUsers = async (payload) => {
-    const url = "https://localhost:7200/api/user/get";
+  const fetchUserRoles = async (payload) => {
+    const url = "https://localhost:7200/api/userRole/get";
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(url, {
@@ -31,15 +39,15 @@ function AllUsers() {
 
       const data = await response.json();
       if (response.ok) {
-        setUsers(data.result);
+        setUserRoles(data.result);
         setItemCount(data.itemCount);
       } else {
-        console.error("Failed to fetch users:", data);
-        alert(data.message || "Failed to fetch users");
+        console.error("Failed to fetch user roles:", data);
+        alert(data.message || "Failed to fetch user roles");
       }
     } catch (error) {
       console.error("An error occurred:", error);
-      alert("An error occurred while fetching users");
+      alert("An error occurred while fetching user roles");
     }
   };
 
@@ -50,7 +58,7 @@ function AllUsers() {
       search: searchText,
     };
 
-    fetchUsers(payload);
+    fetchUserRoles(payload);
   }, [pageNumber, pageSize, searchText]);
 
   const handleSearchClick = () => {
@@ -60,25 +68,19 @@ function AllUsers() {
       search: searchText,
     };
 
-    fetchUsers(payload);
+    fetchUserRoles(payload);
+  };
+
+  const handleEdit = (userRoleID) => {
+    navigate("/edit-user-role", { state: { userRoleID } });
+  };
+
+  const handleSearch = (e) => {
+    setPageNumber(1);
+    setSearchText(e.target.value);
   };
 
   const columns = [
-    {
-      title: "Email",
-      dataIndex: "email",
-      key: "email",
-    },
-    {
-      title: "First",
-      dataIndex: "firstName",
-      key: "firstName",
-    },
-    {
-      title: "Last",
-      dataIndex: "lastName",
-      key: "lastName",
-    },
     {
       title: "Role",
       dataIndex: "role",
@@ -87,7 +89,16 @@ function AllUsers() {
     {
       title: "Actions",
       key: "actions",
-      render: (text, record) => <DeleteUser userID={record.userID} />,
+      render: (text, record) => (
+        <Space size="middle">
+          <Button
+            type="primary"
+            icon={<EditOutlined />}
+            onClick={() => handleEdit(record.userRoleID)}
+          ></Button>
+          <DeleteUserRole userRoleID={record.userRoleID} />
+        </Space>
+      ),
     },
   ];
 
@@ -95,6 +106,7 @@ function AllUsers() {
     setPageNumber(page);
     setPageSize(pageSize);
   };
+
   return (
     <>
       <div
@@ -105,7 +117,7 @@ function AllUsers() {
         }}
       >
         <Title level={2} style={{ marginBottom: "0.3em", lineHeight: "32px" }}>
-          Users
+          User Roles
         </Title>
         <div
           style={{
@@ -116,10 +128,9 @@ function AllUsers() {
         >
           <Input
             type="text"
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-            placeholder="Search users..."
-            style={{ marginRight: "8px", maxWidth: "40%" }}
+            onChange={handleSearch}
+            placeholder="Search user roles..."
+            style={{ marginRight: "8px", maxWidth: "50%" }}
           />
           <Button
             type="primary"
@@ -144,11 +155,11 @@ function AllUsers() {
       <div style={{ maxHeight: "70vh", overflowY: "auto" }}>
         <Table
           columns={columns}
-          dataSource={users}
-          rowKey="userID"
+          dataSource={userRoles}
+          rowKey="userRoleID"
           bordered
           className="custom-table"
-          pagination={false}
+          pagination={false} // Disable built-in pagination, using pagination outside the table
           onChange={handleTableChange}
         />
       </div>
@@ -162,8 +173,8 @@ function AllUsers() {
         }}
       >
         <Button type="primary">
-          <Link to="/create-user" style={{ color: "white" }}>
-            Create User
+          <Link to="/create-user-role" style={{ color: "white" }}>
+            Create User Role
           </Link>
         </Button>
         <Pagination
@@ -177,4 +188,4 @@ function AllUsers() {
   );
 }
 
-export default AllUsers;
+export default AllUserRoles;

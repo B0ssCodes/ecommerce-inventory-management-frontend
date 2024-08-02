@@ -21,6 +21,7 @@ function CreateProductForm() {
   useEffect(() => {
     const fetchCategories = async () => {
       const url = "https://localhost:7200/api/category/get";
+      const token = localStorage.getItem("token");
       const payload = {
         pageNumber: 1,
         pageSize: 200,
@@ -32,6 +33,7 @@ function CreateProductForm() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(payload),
         });
@@ -51,6 +53,7 @@ function CreateProductForm() {
 
   const handleFormSubmit = async (values) => {
     const url = "https://localhost:7200/api/product/create";
+    const token = localStorage.getItem("token");
     const formData = new FormData();
 
     formData.append("SKU", values.SKU);
@@ -67,6 +70,9 @@ function CreateProductForm() {
     try {
       const response = await fetch(url, {
         method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         body: formData,
       });
 

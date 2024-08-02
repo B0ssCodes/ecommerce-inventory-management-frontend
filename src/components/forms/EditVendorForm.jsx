@@ -10,8 +10,14 @@ const EditVendorForm = () => {
   useEffect(() => {
     const fetchVendorDetails = async () => {
       try {
+        const token = localStorage.getItem("token");
         const response = await fetch(
-          `https://localhost:7200/api/vendor/get/${vendorID}`
+          `https://localhost:7200/api/vendor/get/${vendorID}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         const data = await response.json();
 

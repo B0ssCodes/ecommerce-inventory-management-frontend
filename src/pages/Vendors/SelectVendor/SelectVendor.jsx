@@ -22,12 +22,13 @@ function SelectVendor() {
     const fetchVendors = async (payload) => {
       console.log(payload.search);
       const url = "https://localhost:7200/api/vendor/get";
-
+      const token = localStorage.getItem("token");
       try {
         const response = await fetch(url, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(payload),
         });
@@ -63,6 +64,7 @@ function SelectVendor() {
   const handleSelectVendor = async (confirm) => {
     if (confirm) {
       const url = "https://localhost:7200/api/transaction/create";
+      const token = localStorage.getItem("token");
       const payload = {
         transactionTypeID: parseInt(transactionTypeID),
         vendorID: parseInt(selectedVendor.vendorID),
@@ -73,6 +75,7 @@ function SelectVendor() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(payload),
         });

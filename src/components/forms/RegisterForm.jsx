@@ -13,9 +13,23 @@ function RegisterForm({ returnRoute, buttonText, showLogin }) {
   const navigate = useNavigate();
   useEffect(() => {
     const fetchUserRoles = async () => {
+      const token = localStorage.getItem("token");
+      const payload = {
+        pageNumber: 1,
+        pageSize: 100,
+        search: "",
+      };
       try {
         const response = await fetch(
-          "https://localhost:7200/api/userRole/getUserRoles"
+          "https://localhost:7200/api/userRole/get",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(payload),
+          }
         );
         const data = await response.json();
         setUserRoles(data.result);
