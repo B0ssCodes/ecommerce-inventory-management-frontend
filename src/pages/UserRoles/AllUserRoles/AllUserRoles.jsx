@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   Pagination,
   Typography,
@@ -7,8 +7,10 @@ import {
   Space,
   Input,
   Select,
+  Spin,
 } from "antd";
 import { Link, useNavigate } from "react-router-dom";
+import { debounce } from "lodash";
 import { EditOutlined, SearchOutlined } from "@ant-design/icons";
 import "./AllUserRoles.css"; // Import the CSS file
 import DeleteUserRole from "../../../components/modals/DeleteUserRole";
@@ -22,6 +24,7 @@ function AllUserRoles() {
   const [pageSize, setPageSize] = useState(10);
   const [itemCount, setItemCount] = useState(1);
   const [userRoles, setUserRoles] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const fetchUserRoles = async (payload) => {
@@ -75,9 +78,22 @@ function AllUserRoles() {
     navigate("/edit-user-role", { state: { userRoleID } });
   };
 
-  const handleSearch = (e) => {
-    setPageNumber(1);
-    setSearchText(e.target.value);
+  const handleTableChange = (page, pageSize) => {
+    setPageNumber(page);
+    setPageSize(pageSize);
+  };
+
+  const debouncedSearch = useCallback(
+    debounce((value) => {
+      setSearchText(value);
+      setIsLoading(false);
+    }, 1500),
+    []
+  );
+
+  const handleSearchChange = (e) => {
+    setIsLoading(true);
+    debouncedSearch(e.target.value);
   };
 
   const columns = [
@@ -102,11 +118,6 @@ function AllUserRoles() {
     },
   ];
 
-  const handleTableChange = (page, pageSize) => {
-    setPageNumber(page);
-    setPageSize(pageSize);
-  };
-
   return (
     <>
       <div
@@ -126,20 +137,15 @@ function AllUserRoles() {
             alignItems: "center",
           }}
         >
-          <Input
-            type="text"
-            onChange={handleSearch}
-            placeholder="Search user roles..."
-            style={{ marginRight: "8px", maxWidth: "50%" }}
-          />
-          <Button
-            type="primary"
-            icon={<SearchOutlined />}
-            onClick={handleSearchClick}
-            style={{ marginRight: "8px" }}
-          >
-            Search
-          </Button>
+          <div>
+            <Input
+              type="text"
+              onChange={handleSearchChange}
+              placeholder="Search User Roles..."
+              style={{ marginRight: "8px", maxWidth: "80%" }}
+            />
+            {isLoading ? <Spin size="small" /> : null}
+          </div>
           <Select
             defaultValue={10}
             style={{ width: 120 }}

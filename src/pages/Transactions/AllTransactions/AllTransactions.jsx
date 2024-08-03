@@ -169,7 +169,7 @@ function AllTransactions() {
               type="text"
               onChange={handleSearchChange}
               placeholder="Search Transactions..."
-              style={{ marginRight: "8px", maxWidth: "70%" }}
+              style={{ marginRight: "8px", maxWidth: "80%" }}
             />
             {isLoading ? <Spin size="small" /> : null}
           </div>

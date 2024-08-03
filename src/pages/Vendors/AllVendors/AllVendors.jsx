@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   Typography,
   Table,
@@ -7,8 +7,10 @@ import {
   Input,
   Pagination,
   Select,
+  Spin,
 } from "antd";
 import { Link, useNavigate } from "react-router-dom";
+import { debounce } from "lodash";
 import { EditOutlined, SearchOutlined } from "@ant-design/icons";
 import "./AllVendors.css"; // Import the CSS file
 import DeleteVendor from "../../../components/modals/DeleteVendor";
@@ -22,6 +24,7 @@ function AllVendors() {
   const [pageSize, setPageSize] = useState(10);
   const [vendors, setVendors] = useState([]);
   const [itemCount, setItemCount] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const fetchVendors = async (payload) => {
@@ -61,18 +64,26 @@ function AllVendors() {
     fetchVendors(payload);
   }, [pageNumber, pageSize, searchText]);
 
-  const handleSearchClick = () => {
-    const payload = {
-      pageNumber: pageNumber,
-      pagesize: pageSize,
-      search: searchText,
-    };
-
-    fetchVendors(payload);
-  };
-
   const handleEdit = (vendorID) => {
     navigate("/edit-vendor", { state: { vendorID } });
+  };
+
+  const handleTableChange = (page, pageSize) => {
+    setPageNumber(page);
+    setPageSize(pageSize);
+  };
+
+  const debouncedSearch = useCallback(
+    debounce((value) => {
+      setSearchText(value);
+      setIsLoading(false);
+    }, 1500),
+    []
+  );
+
+  const handleSearchChange = (e) => {
+    setIsLoading(true);
+    debouncedSearch(e.target.value);
   };
 
   const columns = [
@@ -112,15 +123,6 @@ function AllVendors() {
     },
   ];
 
-  const handleTableChange = (page, pageSize) => {
-    setPageNumber(page);
-    setPageSize(pageSize);
-  };
-
-  const handleSearch = (e) => {
-    setPageNumber(1);
-    setSearchText(e.target.value);
-  };
   return (
     <>
       <div
@@ -140,21 +142,15 @@ function AllVendors() {
             alignItems: "center",
           }}
         >
-          <Input
-            type="text"
-            value={searchText}
-            onChange={handleSearch}
-            placeholder="Search vendors..."
-            style={{ marginRight: "8px", maxWidth: "40%" }}
-          />
-          <Button
-            type="primary"
-            icon={<SearchOutlined />}
-            onClick={handleSearchClick}
-            style={{ marginRight: "8px" }}
-          >
-            Search
-          </Button>
+          <div>
+            <Input
+              type="text"
+              onChange={handleSearchChange}
+              placeholder="Search Categories..."
+              style={{ marginRight: "8px", maxWidth: "80%" }}
+            />
+            {isLoading ? <Spin size="small" /> : null}
+          </div>
           <Select
             defaultValue={10}
             style={{ width: 120 }}

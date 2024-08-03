@@ -1,6 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { Typography, Table, Button, Input, Pagination, Select } from "antd";
+import React, { useEffect, useState, useCallback } from "react";
+import {
+  Typography,
+  Table,
+  Button,
+  Input,
+  Pagination,
+  Select,
+  Spin,
+} from "antd";
 import { Link, useNavigate } from "react-router-dom";
+import { debounce } from "lodash";
 import { EditOutlined, SearchOutlined } from "@ant-design/icons";
 import "./AllUsers.css"; // Import the CSS file
 import DeleteUser from "../../../components/modals/DeleteUser";
@@ -14,6 +23,7 @@ function AllUsers() {
   const [pageSize, setPageSize] = useState(10);
   const [users, setUsers] = useState([]);
   const [itemCount, setItemCount] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const fetchUsers = async (payload) => {
@@ -53,16 +63,23 @@ function AllUsers() {
     fetchUsers(payload);
   }, [pageNumber, pageSize, searchText]);
 
-  const handleSearchClick = () => {
-    const payload = {
-      pageNumber: pageNumber,
-      pagesize: pageSize,
-      search: searchText,
-    };
-
-    fetchUsers(payload);
+  const handleTableChange = (page, pageSize) => {
+    setPageNumber(page);
+    setPageSize(pageSize);
   };
 
+  const debouncedSearch = useCallback(
+    debounce((value) => {
+      setSearchText(value);
+      setIsLoading(false);
+    }, 1500),
+    []
+  );
+
+  const handleSearchChange = (e) => {
+    setIsLoading(true);
+    debouncedSearch(e.target.value);
+  };
   const columns = [
     {
       title: "Email",
@@ -91,10 +108,6 @@ function AllUsers() {
     },
   ];
 
-  const handleTableChange = (page, pageSize) => {
-    setPageNumber(page);
-    setPageSize(pageSize);
-  };
   return (
     <>
       <div
@@ -114,21 +127,15 @@ function AllUsers() {
             alignItems: "center",
           }}
         >
-          <Input
-            type="text"
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-            placeholder="Search users..."
-            style={{ marginRight: "8px", maxWidth: "40%" }}
-          />
-          <Button
-            type="primary"
-            icon={<SearchOutlined />}
-            onClick={handleSearchClick}
-            style={{ marginRight: "8px" }}
-          >
-            Search
-          </Button>
+          <div>
+            <Input
+              type="text"
+              onChange={handleSearchChange}
+              placeholder="Search Users..."
+              style={{ marginRight: "8px", maxWidth: "80%" }}
+            />
+            {isLoading ? <Spin size="small" /> : null}
+          </div>
           <Select
             defaultValue={10}
             style={{ width: 120 }}

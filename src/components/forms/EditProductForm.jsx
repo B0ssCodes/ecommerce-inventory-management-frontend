@@ -105,10 +105,14 @@ const EditProductForm = () => {
     }
 
     try {
+      const token = localStorage.getItem("token");
       const response = await fetch(
         `https://localhost:7200/api/product/update/${productID}`,
         {
           method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           body: formData,
         }
       );
