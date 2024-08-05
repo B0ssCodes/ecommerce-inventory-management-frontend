@@ -67,6 +67,8 @@ function SubmitTransaction() {
     }
   };
 
+  const itemCount = transactionItems.length;
+
   const menu = (
     <Menu>
       <Menu.ItemGroup title="Transaction Items">
@@ -108,11 +110,12 @@ function SubmitTransaction() {
       >
         <Dropdown overlay={menu} trigger={["click"]}>
           <Button type="primary">
-            Transaction Items <DownOutlined />
+            Transaction Items {itemCount > 0 && `(${itemCount})`}{" "}
+            <DownOutlined />
           </Button>
         </Dropdown>
 
-        <Button onClick={handleTransactionSubmit}>Submit Transactions</Button>
+        <Button onClick={handleTransactionSubmit}>Submit Transaction</Button>
       </Header>
       <Content style={{ padding: "24px" }}>
         <Card>

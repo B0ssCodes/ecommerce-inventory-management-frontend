@@ -53,14 +53,33 @@ function SelectProducts({
   const handleOk = () => {
     if (selectedProduct && quantity > 0) {
       const newTransactionItem = {
-        productID: selectedProduct.id,
+        productID: selectedProduct.productID,
         productName: selectedProduct.name,
         productSKU: selectedProduct.sku,
         quantity: quantity,
         price: selectedProduct.cost * quantity,
       };
 
-      setTransactionItems([...transactionItems, newTransactionItem]);
+      const updatedTransactionItems = transactionItems.map((item) => {
+        if (item.productID === newTransactionItem.productID) {
+          return {
+            ...item,
+            quantity: item.quantity + newTransactionItem.quantity,
+            price: item.price + newTransactionItem.price,
+          };
+        }
+        return item;
+      });
+
+      const transactionItemExists = transactionItems.some(
+        (item) => item.productID === newTransactionItem.productID
+      );
+
+      if (!transactionItemExists) {
+        updatedTransactionItems.push(newTransactionItem);
+      }
+
+      setTransactionItems(updatedTransactionItems);
 
       const newItemToSubmit = {
         productID: selectedProduct.productID,
@@ -68,7 +87,26 @@ function SelectProducts({
         price: selectedProduct.cost * quantity,
       };
 
-      setItemsToSubmit([...itemsToSubmit, newItemToSubmit]);
+      const updatedItemsToSubmit = itemsToSubmit.map((item) => {
+        if (item.productID === newItemToSubmit.productID) {
+          return {
+            ...item,
+            quantity: item.quantity + newItemToSubmit.quantity,
+            price: item.price + newItemToSubmit.price,
+          };
+        }
+        return item;
+      });
+
+      const itemExists = itemsToSubmit.some(
+        (item) => item.productID === newItemToSubmit.productID
+      );
+
+      if (!itemExists) {
+        updatedItemsToSubmit.push(newItemToSubmit);
+      }
+
+      setItemsToSubmit(updatedItemsToSubmit);
     }
     setIsModalVisible(false);
     setQuantity(0);
