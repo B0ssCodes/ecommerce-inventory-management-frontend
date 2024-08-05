@@ -20,7 +20,7 @@ const items = [
   {
     key: "/",
     icon: <HomeOutlined />,
-    label: <Link to="/">Home</Link>,
+    label: <Link to="/">Dashboard</Link>,
   },
   {
     key: "sub1",
@@ -80,7 +80,42 @@ const items = [
   },
 ];
 
-const Sidebar = ({ children, isLoggedIn, setIsLoggedIn }) => {
+const extractTextFromLabel = (label) => {
+  if (typeof label === "string") {
+    return label;
+  }
+  if (label.props && label.props.children) {
+    return extractTextFromLabel(label.props.children);
+  }
+  return "";
+};
+
+const filterItemsByPermissions = (items, userPermissions) => {
+  return items
+    .map((item) => {
+      if (item.children) {
+        const filteredChildren = item.children.filter((child) =>
+          userPermissions.some(
+            (permission) =>
+              permission.permission === extractTextFromLabel(child.label)
+          )
+        );
+        if (filteredChildren.length > 0) {
+          return { ...item, children: filteredChildren };
+        }
+      } else if (
+        userPermissions.some(
+          (permission) =>
+            permission.permission === extractTextFromLabel(item.label)
+        )
+      ) {
+        return item;
+      }
+      return null;
+    })
+    .filter((item) => item !== null);
+};
+const Sidebar = ({ children, isLoggedIn, setIsLoggedIn, userPermissions }) => {
   const location = useLocation();
   const [openKeys, setOpenKeys] = useState([]);
 
@@ -94,6 +129,8 @@ const Sidebar = ({ children, isLoggedIn, setIsLoggedIn }) => {
       setOpenKeys([parentKey]);
     }
   }, [location.pathname]);
+
+  const filteredItems = filterItemsByPermissions(items, userPermissions);
 
   return (
     <div style={{ display: "flex", height: "90vh", marginTop: "1em" }}>
@@ -113,7 +150,7 @@ const Sidebar = ({ children, isLoggedIn, setIsLoggedIn }) => {
               openKeys={openKeys}
               onOpenChange={(keys) => setOpenKeys(keys)}
               style={{ flex: 1 }}
-              items={items}
+              items={filteredItems}
             />
             <Card style={{ height: "10vh" }}>
               <Logout setIsLoggedIn={setIsLoggedIn} />

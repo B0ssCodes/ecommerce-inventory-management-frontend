@@ -1,16 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import LoginForm from "../components/forms/LoginForm";
-import { Typography, Alert, Button } from "antd";
+import { Typography, Alert, Button, message } from "antd";
 const { Title } = Typography;
 
 function Login({ setIsLoggedIn }) {
   const location = useLocation();
+  const navigate = useNavigate();
   const [showSuccessMessage, setShowSuccessMessage] = useState(
     !!location.state?.successMessage
   );
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      message.info("You are already logged in");
+      navigate("/");
+    }
     if (showSuccessMessage) {
       const timer = setTimeout(() => {
         setShowSuccessMessage(false);

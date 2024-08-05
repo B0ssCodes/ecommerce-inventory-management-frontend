@@ -14,6 +14,7 @@ const Logout = ({ setIsLoggedIn }) => {
       localStorage.removeItem("token");
       localStorage.removeItem("tokenExpiry");
       setIsLoggedIn(false);
+
       navigate("/login");
     }
   };

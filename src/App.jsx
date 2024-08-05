@@ -26,13 +26,46 @@ import AllUserRoles from "./pages/UserRoles/AllUserRoles/AllUserRoles";
 import CreateUserRole from "./pages/UserRoles/CreateUserRole/CreateUserRole";
 import EditUserRole from "./pages/UserRoles/EditUserRole/EditUserRole";
 import AllInventories from "./pages/Inventory/AllInventories/AllInventories";
+import { decodeToken } from "./components/utility/decodeToken";
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userPermissions, setUserPermissions] = useState([]);
+  let userRoleID = 0;
+
+  const getUserPermissions = async (roleID) => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await fetch(
+        `https://localhost:7200/api/userRole/get/${roleID}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const data = await response.json();
+      setUserPermissions(data.result.permissions);
+
+      const permissions = data.result.permissions.map((p) => p.permission);
+      localStorage.setItem("userPermissions", JSON.stringify(permissions));
+    } catch (error) {
+      console.error("Error fetching user permissions:", error);
+    }
+  };
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     const tokenExpiry = localStorage.getItem("tokenExpiry");
+    const claims = decodeToken(token);
 
+    if (claims) {
+      userRoleID =
+        claims["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+
+      getUserPermissions(userRoleID);
+    }
     if (token && tokenExpiry) {
       const currentTime = new Date().getTime();
       if (currentTime > tokenExpiry) {
@@ -42,7 +75,7 @@ function App() {
         setIsLoggedIn(true);
       }
     }
-  }, []);
+  }, [localStorage.getItem("token")]);
   return (
     <Router>
       <Routes>
@@ -51,7 +84,11 @@ function App() {
           element={<Login setIsLoggedIn={setIsLoggedIn} />}
         />
       </Routes>
-      <Sidebar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}>
+      <Sidebar
+        isLoggedIn={isLoggedIn}
+        setIsLoggedIn={setIsLoggedIn}
+        userPermissions={userPermissions}
+      >
         <Routes>
           <Route
             path="/"
@@ -64,7 +101,7 @@ function App() {
           <Route
             path="/products"
             element={
-              <ValidateRoute>
+              <ValidateRoute requiredPermissions={"Products"}>
                 <AllProducts />
               </ValidateRoute>
             }
@@ -73,14 +110,14 @@ function App() {
             path="/create-product"
             element={
               <ValidateRoute>
-                <CreateProduct />
+                <CreateProduct requiredPermissions={"Products"} />
               </ValidateRoute>
             }
           />
           <Route
             path="/edit-product"
             element={
-              <ValidateRoute>
+              <ValidateRoute requiredPermissions={"Products"}>
                 <EditProduct />
               </ValidateRoute>
             }
@@ -88,7 +125,7 @@ function App() {
           <Route
             path="/users"
             element={
-              <ValidateRoute>
+              <ValidateRoute requiredPermissions={"Users"}>
                 <AllUsers />
               </ValidateRoute>
             }
@@ -97,7 +134,7 @@ function App() {
           <Route
             path="/create-user"
             element={
-              <ValidateRoute>
+              <ValidateRoute requiredPermissions={"Users"}>
                 <CreateUser />
               </ValidateRoute>
             }
@@ -105,7 +142,7 @@ function App() {
           <Route
             path="/user-roles"
             element={
-              <ValidateRoute>
+              <ValidateRoute requiredPermissions={"User Roles"}>
                 <AllUserRoles />
               </ValidateRoute>
             }
@@ -113,7 +150,7 @@ function App() {
           <Route
             path="/create-user-role"
             element={
-              <ValidateRoute>
+              <ValidateRoute requiredPermissions={"User Roles"}>
                 <CreateUserRole />
               </ValidateRoute>
             }
@@ -121,7 +158,7 @@ function App() {
           <Route
             path="/edit-user-role"
             element={
-              <ValidateRoute>
+              <ValidateRoute requiredPermissions={"User Roles"}>
                 <EditUserRole />
               </ValidateRoute>
             }
@@ -129,7 +166,7 @@ function App() {
           <Route
             path="/vendors"
             element={
-              <ValidateRoute>
+              <ValidateRoute requiredPermissions={"Vendors"}>
                 <AllVendors />
               </ValidateRoute>
             }
@@ -137,7 +174,7 @@ function App() {
           <Route
             path="/create-vendor"
             element={
-              <ValidateRoute>
+              <ValidateRoute requiredPermissions={"Vendors"}>
                 <CreateVendor />
               </ValidateRoute>
             }
@@ -145,7 +182,7 @@ function App() {
           <Route
             path="/edit-vendor"
             element={
-              <ValidateRoute>
+              <ValidateRoute requiredPermissions={"Vendors"}>
                 <EditVendor />
               </ValidateRoute>
             }
@@ -153,7 +190,7 @@ function App() {
           <Route
             path="/categories"
             element={
-              <ValidateRoute>
+              <ValidateRoute requiredPermissions={"Categories"}>
                 <AllCategories />
               </ValidateRoute>
             }
@@ -161,7 +198,7 @@ function App() {
           <Route
             path="/create-category"
             element={
-              <ValidateRoute>
+              <ValidateRoute requiredPermissions={"Categories"}>
                 <CreateCategory />
               </ValidateRoute>
             }
@@ -169,7 +206,7 @@ function App() {
           <Route
             path="/edit-category"
             element={
-              <ValidateRoute>
+              <ValidateRoute requiredPermissions={"Categories"}>
                 <EditCategory />
               </ValidateRoute>
             }
@@ -177,7 +214,7 @@ function App() {
           <Route
             path="/transactions"
             element={
-              <ValidateRoute>
+              <ValidateRoute requiredPermissions={"Transactions"}>
                 <AllTransactions />
               </ValidateRoute>
             }
@@ -185,7 +222,7 @@ function App() {
           <Route
             path="/create-transaction"
             element={
-              <ValidateRoute>
+              <ValidateRoute requiredPermissions={"Transactions"}>
                 <CreateTransaction />
               </ValidateRoute>
             }
@@ -193,7 +230,7 @@ function App() {
           <Route
             path="/select-vendor"
             element={
-              <ValidateRoute>
+              <ValidateRoute requiredPermissions={"Transactions"}>
                 <SelectVendor />
               </ValidateRoute>
             }
@@ -201,7 +238,7 @@ function App() {
           <Route
             path="/submit-transaction"
             element={
-              <ValidateRoute>
+              <ValidateRoute requiredPermissions={"Transactions"}>
                 <SubmitTransaction />
               </ValidateRoute>
             }
@@ -209,7 +246,7 @@ function App() {
           <Route
             path="/view-transaction"
             element={
-              <ValidateRoute>
+              <ValidateRoute requiredPermissions={"Transactions"}>
                 <ViewTransaction />
               </ValidateRoute>
             }
@@ -217,16 +254,8 @@ function App() {
           <Route
             path="/inventories"
             element={
-              <ValidateRoute>
+              <ValidateRoute requiredPermissions={"Inventory"}>
                 <AllInventories />
-              </ValidateRoute>
-            }
-          />
-          <Route
-            path="/add-user"
-            element={
-              <ValidateRoute>
-                <Register />
               </ValidateRoute>
             }
           />
