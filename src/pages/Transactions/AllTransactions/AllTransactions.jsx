@@ -15,6 +15,7 @@ import { debounce } from "lodash";
 import moment from "moment";
 import "./AllTransactions.css";
 import CreateTransactionButton from "../../../components/modals/CreateTransactionButton";
+import { decodeToken } from "../../../components/utility/decodeToken";
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -26,10 +27,28 @@ function AllTransactions() {
   const [itemCount, setItemCount] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const [claims, setClaims] = useState(null);
+  const [passedEmail, setPassedEmail] = useState(null);
 
   const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decodedClaims = decodeToken(token);
+      setClaims(decodedClaims);
+      const roleName = decodedClaims["RoleName"];
+      const userEmail =
+        decodedClaims[
+          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"
+        ];
+      if (roleName === "Vendor" || roleName === "vendor") {
+        setPassedEmail(userEmail);
+      }
+    }
+  }, []);
 
   const fetchTransactions = async (payload) => {
     const url = "https://localhost:7200/api/transaction/get";
@@ -41,7 +60,10 @@ function AllTransactions() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({
+          vendorEmail: passedEmail,
+          paginationParams: payload,
+        }),
       });
 
       const data = await response.json();
@@ -59,14 +81,16 @@ function AllTransactions() {
   };
 
   useEffect(() => {
-    const payload = {
-      pageNumber: pageNumber,
-      pagesize: pageSize,
-      search: searchText,
-    };
+    if (claims) {
+      const payload = {
+        pageNumber: pageNumber,
+        pageSize: pageSize,
+        search: searchText,
+      };
 
-    fetchTransactions(payload);
-  }, [pageNumber, pageSize, searchText]);
+      fetchTransactions(payload);
+    }
+  }, [pageNumber, pageSize, searchText, claims]);
 
   const columns = [
     {

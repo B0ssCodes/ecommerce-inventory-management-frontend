@@ -9,6 +9,7 @@ import {
   TagsOutlined,
   UserOutlined,
   TeamOutlined,
+  HomeOutlined,
   UsergroupAddOutlined,
   SolutionOutlined,
 } from "@ant-design/icons";
@@ -86,9 +87,9 @@ const EditUserRoleForm = () => {
   };
 
   const permissions = [
-    { name: "Dashboard", icon: <AppstoreOutlined /> },
+    { name: "Dashboard", icon: <HomeOutlined /> },
     { name: "Inventory", icon: <AppstoreOutlined /> },
-    { name: "Transaction", icon: <TransactionOutlined /> },
+    { name: "Transactions", icon: <TransactionOutlined /> },
     { name: "Products", icon: <ShopOutlined /> },
     { name: "Categories", icon: <TagsOutlined /> },
     { name: "Users", icon: <UserOutlined /> },

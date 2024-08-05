@@ -13,6 +13,7 @@ const Logout = ({ setIsLoggedIn }) => {
     if (token && tokenExpiry) {
       localStorage.removeItem("token");
       localStorage.removeItem("tokenExpiry");
+      localStorage.removeItem("userPermissions");
       setIsLoggedIn(false);
 
       navigate("/login");
