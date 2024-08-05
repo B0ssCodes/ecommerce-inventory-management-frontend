@@ -105,11 +105,13 @@ function AllProducts() {
       title: "Price",
       dataIndex: "price",
       key: "price",
+      render: (text) => `$${text}`,
     },
     {
       title: "Cost",
       dataIndex: "cost",
       key: "cost",
+      render: (text) => `$${text}`,
     },
     {
       title: "Category",

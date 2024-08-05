@@ -102,11 +102,13 @@ function AllInventories() {
       title: "Unit Cost",
       dataIndex: "productPrice",
       key: "productPrice",
+      render: (text) => `$${text}`,
     },
     {
       title: "Total Cost",
       dataIndex: "price",
       key: "price",
+      render: (text) => `$${text}`,
     },
   ];
 

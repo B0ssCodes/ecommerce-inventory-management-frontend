@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Form, Input, Button, message } from "antd";
+import { Form, Input, Button, message, Row, Col } from "antd";
 import { useNavigate } from "react-router-dom";
 import {
   CheckOutlined,
@@ -9,12 +9,13 @@ import {
   TagsOutlined,
   UserOutlined,
   TeamOutlined,
+  HomeOutlined,
   UsergroupAddOutlined,
   SolutionOutlined,
 } from "@ant-design/icons";
 
 const permissionsList = [
-  { name: "Dashboard", icon: <AppstoreOutlined /> },
+  { name: "Dashboard", icon: <HomeOutlined /> },
   { name: "Inventory", icon: <AppstoreOutlined /> },
   { name: "Transactions", icon: <TransactionOutlined /> },
   { name: "Products", icon: <ShopOutlined /> },
@@ -85,19 +86,31 @@ function CreateUserRoleForm() {
         </Form.Item>
 
         <Form.Item label="Permissions">
-          {permissionsList.map((permission) => (
-            <Button
-              key={permission.name}
-              type={
-                selectedPermissions.includes(permission.name)
-                  ? "primary"
-                  : "default"
-              }
-              onClick={() => handlePermissionClick(permission.name)}
-            >
-              {permission.icon} {permission.name}
-            </Button>
-          ))}
+          <Row gutter={[16, 16]}>
+            {permissionsList.map((permission) => (
+              <Col span={6} key={permission.name}>
+                <Button
+                  type={
+                    selectedPermissions.includes(permission.name)
+                      ? "primary"
+                      : "default"
+                  }
+                  icon={
+                    selectedPermissions.includes(permission.name) ? (
+                      <CheckOutlined />
+                    ) : (
+                      permission.icon
+                    )
+                  }
+                  onClick={() => handlePermissionClick(permission.name)}
+                  size="large"
+                  style={{ width: "100%" }} // Make the button take full width of the column
+                >
+                  {permission.name}
+                </Button>
+              </Col>
+            ))}
+          </Row>
         </Form.Item>
 
         <Form.Item>

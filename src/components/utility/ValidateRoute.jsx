@@ -23,14 +23,17 @@ const ValidateRoute = ({ children, requiredPermissions }) => {
 
   useEffect(() => {
     if (isValid) {
-      const storedPermissions =
-        JSON.parse(localStorage.getItem("userPermissions")) || [];
-      if (!storedPermissions.includes(requiredPermissions)) {
-        notification.error({
-          message: "Access Denied",
-          description: "You cannot access this page.",
-        });
-        navigate(-1); // Navigate to the previous page
+      if (requiredPermissions !== "any") {
+        const storedPermissions =
+          JSON.parse(localStorage.getItem("userPermissions")) || [];
+        let hasPermission = !storedPermissions.includes(requiredPermissions);
+        if (hasPermission) {
+          notification.error({
+            message: "Access Denied",
+            description: "You cannot access this page.",
+          });
+          navigate(-1);
+        }
       }
     } else if (!hasNotified.current) {
       notification.error({

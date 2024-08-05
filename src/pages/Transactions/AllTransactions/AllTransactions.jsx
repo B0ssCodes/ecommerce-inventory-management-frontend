@@ -16,6 +16,7 @@ import moment from "moment";
 import "./AllTransactions.css";
 import CreateTransactionButton from "../../../components/modals/CreateTransactionButton";
 import { decodeToken } from "../../../components/utility/decodeToken";
+import DeleteTransaction from "../../../components/modals/DeleteTransaction";
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -97,12 +98,20 @@ function AllTransactions() {
       title: "Amount",
       dataIndex: "amount",
       key: "amount",
+      render: (text) => `$${text}`,
     },
     {
       title: "Type",
       dataIndex: "type",
       key: "type",
-      render: (text) => capitalizeFirstLetter(text),
+      render: (text) => {
+        if (text === "inbound") {
+          return <span style={{ color: "green" }}>Inbound</span>; // Green text for inbound
+        } else if (text === "outbound") {
+          return <span style={{ color: "red" }}>Outbound</span>; // Red text for outbound
+        }
+        return text;
+      },
     },
     {
       title: "Status",
@@ -126,16 +135,19 @@ function AllTransactions() {
       key: "actions",
       render: (text, record) =>
         record.status === "created" ? (
-          <Button
-            type="primary"
-            onClick={() =>
-              navigate("/submit-transaction", {
-                state: { transactionID: record.transactionID },
-              })
-            }
-          >
-            Submit
-          </Button>
+          <Space size="middle">
+            <Button
+              type="primary"
+              onClick={() =>
+                navigate("/submit-transaction", {
+                  state: { transactionID: record.transactionID },
+                })
+              }
+            >
+              Submit
+            </Button>
+            <DeleteTransaction transactionID={record.transactionID} />
+          </Space>
         ) : (
           <Button
             type="primary"

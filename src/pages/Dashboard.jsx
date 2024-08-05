@@ -25,18 +25,6 @@ function Dashboard() {
   return (
     <div>
       <Title>Welcome, {firstName}</Title>
-      <Button>
-        <Link to="/products">All Products</Link>
-      </Button>
-      <Button>
-        <Link to="/categories">All Categories</Link>
-      </Button>
-      <Button>
-        <Link to="/users">All Users</Link>
-      </Button>
-      <Button>
-        <Link to="/vendors">All Vendors</Link>
-      </Button>
     </div>
   );
 }

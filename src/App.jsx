@@ -93,7 +93,7 @@ function App() {
           <Route
             path="/"
             element={
-              <ValidateRoute>
+              <ValidateRoute requiredPermissions={"any"}>
                 <Dashboard />
               </ValidateRoute>
             }
@@ -109,8 +109,8 @@ function App() {
           <Route
             path="/create-product"
             element={
-              <ValidateRoute>
-                <CreateProduct requiredPermissions={"Products"} />
+              <ValidateRoute requiredPermissions={"Products"}>
+                <CreateProduct />
               </ValidateRoute>
             }
           />

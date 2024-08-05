@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Form, Input, Button, message } from "antd";
+import { Form, Input, Button, message, Row, Col } from "antd";
 import {
   CheckOutlined,
   AppstoreOutlined,
@@ -107,27 +107,31 @@ const EditUserRoleForm = () => {
         <Input />
       </Form.Item>
       <Form.Item label="Permissions">
-        {permissions.map((permission) => (
-          <Button
-            key={permission.name}
-            type={
-              selectedPermissions.includes(permission.name)
-                ? "primary"
-                : "default"
-            }
-            icon={
-              selectedPermissions.includes(permission.name) ? (
-                <CheckOutlined />
-              ) : (
-                permission.icon
-              )
-            }
-            onClick={() => handlePermissionClick(permission.name)}
-            style={{ margin: "5px" }}
-          >
-            {permission.name}
-          </Button>
-        ))}
+        <Row gutter={[16, 16]}>
+          {permissions.map((permission) => (
+            <Col span={6} key={permission.name}>
+              <Button
+                type={
+                  selectedPermissions.includes(permission.name)
+                    ? "primary"
+                    : "default"
+                }
+                icon={
+                  selectedPermissions.includes(permission.name) ? (
+                    <CheckOutlined />
+                  ) : (
+                    permission.icon
+                  )
+                }
+                onClick={() => handlePermissionClick(permission.name)}
+                size="large"
+                style={{ width: "100%" }}
+              >
+                {permission.name}
+              </Button>
+            </Col>
+          ))}
+        </Row>
       </Form.Item>
       <Form.Item>
         <Button type="primary" htmlType="submit">
