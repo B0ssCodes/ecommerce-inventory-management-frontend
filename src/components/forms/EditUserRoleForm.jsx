@@ -12,6 +12,7 @@ import {
   HomeOutlined,
   UsergroupAddOutlined,
   SolutionOutlined,
+  SettingOutlined,
 } from "@ant-design/icons";
 
 const EditUserRoleForm = () => {
@@ -95,6 +96,7 @@ const EditUserRoleForm = () => {
     { name: "Users", icon: <UserOutlined /> },
     { name: "User Roles", icon: <UsergroupAddOutlined /> },
     { name: "Vendors", icon: <SolutionOutlined /> },
+    { name: "Configuration", icon: <SettingOutlined /> },
   ];
 
   return (

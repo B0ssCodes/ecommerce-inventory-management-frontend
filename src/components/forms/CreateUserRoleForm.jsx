@@ -12,6 +12,7 @@ import {
   HomeOutlined,
   UsergroupAddOutlined,
   SolutionOutlined,
+  SettingOutlined,
 } from "@ant-design/icons";
 
 const permissionsList = [
@@ -23,6 +24,7 @@ const permissionsList = [
   { name: "Users", icon: <UserOutlined /> },
   { name: "User Roles", icon: <UsergroupAddOutlined /> },
   { name: "Vendors", icon: <SolutionOutlined /> },
+  { name: "Configuration", icon: <SettingOutlined /> },
 ];
 
 function CreateUserRoleForm() {

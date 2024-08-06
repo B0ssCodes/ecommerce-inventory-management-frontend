@@ -11,25 +11,23 @@ import {
 } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { debounce } from "lodash";
-import { EditOutlined, SearchOutlined } from "@ant-design/icons";
-import "./AllInventories.css"; // Import the CSS file
-import DeleteCategory from "../../../components/modals/DeleteCategory";
+import "./OutInventories.css"; // Import the CSS file
 
 const { Title } = Typography;
 const { Option } = Select;
 
-function AllInventories() {
+function OutInventories() {
   const [searchText, setSearchText] = useState("");
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [itemCount, setItemCount] = useState(1);
   const [inventories, setInventories] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [minStockNum, setMinStockNum] = useState(0);
   const navigate = useNavigate();
 
   const fetchInventories = async (payload) => {
-    const url = "https://localhost:7200/api/inventory/get";
+    const minStockNumber = localStorage.getItem("minStockNumber");
+    const url = `https://localhost:7200/api/inventory/getout`;
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(url, {
@@ -54,9 +52,7 @@ function AllInventories() {
       alert("An error occurred while fetching Inventories");
     }
   };
-  useEffect(() => {
-    setMinStockNum(localStorage.getItem("minStockNumber"));
-  }, []);
+
   useEffect(() => {
     const payload = {
       pageNumber: pageNumber,
@@ -97,27 +93,9 @@ function AllInventories() {
       key: "productSKU",
     },
     {
-      title: "Quantity",
-      dataIndex: "quantity",
-      key: "quantity",
-      render: (text, record) => (
-        <span
-          style={{ color: record.quantity < minStockNum ? "red" : "inherit" }}
-        >
-          {record.quantity}
-        </span>
-      ),
-    },
-    {
       title: "Unit Cost",
       dataIndex: "productPrice",
       key: "productPrice",
-      render: (text) => `$${text}`,
-    },
-    {
-      title: "Total Cost",
-      dataIndex: "price",
-      key: "price",
       render: (text) => `$${text}`,
     },
   ];
@@ -132,7 +110,7 @@ function AllInventories() {
         }}
       >
         <Title level={2} style={{ marginBottom: "0.3em", lineHeight: "32px" }}>
-          Inventory
+          Out of Stock Inventory
         </Title>
         <div
           style={{
@@ -204,14 +182,10 @@ function AllInventories() {
         </Button>
         <Button
           type="default"
-          style={{
-            backgroundColor: "#f5222d",
-            borderColor: "#f5222d",
-            marginLeft: 16,
-          }}
+          style={{ backgroundColor: "#52c41a", borderColor: "#52c41a" }}
         >
-          <Link to="/out-inventories" style={{ color: "white" }}>
-            Out of Stock
+          <Link to="/inventories" style={{ color: "white" }}>
+            Inventories
           </Link>
         </Button>
         <Pagination
@@ -225,4 +199,4 @@ function AllInventories() {
   );
 }
 
-export default AllInventories;
+export default OutInventories;
