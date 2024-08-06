@@ -11,25 +11,23 @@ import {
 } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { debounce } from "lodash";
-import { EditOutlined, SearchOutlined } from "@ant-design/icons";
-import "./AllInventories.css"; // Import the CSS file
-import DeleteCategory from "../../../components/modals/DeleteCategory";
+import "./LowInventories.css"; // Import the CSS file
 
 const { Title } = Typography;
 const { Option } = Select;
 
-function AllInventories() {
+function LowInventories() {
   const [searchText, setSearchText] = useState("");
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [itemCount, setItemCount] = useState(1);
   const [inventories, setInventories] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [minStockNum, setMinStockNum] = useState(0);
   const navigate = useNavigate();
 
   const fetchInventories = async (payload) => {
-    const url = "https://localhost:7200/api/inventory/get";
+    const minStockNumber = localStorage.getItem("minStockNumber");
+    const url = `https://localhost:7200/api/inventory/getlow/${minStockNumber}`;
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(url, {
@@ -54,9 +52,7 @@ function AllInventories() {
       alert("An error occurred while fetching Inventories");
     }
   };
-  useEffect(() => {
-    setMinStockNum(localStorage.getItem("minStockNumber"));
-  }, []);
+
   useEffect(() => {
     const payload = {
       pageNumber: pageNumber,
@@ -100,13 +96,6 @@ function AllInventories() {
       title: "Quantity",
       dataIndex: "quantity",
       key: "quantity",
-      render: (text, record) => (
-        <span
-          style={{ color: record.quantity < minStockNum ? "red" : "inherit" }}
-        >
-          {record.quantity}
-        </span>
-      ),
     },
     {
       title: "Unit Cost",
@@ -132,7 +121,7 @@ function AllInventories() {
         }}
       >
         <Title level={2} style={{ marginBottom: "0.3em", lineHeight: "32px" }}>
-          Inventory
+          Low Stock Inventory
         </Title>
         <div
           style={{
@@ -192,14 +181,10 @@ function AllInventories() {
         </Button>
         <Button
           type="default"
-          style={{
-            backgroundColor: "#fa8c16",
-            borderColor: "#fa8c16",
-            marginLeft: 16,
-          }}
+          style={{ backgroundColor: "#52c41a", borderColor: "#52c41a" }}
         >
-          <Link to="/low-inventories" style={{ color: "white" }}>
-            Low Stock
+          <Link to="/inventories" style={{ color: "white" }}>
+            Inventories
           </Link>
         </Button>
         <Button
@@ -225,4 +210,4 @@ function AllInventories() {
   );
 }
 
-export default AllInventories;
+export default LowInventories;

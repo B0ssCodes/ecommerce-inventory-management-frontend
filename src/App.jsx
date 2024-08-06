@@ -27,7 +27,10 @@ import AllUserRoles from "./pages/UserRoles/AllUserRoles/AllUserRoles";
 import CreateUserRole from "./pages/UserRoles/CreateUserRole/CreateUserRole";
 import EditUserRole from "./pages/UserRoles/EditUserRole/EditUserRole";
 import AllInventories from "./pages/Inventory/AllInventories/AllInventories";
+import LowInventories from "./pages/Inventory/LowInventories/LowInventories";
+import OutInventories from "./pages/Inventory/OutInventories/OutInventories";
 import { decodeToken } from "./components/utility/decodeToken";
+import Configuration from "./pages/Configuration/Configuration";
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userPermissions, setUserPermissions] = useState([]);
@@ -57,6 +60,11 @@ function App() {
   };
 
   useEffect(() => {
+    const minStockNumber = localStorage.getItem("minStockNumber");
+    if (!minStockNumber) {
+      localStorage.setItem("minStockNumber", 10);
+    }
+
     const token = localStorage.getItem("token");
     const tokenExpiry = localStorage.getItem("tokenExpiry");
     const claims = decodeToken(token);
@@ -96,6 +104,14 @@ function App() {
             element={
               <ValidateRoute requiredPermissions={"any"}>
                 <Dashboard />
+              </ValidateRoute>
+            }
+          />
+          <Route
+            path="/configuration"
+            element={
+              <ValidateRoute requiredPermissions={"any"}>
+                <Configuration />
               </ValidateRoute>
             }
           />
@@ -265,6 +281,22 @@ function App() {
             element={
               <ValidateRoute requiredPermissions={"Inventory"}>
                 <AllInventories />
+              </ValidateRoute>
+            }
+          />
+          <Route
+            path="/low-inventories"
+            element={
+              <ValidateRoute requiredPermissions={"Inventory"}>
+                <LowInventories />
+              </ValidateRoute>
+            }
+          />
+          <Route
+            path="/out-inventories"
+            element={
+              <ValidateRoute requiredPermissions={"any"}>
+                <OutInventories />
               </ValidateRoute>
             }
           />

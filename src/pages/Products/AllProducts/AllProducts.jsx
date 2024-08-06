@@ -63,16 +63,6 @@ function AllProducts() {
     fetchProducts(payload);
   }, [pageNumber, pageSize, searchText]);
 
-  const handleSearchClick = () => {
-    const payload = {
-      pageNumber: pageNumber,
-      pagesize: pageSize,
-      search: searchText,
-    };
-
-    fetchProducts(payload);
-  };
-
   const handleEdit = (productID) => {
     navigate("/edit-product", { state: { productID } });
   };

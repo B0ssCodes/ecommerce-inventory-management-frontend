@@ -12,6 +12,7 @@ import {
   TeamOutlined,
   SolutionOutlined,
   ProductOutlined,
+  SettingOutlined,
 } from "@ant-design/icons";
 import { Link, useLocation } from "react-router-dom";
 import Logout from "../modals/Logout";
@@ -77,6 +78,11 @@ const items = [
         label: <Link to="/vendors">Vendors</Link>,
       },
     ],
+  },
+  {
+    key: "/configuration",
+    icon: <SettingOutlined />,
+    label: <Link to="/configuration">Configuration</Link>,
   },
 ];
 

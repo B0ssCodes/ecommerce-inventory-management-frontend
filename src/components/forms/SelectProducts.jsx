@@ -1,5 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { Card, Row, Col, Modal, Input, Button, Pagination } from "antd";
+import {
+  Card,
+  Row,
+  Col,
+  Modal,
+  Input,
+  Button,
+  Pagination,
+  Typography,
+  Tag,
+} from "antd";
+
+const { Title, Text } = Typography;
 
 function SelectProducts({
   transactionItems,
@@ -18,7 +30,7 @@ function SelectProducts({
 
   useEffect(() => {
     const fetchData = async (payload) => {
-      const url = "https://localhost:7200/api/product/get";
+      const url = "https://localhost:7200/api/product/getSelect";
       const token = localStorage.getItem("token");
       const response = await fetch(url, {
         method: "POST",
@@ -139,13 +151,50 @@ function SelectProducts({
         {products.map((product) => (
           <Col span={8} key={product.productID}>
             <Card
-              title={product.name}
               bordered={true}
               onClick={() => showModal(product)}
-              style={{ cursor: "pointer" }}
+              style={{ cursor: "pointer", position: "relative" }}
             >
-              <p>SKU: {product.sku}</p>
-              <p>Cost: ${product.cost}</p>
+              <Tag
+                color="blue"
+                style={{ position: "absolute", top: 8, left: 8 }}
+              >
+                {product.category}
+              </Tag>
+              {product.quantity === 0 && (
+                <Tag
+                  color="red"
+                  style={{ position: "absolute", top: 8, right: 8 }}
+                >
+                  Out Of Stock
+                </Tag>
+              )}
+              <Title level={4} style={{ textAlign: "center", marginTop: 32 }}>
+                {product.name}
+              </Title>
+              <Text
+                style={{
+                  fontSize: "24px",
+                  fontWeight: "bold",
+                  display: "block",
+                  textAlign: "center",
+                  marginBottom: "1em",
+                }}
+              >
+                ${product.cost}
+              </Text>
+              <Tag
+                color="magenta"
+                style={{ position: "absolute", bottom: 8, left: 8 }}
+              >
+                {product.sku}
+              </Tag>
+              <Tag
+                color="green"
+                style={{ position: "absolute", bottom: 8, right: 8 }}
+              >
+                {product.quantity}
+              </Tag>
             </Card>
           </Col>
         ))}
