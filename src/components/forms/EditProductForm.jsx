@@ -171,7 +171,14 @@ const EditProductForm = () => {
         label="Category"
         rules={[{ required: true, message: "Please select a category" }]}
       >
-        <Select>
+        <Select
+          showSearch
+          placeholder="Select a category"
+          optionFilterProp="children"
+          filterOption={(input, option) =>
+            option.children.toLowerCase().includes(input.toLowerCase())
+          }
+        >
           {categories.map((category) => (
             <Option key={category.categoryID} value={category.categoryID}>
               {category.name}

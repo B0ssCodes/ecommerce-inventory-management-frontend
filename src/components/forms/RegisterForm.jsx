@@ -132,7 +132,14 @@ function RegisterForm({ returnRoute, buttonText, showLogin }) {
           name="userRole"
           rules={[{ required: true, message: "Please select your user role!" }]}
         >
-          <Select placeholder="Select a role">
+          <Select
+            showSearch
+            placeholder="Select a role"
+            optionFilterProp="children"
+            filterOption={(input, option) =>
+              option.children.toLowerCase().includes(input.toLowerCase())
+            }
+          >
             {userRoles.map((roleObj) => (
               <Option key={roleObj.userRoleID} value={roleObj.userRoleID}>
                 {roleObj.role}

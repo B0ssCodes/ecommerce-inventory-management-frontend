@@ -129,7 +129,14 @@ const EditUserForm = () => {
         label="Role"
         rules={[{ required: true, message: "Please select a role" }]}
       >
-        <Select>
+        <Select
+          showSearch
+          placeholder="Select a role"
+          optionFilterProp="children"
+          filterOption={(input, option) =>
+            option.children.toLowerCase().includes(input.toLowerCase())
+          }
+        >
           {roles.map((role) => (
             <Option key={role.userRoleID} value={role.userRoleID}>
               {role.role}
