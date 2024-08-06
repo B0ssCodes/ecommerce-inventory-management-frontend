@@ -7,6 +7,7 @@ import {
   Pagination,
   Select,
   Spin,
+  Space,
 } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { debounce } from "lodash";
@@ -76,6 +77,10 @@ function AllUsers() {
     []
   );
 
+  const handleEdit = (userID) => {
+    navigate("/edit-user", { state: { userID } });
+  };
+
   const handleSearchChange = (e) => {
     setIsLoading(true);
     debouncedSearch(e.target.value);
@@ -104,7 +109,16 @@ function AllUsers() {
     {
       title: "Actions",
       key: "actions",
-      render: (text, record) => <DeleteUser userID={record.userID} />,
+      render: (text, record) => (
+        <Space size="middle">
+          <Button
+            type="primary"
+            icon={<EditOutlined />}
+            onClick={() => handleEdit(record.userID)}
+          ></Button>
+          <DeleteUser userID={record.userID} />
+        </Space>
+      ),
     },
   ];
 

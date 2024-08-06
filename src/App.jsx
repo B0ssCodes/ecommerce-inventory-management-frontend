@@ -10,6 +10,7 @@ import CreateProduct from "./pages/Products/CreateProduct/CreateProduct";
 import EditProduct from "./pages/Products/EditProduct/EditProduct";
 import AllUsers from "./pages/Users/AllUsers/AllUsers";
 import CreateUser from "./pages/Users/CreateUser/CreateUser";
+import EditUser from "./pages/Users/EditUser/EditUser";
 import AllVendors from "./pages/Vendors/AllVendors/AllVendors";
 import CreateVendor from "./pages/Vendors/CreateVendor/CreateVendor";
 import EditVendor from "./pages/Vendors/EditVendor/EditVendor";
@@ -136,6 +137,14 @@ function App() {
             element={
               <ValidateRoute requiredPermissions={"Users"}>
                 <CreateUser />
+              </ValidateRoute>
+            }
+          />
+          <Route
+            path="/edit-user"
+            element={
+              <ValidateRoute requiredPermissions={"Users"}>
+                <EditUser />
               </ValidateRoute>
             }
           />
