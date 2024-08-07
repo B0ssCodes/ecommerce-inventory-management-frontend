@@ -6,6 +6,7 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import ValidateRoute from "./components/utility/ValidateRoute";
 import AllProducts from "./pages/Products/AllProducts/AllProducts";
+import ViewProduct from "./pages/Products/ViewProduct/ViewProduct";
 import CreateProduct from "./pages/Products/CreateProduct/CreateProduct";
 import EditProduct from "./pages/Products/EditProduct/EditProduct";
 import AllUsers from "./pages/Users/AllUsers/AllUsers";
@@ -126,6 +127,14 @@ function App({ isDarkMode, toggleTheme }) {
             element={
               <ValidateRoute requiredPermissions={"Products"}>
                 <AllProducts />
+              </ValidateRoute>
+            }
+          />
+          <Route
+            path="/view-product/:productID"
+            element={
+              <ValidateRoute requiredPermissions={"Products"}>
+                <ViewProduct />
               </ValidateRoute>
             }
           />
