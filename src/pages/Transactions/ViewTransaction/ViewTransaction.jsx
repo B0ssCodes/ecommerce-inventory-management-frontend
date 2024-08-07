@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
-import { Layout, Typography, Table, Row, Col, Card } from "antd";
+import { Layout, Typography, Table, Row, Col, Card, Button } from "antd";
+import ReactToPrint from "react-to-print";
 
 const { Header, Content } = Layout;
 const { Title, Text } = Typography;
@@ -9,6 +10,7 @@ function ViewTransaction() {
   const location = useLocation();
   const [transactionID, setTransactionID] = useState(null);
   const [transactionDetails, setTransactionDetails] = useState(null);
+  const componentRef = useRef();
 
   useEffect(() => {
     setTransactionID(location.state.transactionID);
@@ -79,7 +81,11 @@ function ViewTransaction() {
         <Title level={2}>Invoice</Title>
       </Header>
       <Content style={{ margin: "24px 16px 0" }}>
-        <Card>
+        <ReactToPrint
+          trigger={() => <Button type="primary">Print Invoice</Button>}
+          content={() => componentRef.current}
+        />
+        <Card ref={componentRef}>
           <Row gutter={16}>
             <Col span={12}>
               <Title level={4}>

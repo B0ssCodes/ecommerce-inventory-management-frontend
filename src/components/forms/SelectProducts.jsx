@@ -18,6 +18,7 @@ function SelectProducts({
   setTransactionItems,
   itemsToSubmit,
   setItemsToSubmit,
+  transactionTypeID,
 }) {
   const [products, setProducts] = useState([]);
   const [itemCount, setItemCount] = useState(0);
@@ -63,6 +64,11 @@ function SelectProducts({
   };
 
   const handleOk = () => {
+    if (transactionTypeID == 2 && quantity > selectedProduct.quantity) {
+      alert("Requested quantity is larger than the available quantity.");
+      return;
+    }
+
     if (selectedProduct && quantity > 0) {
       const newTransactionItem = {
         productID: selectedProduct.productID,
@@ -124,11 +130,6 @@ function SelectProducts({
     setQuantity(0);
   };
 
-  const handleCancel = () => {
-    setIsModalVisible(false);
-    setQuantity(0);
-  };
-
   const handleSearchChange = (e) => {
     setPageNumber(1);
     setSearchText(e.target.value);
@@ -137,6 +138,11 @@ function SelectProducts({
   const handlePageChange = (page, pageSize) => {
     setPageNumber(page);
     setPageSize(pageSize);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+    setQuantity(0);
   };
 
   return (

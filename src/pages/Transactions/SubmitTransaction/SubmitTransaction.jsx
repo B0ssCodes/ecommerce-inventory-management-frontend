@@ -20,12 +20,14 @@ function SubmitTransaction() {
   const navigate = useNavigate();
 
   const [transactionID, setTransactionID] = useState(null);
+  const [transactionTypeID, setTransactionTypeID] = useState(null);
   const [transactionItems, setTransactionItems] = useState([]);
   const [itemsToSubmit, setItemsToSubmit] = useState([]);
 
   useEffect(() => {
     setTransactionID(location.state.transactionID);
-  }, [location.state.transactionID]);
+    setTransactionTypeID(location.state.transactionTypeID);
+  }, [location.state.transactionID, location.state.transactionTypeID]);
 
   useEffect(() => {
     console.log("Transaction Items:", transactionItems);
@@ -124,6 +126,7 @@ function SubmitTransaction() {
             setTransactionItems={setTransactionItems}
             itemsToSubmit={itemsToSubmit}
             setItemsToSubmit={setItemsToSubmit}
+            transactionTypeID={transactionTypeID}
           />
         </Card>
       </Content>

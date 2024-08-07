@@ -83,7 +83,10 @@ function SelectVendor() {
         const data = await response.json();
         if (response.ok) {
           navigate("/submit-transaction", {
-            state: { transactionID: data.result },
+            state: {
+              transactionID: data.result,
+              transactionTypeID: transactionTypeID,
+            },
           });
         } else {
           console.error("Failed to create transaction:", data);
