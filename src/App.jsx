@@ -29,6 +29,7 @@ import EditUserRole from "./pages/UserRoles/EditUserRole/EditUserRole";
 import AllInventories from "./pages/Inventory/AllInventories/AllInventories";
 import LowInventories from "./pages/Inventory/LowInventories/LowInventories";
 import OutInventories from "./pages/Inventory/OutInventories/OutInventories";
+import AllProductAnalytics from "./pages/ProductAnalytics/AllProductAnalytics/AllProductAnalytics";
 import { decodeToken } from "./components/utility/decodeToken";
 import Configuration from "./pages/Configuration/Configuration";
 function App({ isDarkMode, toggleTheme }) {
@@ -300,6 +301,14 @@ function App({ isDarkMode, toggleTheme }) {
             element={
               <ValidateRoute requiredPermissions={"any"}>
                 <OutInventories />
+              </ValidateRoute>
+            }
+          />
+          <Route
+            path="/product-analytics"
+            element={
+              <ValidateRoute requiredPermissions={"Products"}>
+                <AllProductAnalytics />
               </ValidateRoute>
             }
           />

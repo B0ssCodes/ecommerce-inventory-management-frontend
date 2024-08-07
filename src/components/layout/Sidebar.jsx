@@ -13,6 +13,7 @@ import {
   SolutionOutlined,
   ProductOutlined,
   SettingOutlined,
+  LineChartOutlined,
 } from "@ant-design/icons";
 import { Link, useLocation } from "react-router-dom";
 import Logout from "../modals/Logout";
@@ -76,6 +77,18 @@ const items = [
         key: "/vendors",
         icon: <SolutionOutlined />,
         label: <Link to="/vendors">Vendors</Link>,
+      },
+    ],
+  },
+  {
+    key: "sub4",
+    icon: <UserOutlined />,
+    label: "Analytics",
+    children: [
+      {
+        key: "/product-analytics",
+        icon: <LineChartOutlined />,
+        label: <Link to="/product-analytics">Product Analytics</Link>,
       },
     ],
   },
