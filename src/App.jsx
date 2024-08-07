@@ -31,7 +31,7 @@ import LowInventories from "./pages/Inventory/LowInventories/LowInventories";
 import OutInventories from "./pages/Inventory/OutInventories/OutInventories";
 import { decodeToken } from "./components/utility/decodeToken";
 import Configuration from "./pages/Configuration/Configuration";
-function App() {
+function App({ isDarkMode, toggleTheme }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userPermissions, setUserPermissions] = useState([]);
   let userRoleID = 0;
@@ -272,7 +272,10 @@ function App() {
             path="/view-transaction"
             element={
               <ValidateRoute requiredPermissions={"Transactions"}>
-                <ViewTransaction />
+                <ViewTransaction
+                  isDarkMode={isDarkMode}
+                  toggleTheme={toggleTheme}
+                />
               </ValidateRoute>
             }
           />

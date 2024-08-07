@@ -21,7 +21,7 @@ const Main = () => {
             checkedChildren="Dark"
             unCheckedChildren="Light"
           />
-          <App />
+          <App isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
         </div>
       </div>
     </ConfigProvider>

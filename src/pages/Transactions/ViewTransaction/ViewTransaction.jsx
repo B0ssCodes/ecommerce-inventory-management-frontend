@@ -1,16 +1,18 @@
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { Layout, Typography, Table, Row, Col, Card, Button } from "antd";
+import { PrinterOutlined } from "@ant-design/icons";
 import ReactToPrint from "react-to-print";
-
+import useDarkMode from "../../../components/layout/useDarkMode";
 const { Header, Content } = Layout;
 const { Title, Text } = Typography;
 
-function ViewTransaction() {
+function ViewTransaction({ isDarkMode, toggleTheme }) {
   const location = useLocation();
   const [transactionID, setTransactionID] = useState(null);
   const [transactionDetails, setTransactionDetails] = useState(null);
   const componentRef = useRef();
+  const [originalTheme, setOriginalTheme] = useState(isDarkMode);
 
   useEffect(() => {
     setTransactionID(location.state.transactionID);
@@ -75,16 +77,40 @@ function ViewTransaction() {
     },
   ];
 
+  const handleBeforePrint = () => {
+    if (isDarkMode) {
+      setOriginalTheme(true);
+      toggleTheme();
+    }
+  };
+
+  const handleAfterPrint = () => {
+    if (originalTheme) {
+      toggleTheme();
+    }
+  };
+
   return (
     <Layout style={{ minHeight: "100vh", padding: "24px" }}>
       <Header style={{ background: "transparent", padding: 0 }}>
         <Title level={2}>Invoice</Title>
       </Header>
       <Content style={{ margin: "24px 16px 0" }}>
-        <ReactToPrint
-          trigger={() => <Button type="primary">Print Invoice</Button>}
-          content={() => componentRef.current}
-        />
+        <Row justify="end" style={{ marginBottom: "16px" }}>
+          <Col>
+            <ReactToPrint
+              trigger={() => (
+                <Button type="primary">
+                  <PrinterOutlined />
+                  Print Invoice
+                </Button>
+              )}
+              content={() => componentRef.current}
+              onBeforeGetContent={handleBeforePrint}
+              onAfterPrint={handleAfterPrint}
+            />
+          </Col>
+        </Row>
         <Card ref={componentRef}>
           <Row gutter={16}>
             <Col span={12}>
