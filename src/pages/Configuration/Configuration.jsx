@@ -3,9 +3,11 @@ import { Input, Button, Form, message, Row, Col, Divider } from "antd";
 
 function Configuration() {
   const [minStockNumber, setMinStockNumber] = useState("");
+  const [statisticsRefreshRate, setStatisticsRefreshRate] = useState("");
 
-  const handleLowStockNumber = () => {
+  const handleSave = () => {
     localStorage.setItem("minStockNumber", minStockNumber);
+    localStorage.setItem("statisticsRefreshRate", statisticsRefreshRate);
     message.success("Changes saved successfully");
   };
 
@@ -13,6 +15,13 @@ function Configuration() {
     const savedMinStockNumber = localStorage.getItem("minStockNumber");
     if (savedMinStockNumber) {
       setMinStockNumber(savedMinStockNumber);
+    }
+
+    const savedStatisticsRefreshRate = localStorage.getItem(
+      "statisticsRefreshRate"
+    );
+    if (savedStatisticsRefreshRate) {
+      setStatisticsRefreshRate(savedStatisticsRefreshRate);
     }
   }, []);
 
@@ -37,7 +46,23 @@ function Configuration() {
         </Form.Item>
         <Divider />
         <Form.Item>
-          <Button type="primary" onClick={handleLowStockNumber}>
+          <Row align="middle">
+            <Col span={12}>
+              <label style={{ fontSize: "18px", fontWeight: "bold" }}>
+                Statistics Refresh Rate (days)
+              </label>
+            </Col>
+            <Col span={12}>
+              <Input
+                placeholder="Enter a refresh rate"
+                value={statisticsRefreshRate}
+                onChange={(e) => setStatisticsRefreshRate(e.target.value)}
+              />
+            </Col>
+          </Row>
+        </Form.Item>
+        <Form.Item>
+          <Button type="primary" onClick={handleSave}>
             Save
           </Button>
         </Form.Item>

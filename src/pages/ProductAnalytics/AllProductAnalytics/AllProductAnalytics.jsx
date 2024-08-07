@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Card, Row, Col, Tag, Typography } from "antd";
+import { Card, Row, Col, Tag, Typography, Button } from "antd";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
-
+import moment from "moment";
 const AllProductAnalytics = () => {
   const [productAnalytics, setProductAnalytics] = useState([]);
   const navigate = useNavigate();
-  const { Text } = Typography;
+  const { Text, Title } = Typography;
 
   useEffect(() => {
+    const statisticsRefreshRate = localStorage.getItem("statisticsRefreshRate");
     const fetchProductAnalytics = async () => {
-      const url = "https://localhost:7200/api/analytics/get";
+      const url = `https://localhost:7200/api/analytics/get/${statisticsRefreshRate}`;
       const token = localStorage.getItem("token");
       try {
         const response = await fetch(url, {
@@ -34,6 +35,29 @@ const AllProductAnalytics = () => {
 
     fetchProductAnalytics();
   }, []);
+
+  const handleRefreshStatistics = async () => {
+    const url = "https://localhost:7200/api/analytics/reset";
+    const token = localStorage.getItem("token");
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
+      if (response.ok) {
+        window.location.reload();
+      } else {
+        console.error("Failed to refresh statistics:", data);
+        alert(data.message || "Failed to refresh statistics");
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
+      alert("An error occurred while refreshing statistics");
+    }
+  };
 
   const totalProfit = productAnalytics.reduce(
     (acc, product) => acc + product.profit,
@@ -82,6 +106,29 @@ const AllProductAnalytics = () => {
                 alignItems: "flex-start",
               }}
             >
+              <Title level={5}>Analytics Period</Title>
+              {productAnalytics.length > 0 && (
+                <>
+                  <Text>
+                    From:{" "}
+                    {moment(productAnalytics[0].fromDate).format(
+                      "D/M/Y H:mm:ss"
+                    )}
+                  </Text>
+                  <Text>
+                    To:{" "}
+                    {moment(productAnalytics[0].toDate).format("D/M/Y H:mm:ss")}
+                  </Text>
+                </>
+              )}
+            </div>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+              }}
+            >
               <Text
                 style={{ color: "green", fontSize: "24px", fontWeight: "bold" }}
               >
@@ -92,6 +139,13 @@ const AllProductAnalytics = () => {
               >
                 Total Spent: ${totalSpent}
               </Text>
+              <Button
+                type="primary"
+                onClick={handleRefreshStatistics}
+                style={{ marginTop: "10px" }}
+              >
+                Refresh Statistics
+              </Button>
             </div>
             <div style={{ width: "150px" }}>
               <CircularProgressbar

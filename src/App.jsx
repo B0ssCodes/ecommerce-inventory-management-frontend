@@ -66,6 +66,11 @@ function App({ isDarkMode, toggleTheme }) {
       localStorage.setItem("minStockNumber", 10);
     }
 
+    const statisticsRefreshRate = localStorage.getItem("statisticsRefreshRate");
+    if (!statisticsRefreshRate) {
+      localStorage.setItem("statisticsRefreshRate", 7);
+    }
+
     const token = localStorage.getItem("token");
     const tokenExpiry = localStorage.getItem("tokenExpiry");
     const claims = decodeToken(token);
