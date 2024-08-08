@@ -35,6 +35,7 @@ import { decodeToken } from "./components/utility/decodeToken";
 import Configuration from "./pages/Configuration/Configuration";
 import CategoryAnalytics from "./pages/Analytics/CategoryAnalytics/CategoryAnalytics";
 import VendorAnalytics from "./pages/Analytics/VendorAnalytics/VendorAnalytics";
+import ViewCategory from "./pages/Categories/ViewCategory/ViewCategory";
 function App({ isDarkMode, toggleTheme }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userPermissions, setUserPermissions] = useState([]);
@@ -244,6 +245,14 @@ function App({ isDarkMode, toggleTheme }) {
             element={
               <ValidateRoute requiredPermissions={"Categories"}>
                 <AllCategories />
+              </ValidateRoute>
+            }
+          />
+          <Route
+            path="/view-category/:categoryID"
+            element={
+              <ValidateRoute requiredPermissions={"Categories"}>
+                <ViewCategory />
               </ValidateRoute>
             }
           />
