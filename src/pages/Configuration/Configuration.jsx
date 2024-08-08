@@ -5,6 +5,7 @@ function Configuration() {
   const [minStockNumber, setMinStockNumber] = useState("");
   const [statisticsRefreshRate, setStatisticsRefreshRate] = useState("");
   const [categoryFetchCount, setCategoryFetchCount] = useState("");
+  const [vendorFetchCount, setVendorFetchCount] = useState("");
 
   const handleSave = () => {
     localStorage.setItem("minStockNumber", minStockNumber);
@@ -29,6 +30,11 @@ function Configuration() {
     const savedCategoryFetchCount = localStorage.getItem("categoryFetchCount");
     if (savedCategoryFetchCount) {
       setCategoryFetchCount(savedCategoryFetchCount);
+    }
+
+    const savedVendorFetchCount = localStorage.getItem("vendorFetchCount");
+    if (savedVendorFetchCount) {
+      setVendorFetchCount(savedVendorFetchCount);
     }
   }, []);
 
@@ -68,6 +74,7 @@ function Configuration() {
             </Col>
           </Row>
         </Form.Item>
+        <Divider />
         <Form.Item>
           <Row align="middle">
             <Col span={12}>
@@ -80,6 +87,23 @@ function Configuration() {
                 placeholder="Enter a category count"
                 value={categoryFetchCount}
                 onChange={(e) => setCategoryFetchCount(e.target.value)}
+              />
+            </Col>
+          </Row>
+        </Form.Item>
+        <Divider />
+        <Form.Item>
+          <Row align="middle">
+            <Col span={12}>
+              <label style={{ fontSize: "18px", fontWeight: "bold" }}>
+                Vendor Statistics Count
+              </label>
+            </Col>
+            <Col span={12}>
+              <Input
+                placeholder="Enter a vendor count"
+                value={vendorFetchCount}
+                onChange={(e) => setVendorFetchCount(e.target.value)}
               />
             </Col>
           </Row>

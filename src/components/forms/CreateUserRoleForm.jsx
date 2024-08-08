@@ -8,13 +8,13 @@ import {
   ShopOutlined,
   TagsOutlined,
   UserOutlined,
-  TeamOutlined,
   HomeOutlined,
   UsergroupAddOutlined,
   SolutionOutlined,
   SettingOutlined,
   DotChartOutlined,
   PieChartOutlined,
+  AreaChartOutlined,
 } from "@ant-design/icons";
 
 const permissionsList = [
@@ -29,6 +29,7 @@ const permissionsList = [
   { name: "Configuration", icon: <SettingOutlined /> },
   { name: "Product Analytics", icon: <PieChartOutlined /> },
   { name: "Category Analytics", icon: <DotChartOutlined /> },
+  { name: "Vendor Analytics", icon: <AreaChartOutlined /> },
 ];
 
 function CreateUserRoleForm() {

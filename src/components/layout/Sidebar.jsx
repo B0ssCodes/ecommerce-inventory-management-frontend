@@ -16,6 +16,7 @@ import {
   LineChartOutlined,
   PieChartOutlined,
   DotChartOutlined,
+  AreaChartOutlined,
 } from "@ant-design/icons";
 import { Link, useLocation } from "react-router-dom";
 import Logout from "../modals/Logout";
@@ -96,6 +97,11 @@ const items = [
         key: "/category-analytics",
         icon: <DotChartOutlined />,
         label: <Link to="/category-analytics">Category Analytics</Link>,
+      },
+      {
+        key: "/vendor-analytics",
+        icon: <AreaChartOutlined />,
+        label: <Link to="/vendor-analytics">Vendor Analytics</Link>,
       },
     ],
   },

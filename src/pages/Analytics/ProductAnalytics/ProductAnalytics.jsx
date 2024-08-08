@@ -83,7 +83,7 @@ const ProductAnalytics = () => {
     totalProfit > 0 ? "green" : totalProfit < 0 ? "red" : "gray";
 
   const handleCardClick = (productID) => {
-    navigate("/edit-product", { state: { productID } });
+    navigate("/view-product/" + productID);
   };
 
   return (

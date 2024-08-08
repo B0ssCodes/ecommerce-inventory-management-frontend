@@ -34,6 +34,7 @@ import ProductAnalytics from "./pages/Analytics/ProductAnalytics/ProductAnalytic
 import { decodeToken } from "./components/utility/decodeToken";
 import Configuration from "./pages/Configuration/Configuration";
 import CategoryAnalytics from "./pages/Analytics/CategoryAnalytics/CategoryAnalytics";
+import VendorAnalytics from "./pages/Analytics/VendorAnalytics/VendorAnalytics";
 function App({ isDarkMode, toggleTheme }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userPermissions, setUserPermissions] = useState([]);
@@ -75,7 +76,12 @@ function App({ isDarkMode, toggleTheme }) {
 
     const categoryFetchCount = localStorage.getItem("categoryFetchCount");
     if (!categoryFetchCount) {
-      localStorage.setItem("categoryFetchCount", 5);
+      localStorage.setItem("categoryFetchCount", 10);
+    }
+
+    const vendorFetchCount = localStorage.getItem("vendorFetchCount");
+    if (!vendorFetchCount) {
+      localStorage.setItem("vendorFetchCount", 5);
     }
 
     const token = localStorage.getItem("token");
@@ -337,6 +343,14 @@ function App({ isDarkMode, toggleTheme }) {
             element={
               <ValidateRoute requiredPermissions={"Category Analytics"}>
                 <CategoryAnalytics />
+              </ValidateRoute>
+            }
+          />
+          <Route
+            path="/vendor-analytics"
+            element={
+              <ValidateRoute requiredPermissions={"Vendor Analytics"}>
+                <VendorAnalytics />
               </ValidateRoute>
             }
           />
