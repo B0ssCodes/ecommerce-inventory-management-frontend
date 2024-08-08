@@ -11,7 +11,7 @@ import {
 } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { debounce } from "lodash";
-import { EditOutlined, SearchOutlined } from "@ant-design/icons";
+import { EditOutlined, EyeOutlined } from "@ant-design/icons";
 import "./AllCategories.css"; // Import the CSS file
 import DeleteCategory from "../../../components/modals/DeleteCategory";
 
@@ -81,6 +81,9 @@ function AllCategories() {
     debouncedSearch(e.target.value);
   };
 
+  const handleView = (categoryID) => {
+    navigate(`/view-category/${categoryID}`);
+  };
   const columns = [
     {
       title: "Name",
@@ -97,6 +100,11 @@ function AllCategories() {
       key: "actions",
       render: (text, record) => (
         <Space size="middle">
+          <Button
+            type="primary"
+            icon={<EyeOutlined />}
+            onClick={() => handleView(record.categoryID)}
+          ></Button>
           <Button
             type="primary"
             icon={<EditOutlined />}

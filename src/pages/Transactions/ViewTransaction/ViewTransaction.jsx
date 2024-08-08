@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import { Layout, Typography, Table, Row, Col, Card, Button } from "antd";
 import { PrinterOutlined } from "@ant-design/icons";
 import ReactToPrint from "react-to-print";
+import "./ViewTransaction.css";
 import useDarkMode from "../../../components/layout/useDarkMode";
 const { Header, Content } = Layout;
 const { Title, Text } = Typography;
@@ -77,18 +78,18 @@ function ViewTransaction({ isDarkMode, toggleTheme }) {
     },
   ];
 
-  const handleBeforePrint = () => {
-    if (isDarkMode) {
-      setOriginalTheme(true);
-      toggleTheme();
-    }
-  };
+  // const handleBeforePrint = () => {
+  //   if (isDarkMode) {
+  //     setOriginalTheme(true);
+  //     toggleTheme();
+  //   }
+  // };
 
-  const handleAfterPrint = () => {
-    if (originalTheme) {
-      toggleTheme();
-    }
-  };
+  // const handleAfterPrint = () => {
+  //   if (originalTheme) {
+  //     toggleTheme();
+  //   }
+  // };
 
   return (
     <Layout style={{ minHeight: "100vh", padding: "24px" }}>
@@ -106,8 +107,6 @@ function ViewTransaction({ isDarkMode, toggleTheme }) {
                 </Button>
               )}
               content={() => componentRef.current}
-              onBeforeGetContent={handleBeforePrint}
-              onAfterPrint={handleAfterPrint}
             />
           </Col>
         </Row>

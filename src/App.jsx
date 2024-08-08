@@ -30,9 +30,12 @@ import EditUserRole from "./pages/UserRoles/EditUserRole/EditUserRole";
 import AllInventories from "./pages/Inventory/AllInventories/AllInventories";
 import LowInventories from "./pages/Inventory/LowInventories/LowInventories";
 import OutInventories from "./pages/Inventory/OutInventories/OutInventories";
-import AllProductAnalytics from "./pages/ProductAnalytics/AllProductAnalytics/AllProductAnalytics";
+import ProductAnalytics from "./pages/Analytics/ProductAnalytics/ProductAnalytics";
 import { decodeToken } from "./components/utility/decodeToken";
 import Configuration from "./pages/Configuration/Configuration";
+import CategoryAnalytics from "./pages/Analytics/CategoryAnalytics/CategoryAnalytics";
+import VendorAnalytics from "./pages/Analytics/VendorAnalytics/VendorAnalytics";
+import ViewCategory from "./pages/Categories/ViewCategory/ViewCategory";
 function App({ isDarkMode, toggleTheme }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userPermissions, setUserPermissions] = useState([]);
@@ -70,6 +73,16 @@ function App({ isDarkMode, toggleTheme }) {
     const statisticsRefreshRate = localStorage.getItem("statisticsRefreshRate");
     if (!statisticsRefreshRate) {
       localStorage.setItem("statisticsRefreshRate", 7);
+    }
+
+    const categoryFetchCount = localStorage.getItem("categoryFetchCount");
+    if (!categoryFetchCount) {
+      localStorage.setItem("categoryFetchCount", 10);
+    }
+
+    const vendorFetchCount = localStorage.getItem("vendorFetchCount");
+    if (!vendorFetchCount) {
+      localStorage.setItem("vendorFetchCount", 5);
     }
 
     const token = localStorage.getItem("token");
@@ -236,6 +249,14 @@ function App({ isDarkMode, toggleTheme }) {
             }
           />
           <Route
+            path="/view-category/:categoryID"
+            element={
+              <ValidateRoute requiredPermissions={"Categories"}>
+                <ViewCategory />
+              </ValidateRoute>
+            }
+          />
+          <Route
             path="/create-category"
             element={
               <ValidateRoute requiredPermissions={"Categories"}>
@@ -321,8 +342,24 @@ function App({ isDarkMode, toggleTheme }) {
           <Route
             path="/product-analytics"
             element={
-              <ValidateRoute requiredPermissions={"Products"}>
-                <AllProductAnalytics />
+              <ValidateRoute requiredPermissions={"Product Analytics"}>
+                <ProductAnalytics />
+              </ValidateRoute>
+            }
+          />
+          <Route
+            path="/category-analytics"
+            element={
+              <ValidateRoute requiredPermissions={"Category Analytics"}>
+                <CategoryAnalytics />
+              </ValidateRoute>
+            }
+          />
+          <Route
+            path="/vendor-analytics"
+            element={
+              <ValidateRoute requiredPermissions={"Vendor Analytics"}>
+                <VendorAnalytics />
               </ValidateRoute>
             }
           />
