@@ -69,10 +69,10 @@ const CategoryAnalytics = () => {
             </Text>
           </Col>
           <Col span={12}>
-            <PieChart width={400} height={400}>
+            <PieChart width={500} height={400}>
               <Pie
                 data={pieData}
-                cx={200}
+                cx={250}
                 cy={200}
                 labelLine={false}
                 label={({ name, percent }) =>

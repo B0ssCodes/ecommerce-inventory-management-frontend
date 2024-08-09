@@ -123,13 +123,14 @@ const extractTextFromLabel = (label) => {
 };
 
 const filterItemsByPermissions = (items, userPermissions) => {
-  return items
+  const filteredItems = items
     .map((item) => {
       if (item.children) {
         const filteredChildren = item.children.filter((child) =>
           userPermissions.some(
             (permission) =>
-              permission.permission === extractTextFromLabel(child.label)
+              permission.toLowerCase() ===
+              extractTextFromLabel(child.label).toLowerCase()
           )
         );
         if (filteredChildren.length > 0) {
@@ -138,7 +139,8 @@ const filterItemsByPermissions = (items, userPermissions) => {
       } else if (
         userPermissions.some(
           (permission) =>
-            permission.permission === extractTextFromLabel(item.label)
+            permission.toLowerCase() ===
+            extractTextFromLabel(item.label).toLowerCase()
         )
       ) {
         return item;
@@ -146,12 +148,23 @@ const filterItemsByPermissions = (items, userPermissions) => {
       return null;
     })
     .filter((item) => item !== null);
+
+  console.log("filteredItems:", filteredItems); // Debugging log
+  return filteredItems;
 };
-const Sidebar = ({ children, isLoggedIn, setIsLoggedIn, userPermissions }) => {
+
+const Sidebar = ({ children, isLoggedIn, setIsLoggedIn }) => {
   const location = useLocation();
   const [openKeys, setOpenKeys] = useState([]);
+  const [userPermissions, setUserPermissions] = useState([]);
 
-  // Set open keys based on the current location to open the category (copilot)
+  useEffect(() => {
+    const permissions =
+      JSON.parse(localStorage.getItem("userPermissions")) || [];
+    setUserPermissions(Array.isArray(permissions) ? permissions : []);
+  }, []);
+
+  // Set open keys based on the current location to open the category
   useEffect(() => {
     const path = location.pathname;
     const parentKey = items.find((item) =>

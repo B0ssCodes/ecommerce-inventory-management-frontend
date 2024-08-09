@@ -93,7 +93,9 @@ function App({ isDarkMode, toggleTheme }) {
       userRoleID =
         claims["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
 
-      getUserPermissions(userRoleID);
+      if (!localStorage.getItem("userPermissions")) {
+        getUserPermissions(userRoleID);
+      }
     }
     if (token && tokenExpiry) {
       const currentTime = new Date().getTime();
