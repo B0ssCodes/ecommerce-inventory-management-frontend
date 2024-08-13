@@ -30,6 +30,7 @@ const permissionsList = [
   { name: "Product Analytics", icon: <PieChartOutlined /> },
   { name: "Category Analytics", icon: <DotChartOutlined /> },
   { name: "Vendor Analytics", icon: <AreaChartOutlined /> },
+  { name: "User Logs", icon: <AreaChartOutlined /> },
 ];
 
 function CreateUserRoleForm() {

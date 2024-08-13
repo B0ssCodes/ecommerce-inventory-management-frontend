@@ -36,6 +36,9 @@ import Configuration from "./pages/Configuration/Configuration";
 import CategoryAnalytics from "./pages/Analytics/CategoryAnalytics/CategoryAnalytics";
 import VendorAnalytics from "./pages/Analytics/VendorAnalytics/VendorAnalytics";
 import ViewCategory from "./pages/Categories/ViewCategory/ViewCategory";
+import AllUserLogs from "./pages/Activity/UserLogs/AllUserLogs/AllUserLogs";
+import ViewUserLog from "./pages/Activity/UserLogs/ViewUserLog/ViewUserLog";
+import ViewUser from "./pages/Users/ViewUser/ViewUser";
 function App({ isDarkMode, toggleTheme }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userPermissions, setUserPermissions] = useState([]);
@@ -93,7 +96,9 @@ function App({ isDarkMode, toggleTheme }) {
       userRoleID =
         claims["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
 
-      getUserPermissions(userRoleID);
+      if (!localStorage.getItem("userPermissions")) {
+        getUserPermissions(userRoleID);
+      }
     }
     if (token && tokenExpiry) {
       const currentTime = new Date().getTime();
@@ -181,6 +186,14 @@ function App({ isDarkMode, toggleTheme }) {
             element={
               <ValidateRoute requiredPermissions={"Users"}>
                 <CreateUser />
+              </ValidateRoute>
+            }
+          />
+          <Route
+            path="/view-user/:userID"
+            element={
+              <ValidateRoute requiredPermissions={"Users"}>
+                <ViewUser />
               </ValidateRoute>
             }
           />
@@ -360,6 +373,22 @@ function App({ isDarkMode, toggleTheme }) {
             element={
               <ValidateRoute requiredPermissions={"Vendor Analytics"}>
                 <VendorAnalytics />
+              </ValidateRoute>
+            }
+          />
+          <Route
+            path="/user-logs"
+            element={
+              <ValidateRoute requiredPermissions={"any"}>
+                <AllUserLogs />
+              </ValidateRoute>
+            }
+          />
+          <Route
+            path="/view-user-log"
+            element={
+              <ValidateRoute requiredPermissions={"any"}>
+                <ViewUserLog />
               </ValidateRoute>
             }
           />

@@ -20,15 +20,20 @@ const { Option } = Select;
 
 function AllCategories() {
   const [searchText, setSearchText] = useState("");
-  const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [itemCount, setItemCount] = useState(1);
   const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
 
-  const fetchCategories = async (payload) => {
-    const url = "https://localhost:7200/api/category/get";
+  const fetchCategories = async (pageNumber, pageSize, searchText) => {
+    const payload = {
+      pageNumber,
+      pageSize,
+      search: searchText,
+    };
+    const url = `https://localhost:7200/api/category/get`;
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(url, {
@@ -55,14 +60,8 @@ function AllCategories() {
   };
 
   useEffect(() => {
-    const payload = {
-      pageNumber: pageNumber,
-      pagesize: pageSize,
-      search: searchText,
-    };
-
-    fetchCategories(payload);
-  }, [pageNumber, pageSize, searchText]);
+    fetchCategories(currentPage, pageSize, searchText);
+  }, [currentPage, pageSize, searchText]);
 
   const handleEdit = (categoryID) => {
     navigate("/edit-category", { state: { categoryID } });
@@ -84,6 +83,7 @@ function AllCategories() {
   const handleView = (categoryID) => {
     navigate(`/view-category/${categoryID}`);
   };
+
   const columns = [
     {
       title: "Name",
@@ -117,7 +117,7 @@ function AllCategories() {
   ];
 
   const handleTableChange = (page, pageSize) => {
-    setPageNumber(page);
+    setCurrentPage(page);
     setPageSize(pageSize);
   };
 
@@ -187,7 +187,7 @@ function AllCategories() {
           </Link>
         </Button>
         <Pagination
-          current={pageNumber}
+          current={currentPage}
           pageSize={pageSize}
           total={itemCount}
           onChange={handleTableChange}
