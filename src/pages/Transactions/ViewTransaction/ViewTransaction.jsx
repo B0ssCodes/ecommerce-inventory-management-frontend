@@ -4,17 +4,14 @@ import { Layout, Typography, Table, Row, Col, Card, Button } from "antd";
 import { PrinterOutlined } from "@ant-design/icons";
 import ReactToPrint from "react-to-print";
 import "./ViewTransaction.css";
-import useDarkMode from "../../../components/layout/useDarkMode";
 const { Header, Content } = Layout;
 const { Title, Text } = Typography;
 
-function ViewTransaction({ isDarkMode, toggleTheme }) {
+function ViewTransaction() {
   const location = useLocation();
   const [transactionID, setTransactionID] = useState(null);
   const [transactionDetails, setTransactionDetails] = useState(null);
   const componentRef = useRef();
-  const [originalTheme, setOriginalTheme] = useState(isDarkMode);
-
   useEffect(() => {
     setTransactionID(location.state.transactionID);
   }, [location.state.transactionID]);
@@ -77,19 +74,6 @@ function ViewTransaction({ isDarkMode, toggleTheme }) {
       render: (price) => `$${price}`,
     },
   ];
-
-  // const handleBeforePrint = () => {
-  //   if (isDarkMode) {
-  //     setOriginalTheme(true);
-  //     toggleTheme();
-  //   }
-  // };
-
-  // const handleAfterPrint = () => {
-  //   if (originalTheme) {
-  //     toggleTheme();
-  //   }
-  // };
 
   return (
     <Layout style={{ minHeight: "100vh", padding: "24px" }}>

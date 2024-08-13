@@ -103,7 +103,11 @@ function App({ isDarkMode, toggleTheme }) {
     if (token && tokenExpiry) {
       const currentTime = new Date().getTime();
       if (currentTime > tokenExpiry) {
-        // Token has expired, refresh the page to redirect to login
+        localStorage.removeItem("token");
+        localStorage.removeItem("tokenExpiry");
+        localStorage.removeItem("userPermissions");
+
+        // Token has expired, refresh the page to redirect to login (can use navigate() here)
         window.location.reload();
       } else {
         setIsLoggedIn(true);
@@ -321,10 +325,7 @@ function App({ isDarkMode, toggleTheme }) {
             path="/view-transaction"
             element={
               <ValidateRoute requiredPermissions={"Transactions"}>
-                <ViewTransaction
-                  isDarkMode={isDarkMode}
-                  toggleTheme={toggleTheme}
-                />
+                <ViewTransaction />
               </ValidateRoute>
             }
           />
@@ -347,7 +348,7 @@ function App({ isDarkMode, toggleTheme }) {
           <Route
             path="/out-inventories"
             element={
-              <ValidateRoute requiredPermissions={"any"}>
+              <ValidateRoute requiredPermissions={"Inventory"}>
                 <OutInventories />
               </ValidateRoute>
             }
@@ -379,7 +380,7 @@ function App({ isDarkMode, toggleTheme }) {
           <Route
             path="/user-logs"
             element={
-              <ValidateRoute requiredPermissions={"any"}>
+              <ValidateRoute requiredPermissions={"User Logs"}>
                 <AllUserLogs />
               </ValidateRoute>
             }
@@ -387,7 +388,7 @@ function App({ isDarkMode, toggleTheme }) {
           <Route
             path="/view-user-log"
             element={
-              <ValidateRoute requiredPermissions={"any"}>
+              <ValidateRoute requiredPermissions={"User Logs"}>
                 <ViewUserLog />
               </ValidateRoute>
             }

@@ -1,9 +1,16 @@
 import React, { useState } from "react";
 import { Button, Modal } from "antd";
-import { DeleteOutlined } from "@ant-design/icons";
+import { DeleteOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 
 function DeleteVendor({ vendorID }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const showErrorModal = (message) => {
+    setErrorMessage(message);
+    setIsErrorModalOpen(true);
+  };
 
   const handleDelete = async () => {
     console.log("Deleting vendor with ID:", vendorID);
@@ -20,15 +27,17 @@ function DeleteVendor({ vendorID }) {
         }
       );
 
+      const result = await response.json();
+
       if (response.ok) {
         window.location.reload();
       } else {
         console.error("Failed to delete vendor");
-        alert(response.message || "Failed to delete vendor");
+        showErrorModal(result.message || "Failed to delete vendor");
       }
     } catch (error) {
       console.error("An error occurred:", error);
-      alert("An error occurred while deleting the vendor");
+      showErrorModal("An error occurred while deleting the vendor");
     }
   };
 
@@ -43,6 +52,14 @@ function DeleteVendor({ vendorID }) {
 
   const handleCancel = () => {
     setIsModalOpen(false);
+  };
+
+  const handleErrorModalOk = () => {
+    setIsErrorModalOpen(false);
+  };
+
+  const handleErrorModalCancel = () => {
+    setIsErrorModalOpen(false);
   };
 
   return (
@@ -65,6 +82,22 @@ function DeleteVendor({ vendorID }) {
         <div>
           <p>This action cannot be undone.</p>
         </div>
+      </Modal>
+      <Modal
+        title={
+          <span>
+            <ExclamationCircleOutlined
+              style={{ color: "red", marginRight: 8 }}
+            />
+            Error
+          </span>
+        }
+        open={isErrorModalOpen}
+        onOk={handleErrorModalOk}
+        onCancel={handleErrorModalCancel}
+        okText="OK"
+      >
+        <p>{errorMessage}</p>
       </Modal>
     </div>
   );

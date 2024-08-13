@@ -12,9 +12,16 @@ const ViewCategory = () => {
 
   useEffect(() => {
     const fetchCategory = async () => {
+      const token = localStorage.getItem("token");
       const url = `https://localhost:7200/api/category/getProducts/${categoryID}`;
       try {
-        const response = await fetch(url);
+        const response = await fetch(url, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
         const data = await response.json();
         if (response.ok) {
           setCategory(data.result);

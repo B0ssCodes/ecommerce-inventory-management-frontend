@@ -1,9 +1,16 @@
 import React, { useState } from "react";
 import { Button, Modal } from "antd";
-import { DeleteOutlined } from "@ant-design/icons";
+import { DeleteOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 
 function DeleteCategory({ categoryID }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const showErrorModal = (message) => {
+    setErrorMessage(message);
+    setIsErrorModalOpen(true);
+  };
 
   const handleDelete = async () => {
     console.log("Deleting category with ID:", categoryID);
@@ -20,15 +27,17 @@ function DeleteCategory({ categoryID }) {
         }
       );
 
+      const result = await response.json();
+
       if (response.ok) {
         window.location.reload();
       } else {
         console.error("Failed to delete category");
-        alert(response.message || "Failed to delete category");
+        showErrorModal(result.message || "Failed to delete category");
       }
     } catch (error) {
       console.error("An error occurred:", error);
-      alert("An error occurred while deleting the category");
+      showErrorModal("An error occurred while deleting the category");
     }
   };
 
@@ -43,6 +52,14 @@ function DeleteCategory({ categoryID }) {
 
   const handleCancel = () => {
     setIsModalOpen(false);
+  };
+
+  const handleErrorModalOk = () => {
+    setIsErrorModalOpen(false);
+  };
+
+  const handleErrorModalCancel = () => {
+    setIsErrorModalOpen(false);
   };
 
   return (
@@ -68,6 +85,22 @@ function DeleteCategory({ categoryID }) {
           </p>
           <p>This action cannot be undone.</p>
         </div>
+      </Modal>
+      <Modal
+        title={
+          <span>
+            <ExclamationCircleOutlined
+              style={{ color: "red", marginRight: 8 }}
+            />
+            Error
+          </span>
+        }
+        open={isErrorModalOpen}
+        onOk={handleErrorModalOk}
+        onCancel={handleErrorModalCancel}
+        okText="OK"
+      >
+        <p>{errorMessage}</p>
       </Modal>
     </div>
   );
