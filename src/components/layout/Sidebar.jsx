@@ -17,6 +17,8 @@ import {
   PieChartOutlined,
   DotChartOutlined,
   AreaChartOutlined,
+  FileSearchOutlined,
+  MonitorOutlined,
 } from "@ant-design/icons";
 import { Link, useLocation } from "react-router-dom";
 import Logout from "../modals/Logout";
@@ -102,6 +104,18 @@ const items = [
         key: "/vendor-analytics",
         icon: <AreaChartOutlined />,
         label: <Link to="/vendor-analytics">Vendor Analytics</Link>,
+      },
+    ],
+  },
+  {
+    key: "sub5",
+    icon: <MonitorOutlined />,
+    label: "Monitoring",
+    children: [
+      {
+        key: "/user-logs",
+        icon: <FileSearchOutlined />,
+        label: <Link to="/user-logs">User Logs</Link>,
       },
     ],
   },
