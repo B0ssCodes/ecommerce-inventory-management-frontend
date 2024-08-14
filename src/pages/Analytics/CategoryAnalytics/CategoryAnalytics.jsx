@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Card, Row, Col, Typography } from "antd";
+import { Card, Row, Col, Typography, Button } from "antd";
 import { useNavigate } from "react-router-dom";
 import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
+import moment from "moment";
 
 const { Title, Text } = Typography;
 
@@ -47,6 +48,29 @@ const CategoryAnalytics = () => {
     fetchCategories();
   }, []);
 
+  const handleRefreshStatistics = async () => {
+    const url = "https://localhost:7200/api/mv/refresh/category";
+    const token = localStorage.getItem("token");
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
+      if (response.ok) {
+        window.location.reload();
+      } else {
+        console.error("Failed to refresh statistics:", data);
+        alert(data.message || "Failed to refresh statistics");
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
+      alert("An error occurred while refreshing statistics");
+    }
+  };
+
   const pieData = categories.map((category) => ({
     name: category.categoryName,
     value: category.stockValue,
@@ -61,12 +85,36 @@ const CategoryAnalytics = () => {
         }}
       >
         <Row gutter={[16, 16]} align="middle">
-          <Col span={12} style={{ textAlign: "left" }}>
+          <Col
+            span={12}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              textAlign: "left",
+            }}
+          >
             <Title level={2}>Most Sold Categories</Title>
             <Text>
               Here are the top {categoryFetchCount} categories with the highest
               sales.
             </Text>
+            {categories.length > 0 && (
+              <Text>
+                Last updated:{" "}
+                {moment(categories[0].lastUpdated).format(
+                  "MMMM Do YYYY, h:mm:ss a"
+                )}
+              </Text>
+            )}
+
+            <Button
+              type="primary"
+              onClick={handleRefreshStatistics}
+              style={{ marginTop: "10px", maxWidth: "30%" }}
+            >
+              Refresh Statistics
+            </Button>
           </Col>
           <Col span={12}>
             <PieChart width={500} height={400}>

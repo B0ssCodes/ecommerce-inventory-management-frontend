@@ -12,7 +12,7 @@ const ProductAnalytics = () => {
   useEffect(() => {
     const statisticsRefreshRate = localStorage.getItem("statisticsRefreshRate");
     const fetchProductAnalytics = async () => {
-      const url = `https://localhost:7200/api/analytics/getProduct/${statisticsRefreshRate}`;
+      const url = `https://localhost:7200/api/analytics/getProduct`;
       const token = localStorage.getItem("token");
       try {
         const response = await fetch(url, {
@@ -37,7 +37,7 @@ const ProductAnalytics = () => {
   }, []);
 
   const handleRefreshStatistics = async () => {
-    const url = "https://localhost:7200/api/analytics/resetProduct";
+    const url = "https://localhost:7200/api/mv/refresh/product";
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(url, {
@@ -112,12 +112,14 @@ const ProductAnalytics = () => {
                   <Text>
                     From:{" "}
                     {moment(productAnalytics[0].fromDate).format(
-                      "D/M/Y H:mm:ss"
+                      "MMMM Do YYYY, h:mm:ss a"
                     )}
                   </Text>
                   <Text>
                     To:{" "}
-                    {moment(productAnalytics[0].toDate).format("D/M/Y H:mm:ss")}
+                    {moment(productAnalytics[0].toDate).format(
+                      "MMMM Do YYYY, h:mm:ss a"
+                    )}
                   </Text>
                 </>
               )}

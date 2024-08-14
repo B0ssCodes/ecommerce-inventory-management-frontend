@@ -11,6 +11,7 @@ function Configuration() {
     localStorage.setItem("minStockNumber", minStockNumber);
     localStorage.setItem("statisticsRefreshRate", statisticsRefreshRate);
     localStorage.setItem("categoryFetchCount", categoryFetchCount);
+    localStorage.setItem("vendorFetchCount", vendorFetchCount);
     message.success("Changes saved successfully");
   };
 
