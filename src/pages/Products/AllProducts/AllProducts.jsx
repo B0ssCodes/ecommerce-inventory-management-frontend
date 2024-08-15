@@ -26,8 +26,8 @@ function AllProducts() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const fetchProducts = async (payload) => {
-    const url = "https://localhost:7200/api/product/get";
+  const fetchProducts = async (pageNumber) => {
+    const url = `https://localhost:7200/api/product/get/${pageNumber}`;
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(url, {
@@ -36,7 +36,6 @@ function AllProducts() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(payload),
       });
 
       const data = await response.json();
@@ -210,8 +209,8 @@ function AllProducts() {
         </Button>
         <Pagination
           current={pageNumber}
-          pageSize={pageSize}
-          total={itemCount}
+          pageSize={2}
+          total={itemCount * 2}
           onChange={handleTableChange}
         />
       </div>
