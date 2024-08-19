@@ -26,8 +26,14 @@ function AllProducts() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const fetchProducts = async (pageNumber) => {
-    const url = `https://localhost:7200/api/product/get/${pageNumber}`;
+  const fetchProducts = async (pageNumber, pageSize, searchText) => {
+    const payload = {
+      pageNumber,
+      pageSize,
+      search: searchText,
+    };
+
+    const url = `https://localhost:7200/api/product/get`;
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(url, {
@@ -36,6 +42,7 @@ function AllProducts() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
+        body: JSON.stringify(payload),
       });
 
       const data = await response.json();
@@ -53,13 +60,7 @@ function AllProducts() {
   };
 
   useEffect(() => {
-    const payload = {
-      pageNumber: pageNumber,
-      pagesize: pageSize,
-      search: searchText,
-    };
-
-    fetchProducts(payload);
+    fetchProducts(pageNumber, pageSize, searchText);
   }, [pageNumber, pageSize, searchText]);
 
   const handleView = (productID) => {
@@ -209,8 +210,8 @@ function AllProducts() {
         </Button>
         <Pagination
           current={pageNumber}
-          pageSize={2}
-          total={itemCount * 2}
+          pageSize={pageSize}
+          total={itemCount}
           onChange={handleTableChange}
         />
       </div>

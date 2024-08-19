@@ -120,9 +120,9 @@ function AllTransactions() {
       render: (text) => capitalizeFirstLetter(text),
     },
     {
-      title: "Vendor",
-      dataIndex: ["vendor", "name"],
-      key: "vendor",
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
     },
     {
       title: "Date",
@@ -156,7 +156,10 @@ function AllTransactions() {
             type="primary"
             onClick={() =>
               navigate("/view-transaction", {
-                state: { transactionID: record.transactionID },
+                state: {
+                  transactionID: record.transactionID,
+                  transactionTypeID: record.typeID,
+                },
               })
             }
           >

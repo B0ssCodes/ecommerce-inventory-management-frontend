@@ -28,7 +28,7 @@ function AllUsers() {
   const navigate = useNavigate();
 
   const fetchUsers = async (payload) => {
-    const url = "https://localhost:7200/api/user/get";
+    const url = "https://localhost:7200/api/user/get/false";
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(url, {
