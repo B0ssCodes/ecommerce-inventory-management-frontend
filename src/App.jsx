@@ -39,6 +39,7 @@ import ViewCategory from "./pages/Categories/ViewCategory/ViewCategory";
 import AllUserLogs from "./pages/Activity/UserLogs/AllUserLogs/AllUserLogs";
 import ViewUserLog from "./pages/Activity/UserLogs/ViewUserLog/ViewUserLog";
 import ViewUser from "./pages/Users/ViewUser/ViewUser";
+import SelectUser from "./pages/Users/SelectUser/SelectUser";
 function App({ isDarkMode, toggleTheme }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userPermissions, setUserPermissions] = useState([]);
@@ -198,6 +199,14 @@ function App({ isDarkMode, toggleTheme }) {
             element={
               <ValidateRoute requiredPermissions={"Users"}>
                 <ViewUser />
+              </ValidateRoute>
+            }
+          />
+          <Route
+            path="/select-customer"
+            element={
+              <ValidateRoute requiredPermissions={"Users"}>
+                <SelectUser />
               </ValidateRoute>
             }
           />

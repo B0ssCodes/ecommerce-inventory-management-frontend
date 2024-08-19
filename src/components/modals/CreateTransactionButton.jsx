@@ -13,7 +13,13 @@ function CreateTransactionButton() {
   };
 
   const handleOk = () => {
-    navigate("/select-vendor", { state: { transactionTypeID } });
+    if (transactionTypeID == 1) {
+      navigate("/select-vendor", { state: { transactionTypeID } });
+    } else if (transactionTypeID == 2) {
+      navigate("/select-customer", { state: { transactionTypeID } });
+    } else {
+      alert("Invalid Transaction Type");
+    }
     setIsModalOpen(false);
   };
 

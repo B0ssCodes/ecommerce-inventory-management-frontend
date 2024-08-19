@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Form, Input, Button, message, Row, Col } from "antd";
+import { Form, Input, Button, message, Row, Col, Checkbox } from "antd";
 import {
   CheckOutlined,
   AppstoreOutlined,
@@ -23,6 +23,7 @@ const EditUserRoleForm = () => {
   const { userRoleID } = location.state || {};
   const [form] = Form.useForm();
   const [selectedPermissions, setSelectedPermissions] = useState([]);
+  const [canPurchase, setCanPurchase] = useState(false);
 
   useEffect(() => {
     const fetchUserRoleDetails = async () => {
@@ -42,6 +43,7 @@ const EditUserRoleForm = () => {
           (p) => p.permission
         );
         setSelectedPermissions(receivedPermissions);
+        setCanPurchase(data.result.canPurchase);
       } catch (error) {
         console.error("Failed to fetch user role details:", error);
       }
@@ -63,6 +65,7 @@ const EditUserRoleForm = () => {
   const handleSubmit = async (values) => {
     const payload = {
       roleName: values.role,
+      canPurchase,
       permissions: selectedPermissions,
     };
     try {
@@ -140,6 +143,14 @@ const EditUserRoleForm = () => {
             </Col>
           ))}
         </Row>
+      </Form.Item>
+      <Form.Item>
+        <Checkbox
+          checked={canPurchase}
+          onChange={(e) => setCanPurchase(e.target.checked)}
+        >
+          Can Purchase Items
+        </Checkbox>
       </Form.Item>
       <Form.Item>
         <Button type="primary" htmlType="submit">

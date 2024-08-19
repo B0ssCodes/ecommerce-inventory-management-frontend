@@ -10,15 +10,17 @@ const { Title, Text } = Typography;
 function ViewTransaction() {
   const location = useLocation();
   const [transactionID, setTransactionID] = useState(null);
+  const [transactionTypeID, setTransactionTypeID] = useState(null);
   const [transactionDetails, setTransactionDetails] = useState(null);
   const componentRef = useRef();
   useEffect(() => {
     setTransactionID(location.state.transactionID);
-  }, [location.state.transactionID]);
+    setTransactionTypeID(location.state.transactionTypeID);
+  }, [location.state.transactionID, location.state.transactionTypeID]);
 
   useEffect(() => {
     const fetchTransactionDetails = async () => {
-      const url = `https://localhost:7200/api/transaction/get/${transactionID}`;
+      const url = `https://localhost:7200/api/transaction/get/${transactionID}/${transactionTypeID}`;
       const token = localStorage.getItem("token");
       try {
         const response = await fetch(url, {
@@ -114,20 +116,34 @@ function ViewTransaction() {
                 Date: {new Date(transactionDetails.date).toLocaleDateString()}
               </Text>
             </Col>
-            <Col span={12}>
-              <Title level={4}>Vendor Details</Title>
-              <Text>Name: {transactionDetails.vendor.name}</Text>
-              <br />
-              <Text>Email: {transactionDetails.vendor.email}</Text>
-              <br />
-              <Text>Phone: {transactionDetails.vendor.phone}</Text>
-              <br />
-              <Text>
-                Commercial Phone: {transactionDetails.vendor.commercialPhone}
-              </Text>
-              <br />
-              <Text>Address: {transactionDetails.vendor.address}</Text>
-            </Col>
+            {transactionTypeID == 1 ? (
+              <Col span={12}>
+                <Title level={4}>Vendor Details</Title>
+                <Text>Name: {transactionDetails.vendor.name}</Text>
+                <br />
+                <Text>Email: {transactionDetails.vendor.email}</Text>
+                <br />
+                <Text>Phone: {transactionDetails.vendor.phone}</Text>
+                <br />
+                <Text>
+                  Commercial Phone: {transactionDetails.vendor.commercialPhone}
+                </Text>
+                <br />
+                <Text>Address: {transactionDetails.vendor.address}</Text>
+              </Col>
+            ) : (
+              <Col span={12}>
+                <Title level={4}>User Details</Title>
+                <Text>
+                  Name: {transactionDetails.user.firstName}{" "}
+                  {transactionDetails.user.lastName}
+                </Text>
+                <br />
+                <Text>Email: {transactionDetails.user.email}</Text>
+                <br />
+                <Text>Role: {transactionDetails.user.role}</Text>
+              </Col>
+            )}
           </Row>
           <Table
             style={{ marginTop: "24px" }}
