@@ -2,8 +2,14 @@ import React, { useEffect, useState } from "react";
 import { Form, Input, Button, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import TextArea from "antd/es/input/TextArea";
+import { ErrorBar } from "recharts";
 
-function CreateVendorForm() {
+function CreateVendorForm({
+  returnRoute,
+  isRegisterModalOpen,
+  setIsRegisterModalOpen,
+  setIsVendorCreated,
+}) {
   const navigate = useNavigate();
   const handleFormSubmit = async (values) => {
     const url = "https://localhost:7200/api/vendor/create";
@@ -30,7 +36,16 @@ function CreateVendorForm() {
       const data = await response.json();
       if (response.ok) {
         message.success("Vendor added successfully");
-        navigate("/vendors");
+        if (returnRoute != "stay") {
+          navigate(returnRoute);
+        } else if (returnRoute == "stay") {
+          if (isRegisterModalOpen) {
+            setIsRegisterModalOpen(false);
+            setIsVendorCreated(true);
+          } else {
+            navigate("/vendors");
+          }
+        }
       } else {
         const error = data.message || "An unknown error occurred";
         console.error("Failed to add vendor:", error);
@@ -38,7 +53,7 @@ function CreateVendorForm() {
       }
     } catch (error) {
       console.error("Error adding vendor:", error);
-      message.error("Error adding vendor");
+      message.error(error);
     }
   };
 

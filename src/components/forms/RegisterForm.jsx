@@ -7,7 +7,14 @@ const { Option } = Select;
 
 const dateFormatList = ["YYYY-MM-DD", "MM/DD/YYYY", "DD/MM/YYYY"];
 
-function RegisterForm({ returnRoute, buttonText, showLogin }) {
+function RegisterForm({
+  returnRoute,
+  buttonText,
+  showLogin,
+  isRegisterModalOpen,
+  setIsRegisterModalOpen,
+  setIsUserCreated,
+}) {
   const [userRoles, setUserRoles] = useState([]);
   const [birthDate, setBirthDate] = useState(null);
   const navigate = useNavigate();
@@ -66,8 +73,13 @@ function RegisterForm({ returnRoute, buttonText, showLogin }) {
       } else {
         const data = await response.json();
         console.log("Response: ", data);
-        if (returnRoute) {
+        if (returnRoute != "stay") {
           navigate(returnRoute);
+        } else if (returnRoute == "stay") {
+          if (isRegisterModalOpen) {
+            setIsRegisterModalOpen(false);
+            setIsUserCreated(true);
+          }
         } else {
           navigate("/login", {
             state: {
@@ -93,41 +105,56 @@ function RegisterForm({ returnRoute, buttonText, showLogin }) {
         onFinish={onFinish}
         layout="vertical"
         style={{ maxWidth: "400px", margin: "0 auto" }}
+        autoComplete="off"
       >
+        {/* Hidden input to prevent autofill */}
+        <Input
+          type="text"
+          name="prevent_autofill"
+          style={{ display: "none" }}
+          autoComplete="off"
+        />
+        <Input
+          type="password"
+          name="prevent_autofill_password"
+          style={{ display: "none" }}
+          autoComplete="new-password"
+        />
+
         <Form.Item
           label="First Name"
           name="firstName"
           rules={[{ required: true, message: "Please input your first name!" }]}
         >
-          <Input />
+          <Input autoComplete="off" />
         </Form.Item>
         <Form.Item
           label="Last Name"
           name="lastName"
           rules={[{ required: true, message: "Please input your last name!" }]}
         >
-          <Input />
+          <Input autoComplete="off" />
         </Form.Item>
         <Form.Item
           label="Email"
           name="email"
           rules={[{ required: true, message: "Please input your email!" }]}
         >
-          <Input />
+          <Input autoComplete="off" />
         </Form.Item>
         <Form.Item
           label="Password"
           name="password"
           rules={[{ required: true, message: "Please input your password!" }]}
         >
-          <Input.Password />
+          <Input.Password autoComplete="new-password" />
         </Form.Item>
         <Form.Item
           label="Birth Date"
           name="birthDate"
           rules={[{ required: true, message: "Please input your birth date!" }]}
         >
-          <DatePicker onChange={onDateChange} />
+          <DatePicker onChange={onDateChange} autoComplete="off" />
         </Form.Item>
         <Form.Item
           label="User Role"
@@ -141,6 +168,7 @@ function RegisterForm({ returnRoute, buttonText, showLogin }) {
             filterOption={(input, option) =>
               option.children.toLowerCase().includes(input.toLowerCase())
             }
+            autoComplete="off"
           >
             {userRoles.map((roleObj) => (
               <Option key={roleObj.userRoleID} value={roleObj.userRoleID}>

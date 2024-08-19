@@ -33,6 +33,7 @@ import OutInventories from "./pages/Inventory/OutInventories/OutInventories";
 import ProductAnalytics from "./pages/Analytics/ProductAnalytics/ProductAnalytics";
 import { decodeToken } from "./components/utility/decodeToken";
 import Configuration from "./pages/Configuration/Configuration";
+import AllAnalytics from "./pages/Analytics/AllAnalytics/AllAnalytics";
 import CategoryAnalytics from "./pages/Analytics/CategoryAnalytics/CategoryAnalytics";
 import VendorAnalytics from "./pages/Analytics/VendorAnalytics/VendorAnalytics";
 import ViewCategory from "./pages/Categories/ViewCategory/ViewCategory";
@@ -359,6 +360,14 @@ function App({ isDarkMode, toggleTheme }) {
             element={
               <ValidateRoute requiredPermissions={"Inventory"}>
                 <OutInventories />
+              </ValidateRoute>
+            }
+          />
+          <Route
+            path="/all-analytics"
+            element={
+              <ValidateRoute requiredPermissions={"Product Analytics"}>
+                <AllAnalytics />
               </ValidateRoute>
             }
           />

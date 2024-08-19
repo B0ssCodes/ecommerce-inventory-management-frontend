@@ -28,15 +28,26 @@ function Dashboard() {
 
     const fetchLowStockCount = async () => {
       const response = await fetch(
-        `https://localhost:7200/api/inventory/getlowCount/${minStockNumber}`
+        `https://localhost:7200/api/inventory/getlowCount/${minStockNumber}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
+
       const data = await response.json();
       setLowStockCount(data.result);
     };
 
     const fetchOutStockCount = async () => {
       const response = await fetch(
-        `https://localhost:7200/api/inventory/getoutCount`
+        `https://localhost:7200/api/inventory/getoutCount`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       const data = await response.json();
       setOutStockCount(data.result);
