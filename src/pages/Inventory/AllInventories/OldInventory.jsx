@@ -1,39 +1,35 @@
 import React, { useEffect, useState, useCallback } from "react";
 import {
+  Pagination,
   Typography,
   Table,
   Button,
   Space,
   Input,
-  Pagination,
   Select,
   Spin,
 } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { debounce } from "lodash";
-import { EditOutlined, EyeOutlined } from "@ant-design/icons";
-import "./AllProducts.css"; // Import the CSS file
-import DeleteProduct from "../../../components/modals/DeleteProduct";
+import { EditOutlined, SearchOutlined } from "@ant-design/icons";
+import "./AllInventories.css"; // Import the CSS file
+import DeleteCategory from "../../../components/modals/DeleteCategory";
 
 const { Title } = Typography;
 const { Option } = Select;
-function AllProducts() {
+
+function AllInventories() {
   const [searchText, setSearchText] = useState("");
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [products, setProducts] = useState([]);
   const [itemCount, setItemCount] = useState(1);
+  const [inventories, setInventories] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [minStockNum, setMinStockNum] = useState(0);
   const navigate = useNavigate();
 
-  const fetchProducts = async (pageNumber, pageSize, searchText) => {
-    const payload = {
-      pageNumber,
-      pageSize,
-      search: searchText,
-    };
-
-    const url = `https://localhost:7200/api/product/get`;
+  const fetchInventories = async (payload) => {
+    const url = "https://localhost:7200/api/inventory/get";
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(url, {
@@ -47,28 +43,33 @@ function AllProducts() {
 
       const data = await response.json();
       if (response.ok) {
-        setProducts(data.result);
+        setInventories(data.result);
         setItemCount(data.itemCount);
       } else {
-        console.error("Failed to fetch products:", data);
-        alert(data.message || "Failed to fetch products");
+        console.error("Failed to fetch Inventories:", data);
+        alert(data.message || "Failed to fetch Inventories");
       }
     } catch (error) {
       console.error("An error occurred:", error);
-      alert("An error occurred while fetching products");
+      alert("An error occurred while fetching Inventories");
     }
   };
-
   useEffect(() => {
-    fetchProducts(pageNumber, pageSize, searchText);
+    setMinStockNum(localStorage.getItem("minStockNumber"));
+  }, []);
+  useEffect(() => {
+    const payload = {
+      pageNumber: pageNumber,
+      pagesize: pageSize,
+      search: searchText,
+    };
+
+    fetchInventories(payload);
   }, [pageNumber, pageSize, searchText]);
 
-  const handleView = (productID) => {
-    navigate("/view-product/" + productID);
-  };
-
-  const handleEdit = (productID) => {
-    navigate("/edit-product", { state: { productID } });
+  const handleTableChange = (page, pageSize) => {
+    setPageNumber(page);
+    setPageSize(pageSize);
   };
 
   const debouncedSearch = useCallback(
@@ -86,62 +87,40 @@ function AllProducts() {
 
   const columns = [
     {
-      title: "Name",
-      dataIndex: "name",
-      key: "name",
+      title: "Product Name",
+      dataIndex: "productName",
+      key: "productName",
     },
     {
       title: "SKU",
-      dataIndex: "sku",
-      key: "sku",
+      dataIndex: "productSKU",
+      key: "productSKU",
     },
     {
-      title: "Price",
+      title: "Quantity",
+      dataIndex: "quantity",
+      key: "quantity",
+      render: (text, record) => (
+        <span
+          style={{ color: record.quantity < minStockNum ? "red" : "inherit" }}
+        >
+          {record.quantity}
+        </span>
+      ),
+    },
+    {
+      title: "Unit Cost",
+      dataIndex: "productPrice",
+      key: "productPrice",
+      render: (text) => `$${text}`,
+    },
+    {
+      title: "Total Cost",
       dataIndex: "price",
       key: "price",
       render: (text) => `$${text}`,
     },
-    {
-      title: "Cost",
-      dataIndex: "cost",
-      key: "cost",
-      render: (text) => `$${text}`,
-    },
-    {
-      title: "Category",
-      dataIndex: ["category", "name"],
-      key: "category",
-    },
-    {
-      title: "Image Count",
-      dataIndex: "imageCount",
-      key: "imageCount",
-    },
-    {
-      title: "Actions",
-      key: "actions",
-      render: (text, record) => (
-        <Space size="middle">
-          <Button
-            type="primary"
-            icon={<EyeOutlined />}
-            onClick={() => handleView(record.productID)}
-          ></Button>
-          <Button
-            type="primary"
-            icon={<EditOutlined />}
-            onClick={() => handleEdit(record.productID)}
-          ></Button>
-          <DeleteProduct productID={record.productID} />
-        </Space>
-      ),
-    },
   ];
-
-  const handleTableChange = (page, pageSize) => {
-    setPageNumber(page);
-    setPageSize(pageSize);
-  };
 
   return (
     <>
@@ -153,7 +132,7 @@ function AllProducts() {
         }}
       >
         <Title level={2} style={{ marginBottom: "0.3em", lineHeight: "32px" }}>
-          Products
+          Inventory
         </Title>
         <div
           style={{
@@ -166,7 +145,7 @@ function AllProducts() {
             <Input
               type="text"
               onChange={handleSearchChange}
-              placeholder="Search Products..."
+              placeholder="Search Inventories..."
               style={{ marginRight: "8px", maxWidth: "80%" }}
             />
             {isLoading ? <Spin size="small" /> : null}
@@ -186,11 +165,11 @@ function AllProducts() {
       <div style={{ maxHeight: "70vh", overflowY: "auto" }}>
         <Table
           columns={columns}
-          dataSource={products}
-          rowKey="productID"
+          dataSource={inventories}
+          rowKey="inventoryID"
           bordered
           className="custom-table"
-          pagination={false}
+          pagination={false} // Disable built-in pagination
           onChange={handleTableChange}
         />
       </div>
@@ -203,9 +182,36 @@ function AllProducts() {
           marginTop: 16,
         }}
       >
-        <Button type="primary">
-          <Link to="/create-product" style={{ color: "white" }}>
-            Create Product
+        <Button
+          type="primary"
+          style={{ backgroundColor: "#1890ff", borderColor: "#1890ff" }}
+        >
+          <Link to="/transactions" style={{ color: "white" }}>
+            Create a transaction
+          </Link>
+        </Button>
+        <Button
+          type="default"
+          style={{
+            backgroundColor: "#fa8c16",
+            borderColor: "#fa8c16",
+            marginLeft: 16,
+          }}
+        >
+          <Link to="/low-inventories" style={{ color: "white" }}>
+            Low Stock
+          </Link>
+        </Button>
+        <Button
+          type="default"
+          style={{
+            backgroundColor: "#f5222d",
+            borderColor: "#f5222d",
+            marginLeft: 16,
+          }}
+        >
+          <Link to="/out-inventories" style={{ color: "white" }}>
+            Out of Stock
           </Link>
         </Button>
         <Pagination
@@ -219,4 +225,4 @@ function AllProducts() {
   );
 }
 
-export default AllProducts;
+export default AllInventories;
