@@ -1,39 +1,39 @@
 import React, { useEffect, useState, useCallback } from "react";
 import {
-  Pagination,
   Typography,
   Table,
   Button,
   Space,
   Input,
-  Spin,
+  Pagination,
   Select,
+  Spin,
 } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { debounce } from "lodash";
 import { EditOutlined, EyeOutlined } from "@ant-design/icons";
-import "./AllCategories.css"; // Import the CSS file
-import DeleteCategory from "../../../components/modals/DeleteCategory";
+import "./AllProducts.css"; // Import the CSS file
+import DeleteProduct from "../../../components/modals/DeleteProduct";
 
 const { Title } = Typography;
 const { Option } = Select;
-
-function AllCategories() {
+function AllProducts() {
   const [searchText, setSearchText] = useState("");
+  const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [products, setProducts] = useState([]);
   const [itemCount, setItemCount] = useState(1);
-  const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
 
-  const fetchCategories = async (pageNumber, pageSize, searchText) => {
+  const fetchProducts = async (pageNumber, pageSize, searchText) => {
     const payload = {
       pageNumber,
       pageSize,
       search: searchText,
     };
-    const url = `https://localhost:7200/api/category/get`;
+
+    const url = `https://localhost:7200/api/product/get`;
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(url, {
@@ -47,24 +47,28 @@ function AllCategories() {
 
       const data = await response.json();
       if (response.ok) {
-        setCategories(data.result);
+        setProducts(data.result);
         setItemCount(data.itemCount);
       } else {
-        console.error("Failed to fetch Categories:", data);
-        alert(data.message || "Failed to fetch Categories");
+        console.error("Failed to fetch products:", data);
+        alert(data.message || "Failed to fetch products");
       }
     } catch (error) {
       console.error("An error occurred:", error);
-      alert("An error occurred while fetching Categories");
+      alert("An error occurred while fetching products");
     }
   };
 
   useEffect(() => {
-    fetchCategories(currentPage, pageSize, searchText);
-  }, [currentPage, pageSize, searchText]);
+    fetchProducts(pageNumber, pageSize, searchText);
+  }, [pageNumber, pageSize, searchText]);
 
-  const handleEdit = (categoryID) => {
-    navigate("/edit-category", { state: { categoryID } });
+  const handleView = (productID) => {
+    navigate("/view-product/" + productID);
+  };
+
+  const handleEdit = (productID) => {
+    navigate("/edit-product", { state: { productID } });
   };
 
   const debouncedSearch = useCallback(
@@ -80,10 +84,6 @@ function AllCategories() {
     debouncedSearch(e.target.value);
   };
 
-  const handleView = (categoryID) => {
-    navigate(`/view-category/${categoryID}`);
-  };
-
   const columns = [
     {
       title: "Name",
@@ -91,9 +91,31 @@ function AllCategories() {
       key: "name",
     },
     {
-      title: "Description",
-      dataIndex: "description",
-      key: "description",
+      title: "SKU",
+      dataIndex: "sku",
+      key: "sku",
+    },
+    {
+      title: "Price",
+      dataIndex: "price",
+      key: "price",
+      render: (text) => `$${text}`,
+    },
+    {
+      title: "Cost",
+      dataIndex: "cost",
+      key: "cost",
+      render: (text) => `$${text}`,
+    },
+    {
+      title: "Category",
+      dataIndex: ["category", "name"],
+      key: "category",
+    },
+    {
+      title: "Image Count",
+      dataIndex: "imageCount",
+      key: "imageCount",
     },
     {
       title: "Actions",
@@ -103,21 +125,21 @@ function AllCategories() {
           <Button
             type="primary"
             icon={<EyeOutlined />}
-            onClick={() => handleView(record.categoryID)}
+            onClick={() => handleView(record.productID)}
           ></Button>
           <Button
             type="primary"
             icon={<EditOutlined />}
-            onClick={() => handleEdit(record.categoryID)}
+            onClick={() => handleEdit(record.productID)}
           ></Button>
-          <DeleteCategory categoryID={record.categoryID} />
+          <DeleteProduct productID={record.productID} />
         </Space>
       ),
     },
   ];
 
   const handleTableChange = (page, pageSize) => {
-    setCurrentPage(page);
+    setPageNumber(page);
     setPageSize(pageSize);
   };
 
@@ -131,7 +153,7 @@ function AllCategories() {
         }}
       >
         <Title level={2} style={{ marginBottom: "0.3em", lineHeight: "32px" }}>
-          Categories
+          Products
         </Title>
         <div
           style={{
@@ -144,7 +166,7 @@ function AllCategories() {
             <Input
               type="text"
               onChange={handleSearchChange}
-              placeholder="Search Categories..."
+              placeholder="Search Products..."
               style={{ marginRight: "8px", maxWidth: "80%" }}
             />
             {isLoading ? <Spin size="small" /> : null}
@@ -164,11 +186,11 @@ function AllCategories() {
       <div style={{ maxHeight: "70vh", overflowY: "auto" }}>
         <Table
           columns={columns}
-          dataSource={categories}
-          rowKey="categoryID"
+          dataSource={products}
+          rowKey="productID"
           bordered
           className="custom-table"
-          pagination={false} // Disable built-in pagination
+          pagination={false}
           onChange={handleTableChange}
         />
       </div>
@@ -182,12 +204,12 @@ function AllCategories() {
         }}
       >
         <Button type="primary">
-          <Link to="/create-category" style={{ color: "white" }}>
-            Create Category
+          <Link to="/create-product" style={{ color: "white" }}>
+            Create Product
           </Link>
         </Button>
         <Pagination
-          current={currentPage}
+          current={pageNumber}
           pageSize={pageSize}
           total={itemCount}
           onChange={handleTableChange}
@@ -197,4 +219,4 @@ function AllCategories() {
   );
 }
 
-export default AllCategories;
+export default AllProducts;
