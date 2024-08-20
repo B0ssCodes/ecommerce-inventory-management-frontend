@@ -15,6 +15,7 @@ import {
   PieChartOutlined,
   DotChartOutlined,
   AreaChartOutlined,
+  LineChartOutlined,
 } from "@ant-design/icons";
 
 const EditUserRoleForm = () => {
@@ -101,11 +102,12 @@ const EditUserRoleForm = () => {
     { name: "Users", icon: <UserOutlined /> },
     { name: "User Roles", icon: <UsergroupAddOutlined /> },
     { name: "Vendors", icon: <SolutionOutlined /> },
-    { name: "Configuration", icon: <SettingOutlined /> },
+    { name: "All Analytics", icon: <LineChartOutlined /> },
     { name: "Product Analytics", icon: <PieChartOutlined /> },
     { name: "Category Analytics", icon: <DotChartOutlined /> },
     { name: "Vendor Analytics", icon: <AreaChartOutlined /> },
     { name: "User Logs", icon: <AreaChartOutlined /> },
+    { name: "Configuration", icon: <SettingOutlined /> },
   ];
 
   return (

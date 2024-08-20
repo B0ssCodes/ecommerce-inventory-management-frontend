@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import {
   Typography,
   Table,
@@ -8,9 +8,12 @@ import {
   Pagination,
   Select,
   Spin,
+  Dropdown,
+  Menu,
+  DatePicker,
 } from "antd";
 import { useNavigate } from "react-router-dom";
-import { EyeOutlined } from "@ant-design/icons";
+import { EyeOutlined, DownOutlined } from "@ant-design/icons";
 import { debounce } from "lodash";
 import moment from "moment";
 import "./AllTransactions.css";
@@ -20,6 +23,7 @@ import DeleteTransaction from "../../../components/modals/DeleteTransaction";
 
 const { Title } = Typography;
 const { Option } = Select;
+
 function AllTransactions() {
   const [searchText, setSearchText] = useState("");
   const [pageNumber, setPageNumber] = useState(1);
@@ -27,9 +31,21 @@ function AllTransactions() {
   const [transactions, setTransactions] = useState([]);
   const [itemCount, setItemCount] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  const [sortBy, setSortBy] = useState(null);
+  const [sortOrder, setSortOrder] = useState(null);
+  const [filters, setFilters] = useState([]);
   const navigate = useNavigate();
   const [claims, setClaims] = useState(null);
   const [passedEmail, setPassedEmail] = useState(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [amountGreaterThan, setAmountGreaterThan] = useState("");
+  const [amountLessThan, setAmountLessThan] = useState("");
+  const [type, setType] = useState(null);
+  const [status, setStatus] = useState(null);
+  const [email, setEmail] = useState("");
+  const [dateBefore, setDateBefore] = useState(null);
+  const [dateAfter, setDateAfter] = useState(null);
+  const dropdownRef = useRef(null);
 
   const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -87,23 +103,28 @@ function AllTransactions() {
         pageNumber: pageNumber,
         pageSize: pageSize,
         search: searchText,
+        sortBy: sortBy,
+        sortOrder: sortOrder,
+        filters: filters,
       };
 
       fetchTransactions(payload);
     }
-  }, [pageNumber, pageSize, searchText, claims]);
+  }, [pageNumber, pageSize, searchText, sortBy, sortOrder, filters, claims]);
 
   const columns = [
     {
       title: "Amount",
       dataIndex: "amount",
       key: "amount",
+      sorter: true,
       render: (text) => `$${text}`,
     },
     {
       title: "Type",
       dataIndex: "type",
       key: "type",
+      sorter: true,
       render: (text) => {
         if (text === "inbound") {
           return <span style={{ color: "green" }}>Inbound</span>; // Green text for inbound
@@ -117,17 +138,20 @@ function AllTransactions() {
       title: "Status",
       dataIndex: "status",
       key: "status",
+      sorter: true,
       render: (text) => capitalizeFirstLetter(text),
     },
     {
       title: "Email",
       dataIndex: "email",
       key: "email",
+      sorter: true,
     },
     {
       title: "Date",
       dataIndex: "date",
       key: "date",
+      sorter: true,
       render: (date) => moment(date).format("DD/MM/YYYY HH:mm:ss"),
     },
     {
@@ -169,7 +193,13 @@ function AllTransactions() {
     },
   ];
 
-  const handleTableChange = (page, pageSize) => {
+  const handleTableChange = (pagination, filters, sorter) => {
+    // Handle sorting only (since pagination is managed externally)
+    setSortBy(sorter.field);
+    setSortOrder(sorter.order === "ascend" ? "asc" : "desc");
+  };
+
+  const handlePaginationChange = (page, pageSize) => {
     setPageNumber(page);
     setPageSize(pageSize);
   };
@@ -186,6 +216,156 @@ function AllTransactions() {
     setIsLoading(true);
     debouncedSearch(e.target.value);
   };
+
+  const handleFilterChange = (field, operator, value) => {
+    setFilters((prevFilters) => {
+      const newFilters = prevFilters.filter(
+        (filter) => !(filter.field === field && filter.operator === operator)
+      );
+      if (value) {
+        newFilters.push({ field, operator, value });
+      }
+      return newFilters;
+    });
+  };
+
+  const debouncedHandleFilterChange = useCallback(
+    debounce((field, operator, value) => {
+      handleFilterChange(field, operator, value);
+      setIsLoading(false);
+    }, 800),
+    []
+  );
+
+  const handleAmountGreaterThanChange = (e) => {
+    setAmountGreaterThan(e.target.value);
+    setIsLoading(true);
+    debouncedHandleFilterChange("amount", ">", e.target.value);
+  };
+
+  const handleAmountLessThanChange = (e) => {
+    setAmountLessThan(e.target.value);
+    setIsLoading(true);
+    debouncedHandleFilterChange("amount", "<", e.target.value);
+  };
+
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+    setIsLoading(true);
+    debouncedHandleFilterChange("email", "LIKE", `%${e.target.value}%`);
+  };
+
+  const clearFilters = () => {
+    setAmountGreaterThan("");
+    setAmountLessThan("");
+    setType(null);
+    setStatus(null);
+    setEmail("");
+    setDateBefore(null);
+    setDateAfter(null);
+    // Clear the filters in your filter logic
+    setFilters(null);
+  };
+  const filterMenu = (
+    <Menu>
+      <Menu.Item>
+        <Input
+          type="number"
+          placeholder="Amount Greater Than"
+          value={amountGreaterThan}
+          onChange={handleAmountGreaterThanChange}
+        />
+      </Menu.Item>
+      <Menu.Item>
+        <Input
+          type="number"
+          placeholder="Amount Less Than"
+          value={amountLessThan}
+          onChange={handleAmountLessThanChange}
+        />
+      </Menu.Item>
+      <Menu.Item>
+        <Select
+          placeholder="Type Equals"
+          value={type}
+          onChange={(value) => {
+            setType(value);
+            handleFilterChange("type", "=", value);
+          }}
+          style={{ width: "100%" }}
+        >
+          <Option value="inbound">Inbound</Option>
+          <Option value="outbound">Outbound</Option>
+        </Select>
+      </Menu.Item>
+      <Menu.Item>
+        <Select
+          placeholder="Status Equals"
+          value={status}
+          onChange={(value) => {
+            setStatus(value);
+            handleFilterChange("status", "=", value);
+          }}
+          style={{ width: "100%" }}
+        >
+          <Option value="created">Created</Option>
+          <Option value="submitted">Submitted</Option>
+        </Select>
+      </Menu.Item>
+      <Menu.Item>
+        <Input
+          placeholder="Email Equals"
+          value={email}
+          onChange={handleEmailChange}
+        />
+      </Menu.Item>
+      <Menu.Item>
+        <DatePicker
+          placeholder="Date After"
+          value={dateAfter}
+          onChange={(date, dateString) => {
+            setDateAfter(date);
+            handleFilterChange("date", ">", dateString);
+          }}
+        />
+      </Menu.Item>
+      <Menu.Item>
+        <DatePicker
+          placeholder="Date Before"
+          value={dateBefore}
+          onChange={(date, dateString) => {
+            setDateBefore(date);
+            handleFilterChange("date", "<", dateString);
+          }}
+        />
+      </Menu.Item>
+      <Menu.Item>
+        <Button onClick={clearFilters}>Clear Filters</Button>
+      </Menu.Item>
+    </Menu>
+  );
+
+  const handleDropdownVisibleChange = (flag) => {
+    setIsDropdownOpen(flag);
+  };
+
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setIsDropdownOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isDropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isDropdownOpen]);
 
   return (
     <>
@@ -219,12 +399,24 @@ function AllTransactions() {
           <Select
             defaultValue={10}
             style={{ width: 120 }}
-            onChange={(value) => handleTableChange(1, value)}
+            onChange={(value) => handlePaginationChange(1, value)}
           >
             <Option value={5}>5</Option>
             <Option value={10}>10</Option>
             <Option value={25}>25</Option>
           </Select>
+
+          <Dropdown
+            overlay={filterMenu}
+            trigger={["click"]}
+            open={isDropdownOpen}
+            onVisibleChange={handleDropdownVisibleChange}
+            ref={dropdownRef}
+          >
+            <Button style={{ marginLeft: 8 }}>
+              Filter <DownOutlined />
+            </Button>
+          </Dropdown>
         </div>
       </div>
 
@@ -253,7 +445,7 @@ function AllTransactions() {
           current={pageNumber}
           pageSize={pageSize}
           total={itemCount}
-          onChange={handleTableChange}
+          onChange={handlePaginationChange}
         />
       </div>
     </>

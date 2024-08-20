@@ -12,27 +12,28 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { debounce } from "lodash";
 import { EditOutlined, EyeOutlined } from "@ant-design/icons";
-import "./AllUserLogs.css"; // Import the CSS file
+import "./AllCategories.css"; // Import the CSS file
+import DeleteCategory from "../../../components/modals/DeleteCategory";
 
 const { Title } = Typography;
 const { Option } = Select;
 
-function AllUserLogs() {
+function AllCategories() {
   const [searchText, setSearchText] = useState("");
-  const [pageSize, setPageSize] = useState(100);
+  const [pageSize, setPageSize] = useState(10);
   const [itemCount, setItemCount] = useState(1);
-  const [UserLogs, setUserLogs] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
 
-  const fetchUserLogs = async (pageNumber, pageSize, searchText) => {
+  const fetchCategories = async (pageNumber, pageSize, searchText) => {
     const payload = {
       pageNumber,
       pageSize,
       search: searchText,
     };
-    const url = `https://localhost:7200/api/userLog/get`;
+    const url = `https://localhost:7200/api/category/get`;
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(url, {
@@ -46,21 +47,25 @@ function AllUserLogs() {
 
       const data = await response.json();
       if (response.ok) {
-        setUserLogs(data.result);
+        setCategories(data.result);
         setItemCount(data.itemCount);
       } else {
-        console.error("Failed to fetch user logs:", data);
-        alert(data.message || "Failed to fetch user logs");
+        console.error("Failed to fetch Categories:", data);
+        alert(data.message || "Failed to fetch Categories");
       }
     } catch (error) {
       console.error("An error occurred:", error);
-      alert("An error occurred while fetching user logs");
+      alert("An error occurred while fetching Categories");
     }
   };
 
   useEffect(() => {
-    fetchUserLogs(currentPage, pageSize, searchText);
+    fetchCategories(currentPage, pageSize, searchText);
   }, [currentPage, pageSize, searchText]);
+
+  const handleEdit = (categoryID) => {
+    navigate("/edit-category", { state: { categoryID } });
+  };
 
   const debouncedSearch = useCallback(
     debounce((value) => {
@@ -75,35 +80,38 @@ function AllUserLogs() {
     debouncedSearch(e.target.value);
   };
 
-  const handleView = (userLogID) => {
-    navigate("/view-user-log", { state: { logID: userLogID } });
+  const handleView = (categoryID) => {
+    navigate(`/view-category/${categoryID}`);
   };
 
   const columns = [
     {
       title: "Name",
-      dataIndex: "logName",
-      key: "logName",
+      dataIndex: "name",
+      key: "name",
     },
     {
-      title: "Model",
-      dataIndex: "model",
-      key: "model",
-    },
-    {
-      title: "Action",
-      dataIndex: "action",
-      key: "action",
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
     },
     {
       title: "Actions",
       key: "actions",
       render: (text, record) => (
-        <Button
-          type="primary"
-          icon={<EyeOutlined />}
-          onClick={() => handleView(record.logID)}
-        ></Button>
+        <Space size="middle">
+          <Button
+            type="primary"
+            icon={<EyeOutlined />}
+            onClick={() => handleView(record.categoryID)}
+          ></Button>
+          <Button
+            type="primary"
+            icon={<EditOutlined />}
+            onClick={() => handleEdit(record.categoryID)}
+          ></Button>
+          <DeleteCategory categoryID={record.categoryID} />
+        </Space>
       ),
     },
   ];
@@ -123,7 +131,7 @@ function AllUserLogs() {
         }}
       >
         <Title level={2} style={{ marginBottom: "0.3em", lineHeight: "32px" }}>
-          User Logs
+          Categories
         </Title>
         <div
           style={{
@@ -136,19 +144,28 @@ function AllUserLogs() {
             <Input
               type="text"
               onChange={handleSearchChange}
-              placeholder="Search user logs..."
+              placeholder="Search Categories..."
               style={{ marginRight: "8px", maxWidth: "80%" }}
             />
             {isLoading ? <Spin size="small" /> : null}
           </div>
+          <Select
+            defaultValue={10}
+            style={{ width: 120 }}
+            onChange={(value) => handleTableChange(1, value)}
+          >
+            <Option value={5}>5</Option>
+            <Option value={10}>10</Option>
+            <Option value={25}>25</Option>
+          </Select>
         </div>
       </div>
 
       <div style={{ maxHeight: "70vh", overflowY: "auto" }}>
         <Table
           columns={columns}
-          dataSource={UserLogs}
-          rowKey="logID"
+          dataSource={categories}
+          rowKey="categoryID"
           bordered
           className="custom-table"
           pagination={false} // Disable built-in pagination
@@ -159,11 +176,16 @@ function AllUserLogs() {
       <div
         style={{
           display: "flex",
-          justifyContent: "flex-end",
+          justifyContent: "space-between",
           alignItems: "center",
           marginTop: 16,
         }}
       >
+        <Button type="primary">
+          <Link to="/create-category" style={{ color: "white" }}>
+            Create Category
+          </Link>
+        </Button>
         <Pagination
           current={currentPage}
           pageSize={pageSize}
@@ -175,4 +197,4 @@ function AllUserLogs() {
   );
 }
 
-export default AllUserLogs;
+export default AllCategories;

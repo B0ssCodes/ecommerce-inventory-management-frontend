@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Form, Input, Button, message, Row, Col } from "antd";
+import { Form, Input, Button, message, Row, Col, Checkbox } from "antd";
 import { useNavigate } from "react-router-dom";
 import {
   CheckOutlined,
@@ -15,6 +15,7 @@ import {
   DotChartOutlined,
   PieChartOutlined,
   AreaChartOutlined,
+  LineChartOutlined,
 } from "@ant-design/icons";
 
 const permissionsList = [
@@ -26,15 +27,17 @@ const permissionsList = [
   { name: "Users", icon: <UserOutlined /> },
   { name: "User Roles", icon: <UsergroupAddOutlined /> },
   { name: "Vendors", icon: <SolutionOutlined /> },
-  { name: "Configuration", icon: <SettingOutlined /> },
+  { name: "All Analytics", icon: <LineChartOutlined /> },
   { name: "Product Analytics", icon: <PieChartOutlined /> },
   { name: "Category Analytics", icon: <DotChartOutlined /> },
   { name: "Vendor Analytics", icon: <AreaChartOutlined /> },
   { name: "User Logs", icon: <AreaChartOutlined /> },
+  { name: "Configuration", icon: <SettingOutlined /> },
 ];
 
 function CreateUserRoleForm() {
   const [selectedPermissions, setSelectedPermissions] = useState([]);
+  const [canCreate, setCanCreate] = useState(false);
   const navigate = useNavigate();
 
   const handlePermissionClick = (permission) => {
@@ -51,6 +54,7 @@ function CreateUserRoleForm() {
     const payload = {
       roleName: values.roleName,
       permissions: selectedPermissions,
+      canCreate: canCreate,
     };
     try {
       const response = await fetch(url, {
@@ -68,7 +72,7 @@ function CreateUserRoleForm() {
         navigate("/user-roles");
       } else {
         const error = data.message || "An unknown error occurred";
-        console.error("Failed to add Category:", error);
+        console.error("Failed to add user role:", error);
         message.error(error);
       }
     } catch (error) {
@@ -119,6 +123,12 @@ function CreateUserRoleForm() {
               </Col>
             ))}
           </Row>
+        </Form.Item>
+
+        <Form.Item name="canCreate" valuePropName="checked">
+          <Checkbox onChange={(e) => setCanCreate(e.target.checked)}>
+            Can Create
+          </Checkbox>
         </Form.Item>
 
         <Form.Item>

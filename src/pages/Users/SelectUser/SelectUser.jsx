@@ -2,30 +2,30 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Card, Row, Col, Modal, Pagination, Input, Button, Spin } from "antd";
 import { debounce } from "lodash";
-import CreateVendorForm from "../../../components/forms/CreateVendorForm";
+import Register from "../../../components/forms/RegisterForm";
 
-function SelectVendor() {
+function SelectUser() {
   const location = useLocation();
   const navigate = useNavigate();
   const [transactionTypeID, setTransactionTypeID] = useState(null);
-  const [vendors, setVendors] = useState([]);
+  const [users, setUsers] = useState([]);
   const [itemCount, setItemCount] = useState(1);
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [isLoading, setIsLoading] = useState(false);
   const [searchText, setSearchText] = useState("");
-  const [selectedVendor, setSelectedVendor] = useState(null);
+  const [selectedUser, setSelectedUser] = useState(null);
   const [isSelectModalOpen, setIsSelectModalOpen] = useState(false);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
-  const [isVendorCreated, setIsVendorCreated] = useState(false);
+  const [isUserCreated, setIsUserCreated] = useState(false);
 
   useEffect(() => {
     setTransactionTypeID(location.state.transactionTypeID);
   }, [location.state.transactionTypeID]);
 
-  const fetchVendors = async (payload) => {
+  const fetchUsers = async (payload) => {
     setIsLoading(true);
-    const url = "https://localhost:7200/api/vendor/get";
+    const url = "https://localhost:7200/api/user/get/true";
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(url, {
@@ -39,15 +39,15 @@ function SelectVendor() {
 
       const data = await response.json();
       if (response.ok) {
-        setVendors(data.result);
+        setUsers(data.result);
         setItemCount(data.itemCount);
       } else {
-        console.error("Failed to fetch vendors:", data);
-        alert(data.message || "Failed to fetch vendors");
+        console.error("Failed to fetch users:", data);
+        alert(data.message || "Failed to fetch users");
       }
     } catch (error) {
       console.error("An error occurred:", error);
-      alert("An error occurred while fetching vendors");
+      alert("An error occurred while fetching users");
     } finally {
       setIsLoading(false);
     }
@@ -60,24 +60,24 @@ function SelectVendor() {
       search: searchText,
     };
 
-    fetchVendors(payload);
+    fetchUsers(payload);
   }, [pageNumber, pageSize, searchText]);
 
   useEffect(() => {
-    if (isVendorCreated) {
+    if (isUserCreated) {
       const payload = {
         pageNumber: pageNumber,
         pageSize: pageSize,
         search: searchText,
       };
 
-      fetchVendors(payload);
-      setIsVendorCreated(false);
+      fetchUsers(payload);
+      setIsUserCreated(false);
     }
-  }, [isVendorCreated, pageNumber, pageSize, searchText]);
+  }, [isUserCreated, pageNumber, pageSize, searchText]);
 
-  const handleVendorClick = (vendor) => {
-    setSelectedVendor(vendor);
+  const handleUserClick = (user) => {
+    setSelectedUser(user);
     setIsSelectModalOpen(true);
   };
 
@@ -89,13 +89,13 @@ function SelectVendor() {
     setIsRegisterModalOpen(false);
   };
 
-  const handleSelectVendor = async (confirm) => {
+  const handleSelectUser = async (confirm) => {
     if (confirm) {
       const url = "https://localhost:7200/api/transaction/create";
       const token = localStorage.getItem("token");
       const payload = {
         transactionTypeID: parseInt(transactionTypeID),
-        vendorID: parseInt(selectedVendor.vendorID),
+        vendorID: parseInt(selectedUser.userID),
       };
 
       try {
@@ -126,7 +126,7 @@ function SelectVendor() {
       }
     }
     setIsSelectModalOpen(false);
-    setSelectedVendor(null);
+    setSelectedUser(null);
   };
 
   const debouncedSearch = useCallback(
@@ -160,13 +160,13 @@ function SelectVendor() {
           <Input
             type="text"
             onChange={handleSearch}
-            placeholder="Search Vendors..."
+            placeholder="Search Users..."
             style={{ marginRight: "8px", maxWidth: "50%" }}
           />
           {isLoading && <Spin style={{ marginLeft: "8px" }} />}
         </div>
         <Button type="primary" onClick={() => setIsRegisterModalOpen(true)}>
-          Create Vendor
+          Create User
         </Button>
       </div>
       {isLoading ? (
@@ -174,15 +174,15 @@ function SelectVendor() {
       ) : (
         <>
           <Row gutter={[16, 16]} style={{ marginTop: "16px" }}>
-            {vendors.map((vendor) => (
-              <Col span={8} key={vendor.vendorID}>
+            {users.map((user) => (
+              <Col span={8} key={user.userID}>
                 <Card
-                  title={vendor.name}
+                  title={user.firstName + " " + user.lastName}
                   bordered={true}
-                  onClick={() => handleVendorClick(vendor)}
+                  onClick={() => handleUserClick(user)}
                   style={{ cursor: "pointer" }}
                 >
-                  <p>{vendor.email}</p>
+                  <p>{user.email}</p>
                 </Card>
               </Col>
             ))}
@@ -199,32 +199,32 @@ function SelectVendor() {
         </>
       )}
       <Modal
-        title="Select Vendor"
+        title="Select User"
         open={isSelectModalOpen}
-        onOk={() => handleSelectVendor(true)}
+        onOk={() => handleSelectUser(true)}
         onCancel={handleSelectModalClose}
         okText="Yes"
         cancelText="No"
       >
-        <p>Do you want to select this vendor?</p>
+        <p>Do you want to select this user?</p>
       </Modal>
       <Modal
-        title="Add a Vendor"
+        title="Add a User"
         open={isRegisterModalOpen}
         onCancel={handleRegisterModalClose}
         footer={null}
       >
-        <CreateVendorForm
+        <Register
           returnRoute={"stay"}
-          buttonText="Create Vendor"
+          buttonText="Create User"
           showLogin={false}
           isRegisterModalOpen={isRegisterModalOpen}
           setIsRegisterModalOpen={setIsRegisterModalOpen}
-          setIsVendorCreated={setIsVendorCreated}
+          setIsUserCreated={setIsUserCreated}
         />
       </Modal>
     </div>
   );
 }
 
-export default SelectVendor;
+export default SelectUser;

@@ -91,19 +91,9 @@ const items = [
     label: "Analytics",
     children: [
       {
-        key: "/product-analytics",
+        key: "/all-analytics",
         icon: <PieChartOutlined />,
-        label: <Link to="/product-analytics">Product Analytics</Link>,
-      },
-      {
-        key: "/category-analytics",
-        icon: <DotChartOutlined />,
-        label: <Link to="/category-analytics">Category Analytics</Link>,
-      },
-      {
-        key: "/vendor-analytics",
-        icon: <AreaChartOutlined />,
-        label: <Link to="/vendor-analytics">Vendor Analytics</Link>,
+        label: <Link to="/all-analytics">All Analytics</Link>,
       },
     ],
   },
