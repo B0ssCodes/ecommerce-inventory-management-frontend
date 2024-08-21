@@ -19,7 +19,7 @@ const { Option } = Select;
 
 function AllUserLogs() {
   const [searchText, setSearchText] = useState("");
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(100);
   const [itemCount, setItemCount] = useState(1);
   const [UserLogs, setUserLogs] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
