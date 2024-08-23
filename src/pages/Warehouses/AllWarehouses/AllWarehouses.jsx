@@ -11,25 +11,24 @@ import {
 } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { debounce } from "lodash";
-import { EditOutlined, SearchOutlined } from "@ant-design/icons";
-import "./AllInventories.css"; // Import the CSS file
-import DeleteCategory from "../../../components/modals/DeleteCategory";
+import { EditOutlined } from "@ant-design/icons";
+import "./AllWarehouses.css"; // Import the CSS file
+import DeleteWarehouse from "../../../components/modals/DeleteWarehouse";
 
 const { Title } = Typography;
 const { Option } = Select;
 
-function AllInventories() {
+function AllWarehouses() {
   const [searchText, setSearchText] = useState("");
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [itemCount, setItemCount] = useState(1);
-  const [inventories, setInventories] = useState([]);
+  const [warehouses, setWarehouses] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [minStockNum, setMinStockNum] = useState(0);
   const navigate = useNavigate();
 
-  const fetchInventories = async (payload) => {
-    const url = "https://localhost:7200/api/inventory/get";
+  const fetchWarehouses = async (payload) => {
+    const url = "https://localhost:7200/api/warehouse/get";
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(url, {
@@ -43,20 +42,18 @@ function AllInventories() {
 
       const data = await response.json();
       if (response.ok) {
-        setInventories(data.result);
+        setWarehouses(data.result);
         setItemCount(data.itemCount);
       } else {
-        console.error("Failed to fetch Inventories:", data);
-        alert(data.message || "Failed to fetch Inventories");
+        console.error("Failed to fetch warehouses:", data);
+        alert(data.message || "Failed to fetch warehouses");
       }
     } catch (error) {
       console.error("An error occurred:", error);
-      alert("An error occurred while fetching Inventories");
+      alert("An error occurred while fetching warehouses");
     }
   };
-  useEffect(() => {
-    setMinStockNum(localStorage.getItem("minStockNumber"));
-  }, []);
+
   useEffect(() => {
     const payload = {
       pageNumber: pageNumber,
@@ -64,8 +61,12 @@ function AllInventories() {
       search: searchText,
     };
 
-    fetchInventories(payload);
+    fetchWarehouses(payload);
   }, [pageNumber, pageSize, searchText]);
+
+  const handleEdit = (warehouseID) => {
+    navigate("/edit-warehouse", { state: { warehouseID } });
+  };
 
   const handleTableChange = (page, pageSize) => {
     setPageNumber(page);
@@ -87,38 +88,33 @@ function AllInventories() {
 
   const columns = [
     {
-      title: "Product Name",
-      dataIndex: "productName",
-      key: "productName",
+      title: "Name",
+      dataIndex: "warehouseName",
+      key: "warehouseName",
     },
     {
-      title: "SKU",
-      dataIndex: "productSKU",
-      key: "productSKU",
+      title: "Address",
+      dataIndex: "warehouseAddress",
+      key: "warehouseAddress",
     },
     {
-      title: "Quantity",
-      dataIndex: "quantity",
-      key: "quantity",
+      title: "Floor Count",
+      dataIndex: "floorCount",
+      key: "floorCount",
+    },
+    {
+      title: "Actions",
+      key: "actions",
       render: (text, record) => (
-        <span
-          style={{ color: record.quantity < minStockNum ? "red" : "inherit" }}
-        >
-          {record.quantity}
-        </span>
+        <Space size="middle">
+          <Button
+            type="primary"
+            icon={<EditOutlined />}
+            onClick={() => handleEdit(record.warehouseID)}
+          ></Button>
+          <DeleteWarehouse warehouseID={record.warehouseID} />
+        </Space>
       ),
-    },
-    {
-      title: "Unit Cost",
-      dataIndex: "productPrice",
-      key: "productPrice",
-      render: (text) => `$${text}`,
-    },
-    {
-      title: "Total Cost",
-      dataIndex: "price",
-      key: "price",
-      render: (text) => `$${text}`,
     },
   ];
 
@@ -132,7 +128,7 @@ function AllInventories() {
         }}
       >
         <Title level={2} style={{ marginBottom: "0.3em", lineHeight: "32px" }}>
-          Inventory
+          Warehouses
         </Title>
         <div
           style={{
@@ -145,7 +141,7 @@ function AllInventories() {
             <Input
               type="text"
               onChange={handleSearchChange}
-              placeholder="Search Inventories..."
+              placeholder="Search Warehouses..."
               style={{ marginRight: "8px", maxWidth: "80%" }}
             />
             {isLoading ? <Spin size="small" /> : null}
@@ -165,11 +161,11 @@ function AllInventories() {
       <div style={{ maxHeight: "70vh", overflowY: "auto" }}>
         <Table
           columns={columns}
-          dataSource={inventories}
-          rowKey="inventoryID"
+          dataSource={warehouses}
+          rowKey="warehouseID"
           bordered
           className="custom-table"
-          pagination={false} // Disable built-in pagination
+          pagination={false} // Disable built-in pagination, using pagination outside the table
           onChange={handleTableChange}
         />
       </div>
@@ -182,36 +178,9 @@ function AllInventories() {
           marginTop: 16,
         }}
       >
-        <Button
-          type="primary"
-          style={{ backgroundColor: "#1890ff", borderColor: "#1890ff" }}
-        >
-          <Link to="/transactions" style={{ color: "white" }}>
-            Create a transaction
-          </Link>
-        </Button>
-        <Button
-          type="default"
-          style={{
-            backgroundColor: "#fa8c16",
-            borderColor: "#fa8c16",
-            marginLeft: 16,
-          }}
-        >
-          <Link to="/low-inventories" style={{ color: "white" }}>
-            Low Stock
-          </Link>
-        </Button>
-        <Button
-          type="default"
-          style={{
-            backgroundColor: "#f5222d",
-            borderColor: "#f5222d",
-            marginLeft: 16,
-          }}
-        >
-          <Link to="/out-inventories" style={{ color: "white" }}>
-            Out of Stock
+        <Button type="primary">
+          <Link to="/create-warehouse" style={{ color: "white" }}>
+            Create Warehouse
           </Link>
         </Button>
         <Pagination
@@ -225,4 +194,4 @@ function AllInventories() {
   );
 }
 
-export default AllInventories;
+export default AllWarehouses;

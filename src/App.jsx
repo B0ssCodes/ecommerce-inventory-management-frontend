@@ -41,6 +41,9 @@ import AllUserLogs from "./pages/Activity/UserLogs/AllUserLogs/AllUserLogs";
 import ViewUserLog from "./pages/Activity/UserLogs/ViewUserLog/ViewUserLog";
 import ViewUser from "./pages/Users/ViewUser/ViewUser";
 import SelectUser from "./pages/Users/SelectUser/SelectUser";
+import AllWarehouses from "./pages/Warehouses/AllWarehouses/AllWarehouses";
+import UpsertWarehouse from "./pages/Warehouses/UpsertWarehouse/UpsertWarehouse";
+import ProductToBin from "./pages/Warehouses/ProductToBin/ProductToBin";
 function App({ isDarkMode, toggleTheme }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userPermissions, setUserPermissions] = useState([]);
@@ -408,6 +411,38 @@ function App({ isDarkMode, toggleTheme }) {
             element={
               <ValidateRoute requiredPermissions={"User Logs"}>
                 <ViewUserLog />
+              </ValidateRoute>
+            }
+          />
+          <Route
+            path="/warehouses"
+            element={
+              <ValidateRoute requiredPermissions={"any"}>
+                <AllWarehouses />
+              </ValidateRoute>
+            }
+          />
+          <Route
+            path="/create-warehouse"
+            element={
+              <ValidateRoute requiredPermissions={"any"}>
+                <UpsertWarehouse />
+              </ValidateRoute>
+            }
+          />
+          <Route
+            path="/edit-warehouse"
+            element={
+              <ValidateRoute requiredPermissions={"any"}>
+                <UpsertWarehouse />
+              </ValidateRoute>
+            }
+          />
+          <Route
+            path="/product-to-bin"
+            element={
+              <ValidateRoute requiredPermissions={"any"}>
+                <ProductToBin />
               </ValidateRoute>
             }
           />

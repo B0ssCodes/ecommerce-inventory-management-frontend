@@ -19,6 +19,7 @@ import {
   AreaChartOutlined,
   FileSearchOutlined,
   MonitorOutlined,
+  BankOutlined,
 } from "@ant-design/icons";
 import { Link, useLocation } from "react-router-dom";
 import Logout from "../modals/Logout";
@@ -82,6 +83,11 @@ const items = [
         key: "/vendors",
         icon: <SolutionOutlined />,
         label: <Link to="/vendors">Vendors</Link>,
+      },
+      {
+        key: "/warehouses",
+        icon: <BankOutlined />,
+        label: <Link to="/warehouses">Warehouses</Link>,
       },
     ],
   },
