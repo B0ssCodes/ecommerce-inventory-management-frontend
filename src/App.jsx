@@ -43,6 +43,7 @@ import ViewUser from "./pages/Users/ViewUser/ViewUser";
 import SelectUser from "./pages/Users/SelectUser/SelectUser";
 import AllWarehouses from "./pages/Warehouses/AllWarehouses/AllWarehouses";
 import UpsertWarehouse from "./pages/Warehouses/UpsertWarehouse/UpsertWarehouse";
+import ProductToBin from "./pages/Warehouses/ProductToBin/ProductToBin";
 function App({ isDarkMode, toggleTheme }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userPermissions, setUserPermissions] = useState([]);
@@ -434,6 +435,14 @@ function App({ isDarkMode, toggleTheme }) {
             element={
               <ValidateRoute requiredPermissions={"any"}>
                 <UpsertWarehouse />
+              </ValidateRoute>
+            }
+          />
+          <Route
+            path="/product-to-bin"
+            element={
+              <ValidateRoute requiredPermissions={"any"}>
+                <ProductToBin />
               </ValidateRoute>
             }
           />

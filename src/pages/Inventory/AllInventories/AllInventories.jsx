@@ -97,6 +97,11 @@ function AllInventories() {
       sorter: true,
     },
     {
+      title: "Bin",
+      dataIndex: "binName",
+      key: "binName",
+    },
+    {
       title: "Quantity",
       dataIndex: "quantity",
       key: "quantity",

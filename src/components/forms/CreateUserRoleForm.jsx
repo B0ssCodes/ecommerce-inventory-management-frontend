@@ -16,6 +16,7 @@ import {
   PieChartOutlined,
   AreaChartOutlined,
   LineChartOutlined,
+  BankOutlined,
 } from "@ant-design/icons";
 
 const permissionsList = [
@@ -27,6 +28,7 @@ const permissionsList = [
   { name: "Users", icon: <UserOutlined /> },
   { name: "User Roles", icon: <UsergroupAddOutlined /> },
   { name: "Vendors", icon: <SolutionOutlined /> },
+  { name: "Warehouses", icon: <BankOutlined /> },
   { name: "All Analytics", icon: <LineChartOutlined /> },
   { name: "Product Analytics", icon: <PieChartOutlined /> },
   { name: "Category Analytics", icon: <DotChartOutlined /> },
