@@ -83,6 +83,14 @@ function AllInventories() {
     fetchInventories(payload);
   }, [pageNumber, pageSize, searchText, sortBy, sortOrder, filters]);
 
+  const handleView = (inventoryID) => {
+    navigate("/view-inventory", { state: { inventoryID } });
+  };
+
+  const handleEdit = (inventoryID) => {
+    navigate("/edit-inventory-bin", { state: { inventoryID } });
+  };
+
   const columns = [
     {
       title: "Product Name",
@@ -126,6 +134,24 @@ function AllInventories() {
       dataIndex: "price",
       key: "price",
       render: (text) => `$${text}`,
+    },
+    {
+      title: "Actions",
+      key: "actions",
+      render: (text, record) => (
+        <Space size="middle">
+          <Button
+            type="primary"
+            icon={<EyeOutlined />}
+            onClick={() => handleView(record.inventoryID)}
+          ></Button>
+          <Button
+            type="primary"
+            icon={<EditOutlined />}
+            onClick={() => handleEdit(record.inventoryID)}
+          ></Button>
+        </Space>
+      ),
     },
   ];
 
