@@ -8,7 +8,7 @@ function CreateVendor() {
   return (
     <div>
       <Title style={{ textAlign: "center" }}>Add a New Vendor</Title>
-      <CreateVendorForm />
+      <CreateVendorForm returnRoute="/vendors" />
     </div>
   );
 }

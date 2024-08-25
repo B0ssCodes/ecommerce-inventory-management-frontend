@@ -4,7 +4,7 @@ import { Form, Select, Button, message } from "antd";
 
 const { Option } = Select;
 
-function ProductToBin() {
+function InventoryToBin() {
   const [warehouses, setWarehouses] = useState([]);
   const [floors, setFloors] = useState([]);
   const [rooms, setRooms] = useState([]);
@@ -20,7 +20,7 @@ function ProductToBin() {
 
   const location = useLocation();
   const navigate = useNavigate();
-  const { productID } = location.state;
+  const { inventoryID } = location.state;
 
   useEffect(() => {
     const fetchWarehouses = async () => {
@@ -157,7 +157,17 @@ function ProductToBin() {
     setSelectedBin(value);
   };
 
-  const handleAddProductToBin = async () => {
+  const handleAddInventoryToBin = async () => {
+    const payload = {
+      warehouseID: selectedWarehouse,
+      floorID: selectedFloor,
+      roomID: selectedRoom,
+      aisleID: selectedAisle,
+      shelfID: selectedShelf,
+      binID: selectedBin,
+      inventoryID,
+    };
+
     try {
       const response = await fetch(
         "https://localhost:7200/api/location/create",
@@ -166,17 +176,20 @@ function ProductToBin() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ binID: selectedBin, productID }),
+          body: JSON.stringify(payload),
         }
       );
+
+      const data = await response.json();
+      const responseMessage = data.message; // Renamed variable to avoid conflict
       if (response.ok) {
-        message.success("Product added to bin successfully!");
-        navigate("/products");
+        message.success("Inventory added to bin successfully!");
+        navigate("/inventories");
       } else {
-        message.error("Failed to add product to bin.");
+        message.error(responseMessage);
       }
     } catch (error) {
-      message.error("An error occurred while adding product to bin.");
+      message.error("An error occurred while adding inventory to bin.");
     }
   };
 
@@ -248,8 +261,8 @@ function ProductToBin() {
       )}
       {selectedBin && (
         <Form.Item>
-          <Button type="primary" onClick={handleAddProductToBin}>
-            Add Product to Bin
+          <Button type="primary" onClick={handleAddInventoryToBin}>
+            Add Inventory to Bin
           </Button>
         </Form.Item>
       )}
@@ -257,4 +270,4 @@ function ProductToBin() {
   );
 }
 
-export default ProductToBin;
+export default InventoryToBin;

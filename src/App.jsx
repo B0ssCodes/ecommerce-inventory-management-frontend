@@ -43,7 +43,8 @@ import ViewUser from "./pages/Users/ViewUser/ViewUser";
 import SelectUser from "./pages/Users/SelectUser/SelectUser";
 import AllWarehouses from "./pages/Warehouses/AllWarehouses/AllWarehouses";
 import UpsertWarehouse from "./pages/Warehouses/UpsertWarehouse/UpsertWarehouse";
-import ProductToBin from "./pages/Warehouses/ProductToBin/ProductToBin";
+import InventoryToBin from "./pages/Warehouses/InventoryToBin/InventoryToBin";
+import ViewInventoryLocation from "./pages/Warehouses/ViewInventoryLocation/ViewInventoryLocation";
 function App({ isDarkMode, toggleTheme }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userPermissions, setUserPermissions] = useState([]);
@@ -108,6 +109,7 @@ function App({ isDarkMode, toggleTheme }) {
     if (token && tokenExpiry) {
       const currentTime = new Date().getTime();
       if (currentTime > tokenExpiry) {
+        console.log("token is expired");
         localStorage.removeItem("token");
         localStorage.removeItem("tokenExpiry");
         localStorage.removeItem("userPermissions");
@@ -439,10 +441,18 @@ function App({ isDarkMode, toggleTheme }) {
             }
           />
           <Route
-            path="/product-to-bin"
+            path="/view-inventory-location"
             element={
               <ValidateRoute requiredPermissions={"any"}>
-                <ProductToBin />
+                <ViewInventoryLocation />
+              </ValidateRoute>
+            }
+          />
+          <Route
+            path="/edit-inventory-bin"
+            element={
+              <ValidateRoute requiredPermissions={"any"}>
+                <InventoryToBin />
               </ValidateRoute>
             }
           />

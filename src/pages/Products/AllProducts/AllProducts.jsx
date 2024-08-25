@@ -351,7 +351,7 @@ function AllProducts() {
             <Input
               type="text"
               onChange={handleSearchChange}
-              placeholder="Search Transactions..."
+              placeholder="Search Products..."
               style={{ marginRight: "8px", maxWidth: "80%" }}
             />
             {isLoading ? <Spin size="small" /> : null}
