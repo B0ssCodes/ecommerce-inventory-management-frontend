@@ -17,7 +17,7 @@ const COLORS = [
   "#FFCE56",
 ];
 
-const CategoryAnalytics = () => {
+const CategoryAnalytics = ({ displayAll = null }) => {
   const [categories, setCategories] = useState([]);
   const navigate = useNavigate();
   let categoryFetchCount = localStorage.getItem("categoryFetchCount");
@@ -76,12 +76,23 @@ const CategoryAnalytics = () => {
     value: category.stockValue,
   }));
 
+  const handleCardClick = () => {
+    navigate("/category-analytics");
+  };
+
   return (
-    <div>
+    <div onClick={handleCardClick} style={{ cursor: "pointer" }}>
       <Card
+        hoverable={displayAll === false}
         style={{
           marginBottom: "20px",
           textAlign: "center",
+          transition: "transform 0.3s",
+          ...(displayAll === false && {
+            ":hover": {
+              transform: "scale(1.05)",
+            },
+          }),
         }}
       >
         <Row gutter={[16, 16]} align="middle">
@@ -110,7 +121,10 @@ const CategoryAnalytics = () => {
 
             <Button
               type="primary"
-              onClick={handleRefreshStatistics}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleRefreshStatistics();
+              }}
               style={{ marginTop: "10px", maxWidth: "30%" }}
             >
               Refresh Statistics
@@ -143,45 +157,49 @@ const CategoryAnalytics = () => {
           </Col>
         </Row>
       </Card>
-      <Row gutter={[16, 16]}>
-        {categories.map((category) => (
-          <Col key={category.categoryID} xs={24} sm={24} md={12} lg={8}>
-            <Card
-              hoverable
-              onClick={() => navigate(`/view-category/${category.categoryID}`)}
-              style={{
-                marginBottom: "16px",
-                transition: "transform 0.3s",
-                cursor: "pointer",
-              }}
-              bodyStyle={{ textAlign: "center" }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.transform = "scale(1.05)")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.transform = "scale(1)")
-              }
-              title={<Title level={3}>{category.categoryName}</Title>}
-            >
-              <Row>
-                <Col span={24} style={{ textAlign: "center" }}>
-                  <Text style={{ fontSize: "1.5em" }}>
-                    Products Sold: {category.productsSold}
-                  </Text>
-                </Col>
-                <Col
-                  span={24}
-                  style={{ textAlign: "center", marginTop: "10px" }}
-                >
-                  <Text style={{ fontSize: "1.5em" }}>
-                    Stock Value: ${category.stockValue}
-                  </Text>
-                </Col>
-              </Row>
-            </Card>
-          </Col>
-        ))}
-      </Row>
+      {(displayAll === null || displayAll) && (
+        <Row gutter={[16, 16]}>
+          {categories.map((category) => (
+            <Col key={category.categoryID} xs={24} sm={24} md={12} lg={8}>
+              <Card
+                hoverable
+                onClick={() =>
+                  navigate(`/view-category/${category.categoryID}`)
+                }
+                style={{
+                  marginBottom: "16px",
+                  transition: "transform 0.3s",
+                  cursor: "pointer",
+                }}
+                bodyStyle={{ textAlign: "center" }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.transform = "scale(1.05)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.transform = "scale(1)")
+                }
+                title={<Title level={3}>{category.categoryName}</Title>}
+              >
+                <Row>
+                  <Col span={24} style={{ textAlign: "center" }}>
+                    <Text style={{ fontSize: "1.5em" }}>
+                      Products Sold: {category.productsSold}
+                    </Text>
+                  </Col>
+                  <Col
+                    span={24}
+                    style={{ textAlign: "center", marginTop: "10px" }}
+                  >
+                    <Text style={{ fontSize: "1.5em" }}>
+                      Stock Value: ${category.stockValue}
+                    </Text>
+                  </Col>
+                </Row>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      )}
     </div>
   );
 };

@@ -129,7 +129,7 @@ function CreateUserRoleForm() {
 
         <Form.Item name="canCreate" valuePropName="checked">
           <Checkbox onChange={(e) => setCanCreate(e.target.checked)}>
-            Can Create
+            Can Purchase Items
           </Checkbox>
         </Form.Item>
 

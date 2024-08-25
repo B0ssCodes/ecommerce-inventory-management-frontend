@@ -4,7 +4,8 @@ import { Card, Row, Col, Tag, Typography, Button } from "antd";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import moment from "moment";
-const ProductAnalytics = () => {
+
+const ProductAnalytics = ({ displayAll = null }) => {
   const [productAnalytics, setProductAnalytics] = useState([]);
   const navigate = useNavigate();
   const { Text, Title } = Typography;
@@ -86,18 +87,24 @@ const ProductAnalytics = () => {
     navigate("/view-product/" + productID);
   };
 
+  const handleMainCardClick = () => {
+    navigate("/product-analytics");
+  };
+
   return (
     <>
       <Row gutter={[16, 16]}>
         <Col xs={24} sm={24} md={24} lg={24}>
           <Card
             title="Weekly Analytics Result"
-            style={{ width: "100%" }}
+            style={{ width: "100%", cursor: "pointer" }}
             bodyStyle={{
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
             }}
+            onClick={handleMainCardClick}
+            hoverable
           >
             <div
               style={{
@@ -143,7 +150,10 @@ const ProductAnalytics = () => {
               </Text>
               <Button
                 type="primary"
-                onClick={handleRefreshStatistics}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleRefreshStatistics();
+                }}
                 style={{ marginTop: "10px" }}
               >
                 Refresh Statistics
@@ -196,8 +206,16 @@ const ProductAnalytics = () => {
                 title={productName}
                 extra={<Tag>{productSKU}</Tag>}
                 onClick={() => handleCardClick(productID)}
-                hoverable
-                style={{ transition: "transform 0.3s", cursor: "pointer" }}
+                hoverable={displayAll === false}
+                style={{
+                  transition: "transform 0.3s",
+                  cursor: "pointer",
+                  ...(displayAll === false && {
+                    ":hover": {
+                      transform: "scale(1.05)",
+                    },
+                  }),
+                }}
                 bodyStyle={{ transition: "transform 0.3s" }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = "scale(1.05)";
@@ -219,7 +237,7 @@ const ProductAnalytics = () => {
                   />
                 </div>
                 <div style={{ textAlign: "center", marginTop: "10px" }}>
-                  <div style={{ color: "green" }}>Earned: ${moneyEarned}</div>
+                  <div style={{ color: "green" }}>Sold For: ${moneyEarned}</div>
                   <div style={{ color: "red" }}>Spent: ${moneySpent}</div>
                 </div>
               </Card>

@@ -84,7 +84,7 @@ function AllInventories() {
   }, [pageNumber, pageSize, searchText, sortBy, sortOrder, filters]);
 
   const handleView = (inventoryID) => {
-    navigate("/view-inventory", { state: { inventoryID } });
+    navigate("/view-inventory-location", { state: { inventoryID } });
   };
 
   const handleEdit = (inventoryID) => {

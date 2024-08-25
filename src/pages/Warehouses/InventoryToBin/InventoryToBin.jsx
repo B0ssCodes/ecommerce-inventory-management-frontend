@@ -158,6 +158,16 @@ function InventoryToBin() {
   };
 
   const handleAddInventoryToBin = async () => {
+    const payload = {
+      warehouseID: selectedWarehouse,
+      floorID: selectedFloor,
+      roomID: selectedRoom,
+      aisleID: selectedAisle,
+      shelfID: selectedShelf,
+      binID: selectedBin,
+      inventoryID,
+    };
+
     try {
       const response = await fetch(
         "https://localhost:7200/api/location/create",
@@ -166,14 +176,17 @@ function InventoryToBin() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ binID: selectedBin, inventoryID }),
+          body: JSON.stringify(payload),
         }
       );
+
+      const data = await response.json();
+      const responseMessage = data.message; // Renamed variable to avoid conflict
       if (response.ok) {
         message.success("Inventory added to bin successfully!");
         navigate("/inventories");
       } else {
-        message.error("Failed to add inventory to bin.");
+        message.error(responseMessage);
       }
     } catch (error) {
       message.error("An error occurred while adding inventory to bin.");

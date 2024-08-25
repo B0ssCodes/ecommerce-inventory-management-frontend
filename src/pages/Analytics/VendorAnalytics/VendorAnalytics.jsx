@@ -11,12 +11,11 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { set } from "lodash";
 
 const { Title, Text } = Typography;
 const { Content } = Layout;
 
-const VendorAnalytics = () => {
+const VendorAnalytics = ({ displayAll = null }) => {
   const [vendors, setVendors] = useState([]);
   const [vendorFetchCount, setVendorFetchCount] = useState(5);
   const navigate = useNavigate();
@@ -77,11 +76,23 @@ const VendorAnalytics = () => {
     items: vendor.productsSold,
   }));
 
+  const handleCardClick = () => {
+    navigate("/vendor-analytics");
+  };
+
   return (
-    <div>
+    <div onClick={handleCardClick} style={{ cursor: "pointer" }}>
       <Card
+        hoverable={displayAll === false}
         style={{
           marginBottom: "20px",
+          textAlign: "center",
+          transition: "transform 0.3s",
+          ...(displayAll === false && {
+            ":hover": {
+              transform: "scale(1.05)",
+            },
+          }),
         }}
       >
         <Row>
@@ -110,7 +121,10 @@ const VendorAnalytics = () => {
 
             <Button
               type="primary"
-              onClick={handleRefreshStatistics}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleRefreshStatistics();
+              }}
               style={{ marginTop: "10px", maxWidth: "30%" }}
             >
               Refresh Statistics
@@ -138,48 +152,50 @@ const VendorAnalytics = () => {
           </Col>
         </Row>
       </Card>
-      <Row gutter={[16, 16]}>
-        {vendors.map((vendor) => (
-          <Col key={vendor.vendorID} xs={24} sm={24} md={12} lg={8}>
-            <Card
-              title={<Title level={3}>{vendor.vendorName}</Title>}
-              style={{
-                marginBottom: "16px",
-                transition: "transform 0.3s",
-                cursor: "pointer",
-              }}
-              hoverable
-              onClick={() =>
-                navigate("/edit-vendor", {
-                  state: { vendorID: vendor.vendorID },
-                })
-              }
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.transform = "scale(1.05)")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.transform = "scale(1)")
-              }
-            >
-              <Row>
-                <Col span={24} style={{ textAlign: "center" }}>
-                  <Text style={{ fontSize: "1.5em" }}>
-                    Quantity: {vendor.productsSold} items
-                  </Text>
-                </Col>
-                <Col
-                  span={24}
-                  style={{ textAlign: "center", marginTop: "10px" }}
-                >
-                  <Text style={{ fontSize: "1.5em" }}>
-                    Bought Items Cost: ${vendor.stockValue}
-                  </Text>
-                </Col>
-              </Row>
-            </Card>
-          </Col>
-        ))}
-      </Row>
+      {(displayAll === null || displayAll) && (
+        <Row gutter={[16, 16]}>
+          {vendors.map((vendor) => (
+            <Col key={vendor.vendorID} xs={24} sm={24} md={12} lg={8}>
+              <Card
+                title={<Title level={3}>{vendor.vendorName}</Title>}
+                style={{
+                  marginBottom: "16px",
+                  transition: "transform 0.3s",
+                  cursor: "pointer",
+                }}
+                hoverable
+                onClick={() =>
+                  navigate("/edit-vendor", {
+                    state: { vendorID: vendor.vendorID },
+                  })
+                }
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.transform = "scale(1.05)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.transform = "scale(1)")
+                }
+              >
+                <Row>
+                  <Col span={24} style={{ textAlign: "center" }}>
+                    <Text style={{ fontSize: "1.5em" }}>
+                      Quantity: {vendor.productsSold} items
+                    </Text>
+                  </Col>
+                  <Col
+                    span={24}
+                    style={{ textAlign: "center", marginTop: "10px" }}
+                  >
+                    <Text style={{ fontSize: "1.5em" }}>
+                      Bought Items Cost: ${vendor.stockValue}
+                    </Text>
+                  </Col>
+                </Row>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      )}
     </div>
   );
 };
